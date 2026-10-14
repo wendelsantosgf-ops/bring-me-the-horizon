@@ -41,16 +41,23 @@ if(user){
    }
   }finally{busy=false}
  }
+ let readTimer=null;
  bell.onclick=async()=>{
   panel.hidden=!panel.hidden;
   if(panel.hidden)return;
   await refresh();
-  // Opening the notification drawer acknowledges all currently unread items.
+  // Keep notices visible for one full minute after the panel is opened.
+  if(readTimer)clearTimeout(readTimer);
   const ids=[...(seenIds||[])];
   if(ids.length){
-   const {error}=await client.from('bmth_notifications').update({read_at:new Date().toISOString()}).eq('recipient_id',user.id).in('id',ids);
-   if(!error){seenIds=new Set();count.hidden=true;items.replaceChildren();items.textContent='Notificações visualizadas. Nenhuma pendente.'}
-   else{const warning=document.createElement('p');warning.textContent='Não foi possível marcar como lidas.';items.prepend(warning)}
+   readTimer=setTimeout(async()=>{
+    readTimer=null;
+    const {error}=await client.from('bmth_notifications')
+     .update({read_at:new Date().toISOString()})
+     .eq('recipient_id',user.id).in('id',ids);
+    if(!error)await refresh();
+    else{const warning=document.createElement('p');warning.textContent='Não foi possível marcar as notificações como lidas.';items.prepend(warning)}
+   },60000);
   }
  };
  await refresh();
