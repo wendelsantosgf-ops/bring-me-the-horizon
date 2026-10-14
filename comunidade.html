@@ -187,7 +187,7 @@ async function drawSocialPost(area,p){
  card.prepend(head);
  if(p.content)card.append(el('p','social-post-body',p.content));
  const imgurl=safeUrl(p.image_url);if(imgurl){const img=el('img','social-post-image');img.src=imgurl;img.alt='Imagem publicada por '+name;img.loading='lazy';card.append(img)}
- const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','♧ Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
+ const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','👎 Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
  actions.append(like,dislike,count,commentsToggle);card.append(actions);
  const comments=el('div','social-comments');comments.hidden=true;const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
  input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;send.type='submit';form.append(input,send);comments.append(list,form,feedback);card.append(comments);area.append(card);
@@ -284,7 +284,7 @@ async function drawCharacterPost(area,c){
  const view=link('./perfil.html?id='+encodeURIComponent(c.profile_id)+'&character='+encodeURIComponent(c.id),'✦ Ver ficha completa');
  view.className='button';view.style.cssText='display:inline-flex;align-items:center;padding:11px 17px;border:1px solid #a94e70;border-radius:10px;background:#351c2c;color:#fff;text-decoration:none;font-weight:700';
  actions.append(view);card.append(actions);
- const reactions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','♧ Não curtir'),count=el('span','muted',''),toggle=el('button','','▤ Comentários');
+ const reactions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','👎 Não curtir'),count=el('span','muted',''),toggle=el('button','','▤ Comentários');
  like.type=dislike.type=toggle.type='button';
  reactions.append(like,dislike,count,toggle);card.append(reactions);
  const comments=el('div','social-comments');comments.hidden=true;
@@ -297,7 +297,7 @@ async function drawCharacterPost(area,c){
   const {data,error}=await db.from('character_reactions').select('user_id,reaction').eq('character_id',c.id);
   if(error){count.textContent='Interações indisponíveis: execute o SQL character_feed_interactions.sql';like.disabled=dislike.disabled=true;return}
   const mine=(data||[]).find(x=>x.user_id===user.id)?.reaction;
-  like.textContent=mine==='like'?'♥ Curtido':'♡ Curtir';dislike.textContent=mine==='dislike'?'♧ Não curtiu':'♧ Não curtir';
+  like.textContent=mine==='like'?'♥ Curtido':'♡ Curtir';dislike.textContent=mine==='dislike'?'👎 Não curtiu':'👎 Não curtir';
   like.dataset.active=String(mine==='like');dislike.dataset.active=String(mine==='dislike');
   count.textContent=(data||[]).filter(x=>x.reaction==='like').length+' curtidas · '+(data||[]).filter(x=>x.reaction==='dislike').length+' dislikes';
  }
@@ -347,7 +347,7 @@ async function drawPost(area,w){const card=el('article','post');const c=characte
  }
  card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
 const media=el('div','post-media');const fallback=()=>{media.replaceChildren();const block=el('div','fallback-cover');block.append(el('b','','✧'),el('span','','BMTH // ARQUIVO DE HABILIDADE'));media.append(block)};const cover=safeUrl(w.cover_image);if(cover){const img=el('img');img.src=cover;img.alt='Capa da habilidade '+(w.title||'');img.loading='lazy';img.onerror=fallback;media.append(img)}else fallback();card.append(media);
-const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const dislike=el('button','','♧ Não curtir');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
+const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const dislike=el('button','','👎 Não curtir');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
 const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
 async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥ Curtido':'♡ Curtir';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked);await refreshDislikes()}
 async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of data||[]){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));list.append(item)}}
@@ -356,7 +356,7 @@ async function refreshDislikes(){
  const {data,error}=await db.from('wiki_dislikes').select('user_id').eq('wiki_id',w.id);
  if(error){dislike.disabled=true;return}
  const mine=(data||[]).some(x=>x.user_id===user.id);
- dislike.textContent=mine?'▼ Não curtiu':'♧ Não curtir';dislike.dataset.active=String(mine);
+ dislike.textContent=mine?'👎 Não curtiu':'👎 Não curtir';dislike.dataset.active=String(mine);
  count.textContent+=' · '+(data||[]).length+' dislikes';
 }
 dislike.addEventListener('click',async()=>{
