@@ -16,3 +16,22 @@ body.login-page h1{font:600 clamp(25px,3vw,35px) 'Cinzel',Georgia,serif}
 body.login-page .bmth-header{width:100%}
 body.login-page .primary{background:linear-gradient(110deg,#921c34,#c23450);border-radius:5px}
 body.login-page .secondary{color:#ef8194}
+
+/* BMTH 2.0 visual language — preserves existing typography and functionality */
+:root{--red:#c43b57;--line:#50313f;--panel:#171119;--muted:#bdaeb8}
+body{background:radial-gradient(ellipse at 75% -15%,#321422 0%,transparent 55%),#09080d}
+.bmth-header{background:#0b090eec;border-bottom:1px solid #673247;box-shadow:0 10px 35px #0008}
+.bmth-header .bmth-nav a{border-radius:9px;transition:background .2s,color .2s}
+.bmth-header .bmth-nav a:hover{background:#3c1a29}
+body:not(.manual-page) main .card,body:not(.manual-page) main .panel,body:not(.manual-page) main .formbox{border-color:#573445;border-radius:17px;box-shadow:0 12px 35px #0003}
+body:not(.manual-page) input,body:not(.manual-page) textarea,body:not(.manual-page) select{border-radius:9px}
+body:not(.manual-page) button{border-radius:9px}
+body:not(.manual-page) button:focus-visible,body:not(.manual-page) a:focus-visible{outline:2px solid #ef9ab1;outline-offset:3px}
+body.manual-page{--red:#bd344f;--red-bright:#d95873;--purple:#d7a0b4;--line:#51303e}
+body.manual-page .hero-art{border-color:#704057;background:radial-gradient(circle at 70% 40%,#7e2d49,transparent 45%),linear-gradient(135deg,#321522,#120e15)}
+body.manual-page .portal{border-color:#ef9caf;box-shadow:0 0 25px #c44c7055,inset 0 0 30px #ad405555}
+body.manual-page .quick-nav a,body.manual-page .card,body.manual-page .energy-card,body.manual-page .zone{border-color:#543343}
+body.manual-page .quick-nav a{border-radius:13px}body.manual-page .card,body.manual-page .energy-card,body.manual-page .zone{border-radius:15px}
+body.login-page main{border-radius:22px;border-color:#613648;box-shadow:0 30px 80px #0009}
+body.login-page .primary{border-radius:11px}
+@media(max-width:760px){.bmth-header{box-shadow:0 6px 24px #0008}body.login-page main{border-radius:18px}}
