@@ -15,6 +15,16 @@ button{cursor:pointer;font:inherit}button:disabled{opacity:.65;cursor:wait}.prim
 .oauth-divider{display:flex;align-items:center;gap:12px;margin:20px 0 14px;color:#a99ba8;font-size:12px;letter-spacing:.12em}.oauth-divider:before,.oauth-divider:after{content:"";flex:1;height:1px;background:#44323d}.google-login{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 15px;background:#f6f5f6;border:1px solid #ddd;color:#242027;border-radius:6px;font-weight:700}.google-login:hover{background:#fff}.google-login svg{width:20px;height:20px;flex-shrink:0}.google-login:disabled{opacity:.55;cursor:wait}.oauth-note{font-size:11px;text-align:center;margin:10px 0 0}[hidden]{display:none!important}
 </style>
 <link rel="stylesheet" href="./theme.css?v=1">
+<style>
+.login-page .portal-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:25px 0 22px}
+.login-page .portal-action{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;min-height:112px;padding:17px 12px;border-radius:15px;border:1px solid #ae3755;background:linear-gradient(145deg,#9e2949,#5e1a36);color:#fff;text-decoration:none;text-align:center;font-size:12px;font-weight:800;letter-spacing:.07em;line-height:1.4;box-shadow:0 10px 24px #0005;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.login-page .portal-action svg{width:25px;height:25px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.login-page .portal-action.profile-action{background:linear-gradient(145deg,#29202f,#18131f);border-color:#745469}
+.login-page .portal-action:hover,.login-page .portal-action:focus-visible{transform:translateY(-3px);box-shadow:0 15px 30px #0008;outline-offset:3px}
+.login-page .portal-action:active{transform:translateY(0)}
+@media(max-width:360px){.login-page .portal-actions{grid-template-columns:1fr}.login-page .portal-action{min-height:78px;flex-direction:row}}
+@media(prefers-reduced-motion:reduce){.login-page .portal-action{transition:none}}
+</style>
 </head>
 <body class="login-page">
 <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html"><span class="bmth-icon">▤</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html"><span class="bmth-icon">♟</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon">♜</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
@@ -34,7 +44,11 @@ button{cursor:pointer;font:inherit}button:disabled{opacity:.65;cursor:wait}.prim
 <p class="oauth-note">Use sua conta Google para entrar ou criar seu cadastro.</p>
 </section>
 <section id="logged" hidden>
-<p>Autenticação realizada! O portal da comunidade está aberto para você.</p><p><a href="./comunidade.html">IR PARA A COMUNIDADE →</a></p><p><a href="./perfil.html">MEU PERFIL →</a></p>
+<p>Autenticação realizada! O portal da comunidade está aberto para você.</p>
+<div class="portal-actions" aria-label="Acesso rápido">
+<a class="portal-action" href="./comunidade.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg><span>COMUNIDADE</span></a>
+<a class="portal-action profile-action" href="./perfil.html"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>MEU PERFIL</span></a>
+</div>
 <p id="account"></p>
 <button class="primary" id="logout" type="button">SAIR DA CONTA</button>
 </section>
