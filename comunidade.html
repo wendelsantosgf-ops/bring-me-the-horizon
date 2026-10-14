@@ -283,7 +283,49 @@ async function drawCharacterPost(area,c){
  const actions=el('div','post-actions');
  const view=link('./perfil.html?id='+encodeURIComponent(c.profile_id)+'&character='+encodeURIComponent(c.id),'✦ Ver ficha completa');
  view.className='button';view.style.cssText='display:inline-flex;align-items:center;padding:11px 17px;border:1px solid #a94e70;border-radius:10px;background:#351c2c;color:#fff;text-decoration:none;font-weight:700';
- actions.append(view);card.append(actions);area.append(card);
+ actions.append(view);card.append(actions);
+ const reactions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','♧ Não curtir'),count=el('span','muted',''),toggle=el('button','','▤ Comentários');
+ like.type=dislike.type=toggle.type='button';
+ reactions.append(like,dislike,count,toggle);card.append(reactions);
+ const comments=el('div','social-comments');comments.hidden=true;
+ const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
+ input.placeholder='Escreva um comentário sobre '+name+'...';input.maxLength=2000;input.required=true;send.type='submit';
+ form.append(input,send);comments.append(list,form,feedback);card.append(comments);area.append(card);
+ toggle.setAttribute('aria-expanded','false');
+ toggle.onclick=()=>{comments.hidden=!comments.hidden;toggle.setAttribute('aria-expanded',String(!comments.hidden));if(!comments.hidden)refreshComments()};
+ async function refreshReactions(){
+  const {data,error}=await db.from('character_reactions').select('user_id,reaction').eq('character_id',c.id);
+  if(error){count.textContent='Interações indisponíveis: execute o SQL character_feed_interactions.sql';like.disabled=dislike.disabled=true;return}
+  const mine=(data||[]).find(x=>x.user_id===user.id)?.reaction;
+  like.textContent=mine==='like'?'♥ Curtido':'♡ Curtir';dislike.textContent=mine==='dislike'?'♧ Não curtiu':'♧ Não curtir';
+  like.dataset.active=String(mine==='like');dislike.dataset.active=String(mine==='dislike');
+  count.textContent=(data||[]).filter(x=>x.reaction==='like').length+' curtidas · '+(data||[]).filter(x=>x.reaction==='dislike').length+' dislikes';
+ }
+ async function react(kind){
+  like.disabled=dislike.disabled=true;feedback.textContent='';
+  const active=(kind==='like'?like:dislike).dataset.active==='true';
+  const query=active?db.from('character_reactions').delete().eq('character_id',c.id).eq('user_id',user.id):db.from('character_reactions').upsert({character_id:c.id,user_id:user.id,reaction:kind},{onConflict:'character_id,user_id'});
+  const {error}=await query;if(error)feedback.textContent='Erro ao reagir: '+error.message;
+  await refreshReactions();like.disabled=dislike.disabled=false;
+ }
+ like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
+ async function refreshComments(){
+  const {data,error}=await db.from('character_comments').select('user_id,content,created_at').eq('character_id',c.id).order('created_at',{ascending:true}).limit(80);
+  list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
+  if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
+  for(const item of data||[]){
+   const comment=el('div','comment'),author=profiles.get(item.user_id);
+   comment.append(el('strong','',author?.display_name||'Limpador'),el('small','',' · '+new Date(item.created_at).toLocaleString('pt-BR')),el('div','',item.content));list.append(comment);
+  }
+ }
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;feedback.textContent='';
+  const {error}=await db.from('character_comments').insert({character_id:c.id,user_id:user.id,content});
+  if(error)feedback.textContent='Erro ao comentar: '+error.message;
+  else{input.value='';feedback.textContent='Comentário enviado.';await refreshComments()}
+  send.disabled=false;
+ });
+ await refreshReactions();
 }
 async function drawPost(area,w){const card=el('article','post');const c=characterProfiles.get(w.character_id);const owner=[...profiles.values()].find(p=>p.id===c?.profile_id);const displayName=[c?.first_name,c?.last_name].filter(Boolean).join(' ')||'Limpador desconhecido';const head=el('div','post-head');const identity=el('div','post-identity');const avatarUrl=safeUrl(owner?.avatar_url);if(avatarUrl){const av=el('img','post-avatar');av.src=avatarUrl;av.alt='';av.onerror=()=>{av.replaceWith(el('span','post-avatar',displayName.charAt(0).toUpperCase()))};identity.append(av)}else identity.append(el('span','post-avatar',displayName.charAt(0).toUpperCase()));const by=el('div');const name=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),displayName):el('span','',displayName);const line=el('div','post-byline');line.append(name);by.append(line,el('div','post-time',new Date(w.created_at).toLocaleDateString('pt-BR')+' · Registro de habilidade'));identity.append(by);head.append(identity);card.append(head);
  if(owner?.user_id===user.id||isAdmin){
