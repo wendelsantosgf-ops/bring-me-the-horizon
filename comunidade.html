@@ -247,18 +247,43 @@ async function loadPeople(){
 
 async function loadPosts(){
  const area=$('posts');area.replaceChildren();
- const [wikiResult,socialResult]=await Promise.all([
+ const [wikiResult,socialResult,characterResult]=await Promise.all([
   db.from('ability_wikis').select('id,character_id,title,description,category,limitations,cover_image,created_at').order('created_at',{ascending:false}).limit(40),
-  db.from('community_posts').select('id,user_id,content,image_url,created_at').order('created_at',{ascending:false}).limit(40)
+  db.from('community_posts').select('id,user_id,content,image_url,created_at').order('created_at',{ascending:false}).limit(40),
+  db.from('characters').select('id,profile_id,first_name,last_name,age,spiritual_energy,appearance,history,portrait_url,created_at').order('created_at',{ascending:false}).limit(40)
  ]);
  if(wikiResult.error){area.append(el('p','muted','Erro ao carregar Wikis: '+wikiResult.error.message))}
  if(socialResult.error){area.append(el('p','muted','Postagens sociais aguardando configuração do Supabase. Execute supabase/community_social_feed.sql para ativá-las.'))}
- const wikis=wikiResult.data||[],social=socialResult.data||[];
+ if(characterResult.error)area.append(el('p','muted','Não foi possível carregar fichas recentes: '+characterResult.error.message));
+ const wikis=wikiResult.data||[],social=socialResult.data||[],characters=characterResult.data||[];
  const ids=[...new Set(wikis.map(w=>w.character_id).filter(Boolean))];characterProfiles=new Map();
  if(ids.length){const {data:owners}=await db.from('characters').select('id,first_name,last_name,profile_id').in('id',ids);for(const c of owners||[])characterProfiles.set(c.id,c)}
- const entries=[...wikis.map(w=>({kind:'wiki',item:w})),...social.map(p=>({kind:'social',item:p}))].sort((a,b)=>new Date(b.item.created_at)-new Date(a.item.created_at));
+ const entries=[...wikis.map(w=>({kind:'wiki',item:w})),...social.map(p=>({kind:'social',item:p})),...characters.map(c=>({kind:'character',item:c}))].sort((a,b)=>new Date(b.item.created_at)-new Date(a.item.created_at));
  if(!entries.length&&!wikiResult.error&&!socialResult.error)area.append(el('div','panel','Ainda não há publicações. Seja o primeiro a compartilhar algo com os Limpadores.'));
- for(const entry of entries){if(entry.kind==='wiki')await drawPost(area,entry.item);else await drawSocialPost(area,entry.item)}
+ for(const entry of entries){if(entry.kind==='wiki')await drawPost(area,entry.item);else if(entry.kind==='character')await drawCharacterPost(area,entry.item);else await drawSocialPost(area,entry.item)}
+}
+async function drawCharacterPost(area,c){
+ const card=el('article','post');
+ const owner=[...profiles.values()].find(p=>p.id===c.profile_id);
+ const name=[c.first_name,c.last_name].filter(Boolean).join(' ')||'Personagem sem nome';
+ const head=el('div','post-head'),identity=el('div','post-identity');
+ const avatar=safeUrl(owner?.avatar_url);
+ if(avatar){const img=el('img','post-avatar');img.src=avatar;img.alt='';identity.append(img)}
+ else identity.append(el('span','post-avatar',name.charAt(0)));
+ const by=el('div');const author=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),owner.display_name||'Limpador'):el('span','','Limpador');
+ by.append(author,el('div','post-time',new Date(c.created_at).toLocaleDateString('pt-BR')+' · Nova ficha de personagem'));
+ identity.append(by);head.append(identity);card.append(head);
+ card.append(el('div','tag post-tag','✦ NOVO PERSONAGEM'));
+ card.append(el('h3','post-title',name));
+ const description=[c.spiritual_energy?'Energia: '+c.spiritual_energy:null,c.age!=null?'Idade: '+c.age:null].filter(Boolean).join(' · ');
+ if(description)card.append(el('p','post-description',description));
+ if(c.history)card.append(el('p','post-description',c.history.length>420?c.history.slice(0,417)+'...':c.history));
+ const media=el('div','post-media');const portrait=safeUrl(c.portrait_url);
+ if(portrait){const img=el('img');img.src=portrait;img.alt='Retrato de '+name;img.loading='lazy';img.style.objectFit='contain';img.style.maxHeight='520px';img.onerror=()=>media.remove();media.append(img);card.append(media)}
+ const actions=el('div','post-actions');
+ const view=link('./perfil.html?id='+encodeURIComponent(c.profile_id)+'&character='+encodeURIComponent(c.id),'✦ Ver ficha completa');
+ view.className='button';view.style.cssText='display:inline-flex;align-items:center;padding:11px 17px;border:1px solid #a94e70;border-radius:10px;background:#351c2c;color:#fff;text-decoration:none;font-weight:700';
+ actions.append(view);card.append(actions);area.append(card);
 }
 async function drawPost(area,w){const card=el('article','post');const c=characterProfiles.get(w.character_id);const owner=[...profiles.values()].find(p=>p.id===c?.profile_id);const displayName=[c?.first_name,c?.last_name].filter(Boolean).join(' ')||'Limpador desconhecido';const head=el('div','post-head');const identity=el('div','post-identity');const avatarUrl=safeUrl(owner?.avatar_url);if(avatarUrl){const av=el('img','post-avatar');av.src=avatarUrl;av.alt='';av.onerror=()=>{av.replaceWith(el('span','post-avatar',displayName.charAt(0).toUpperCase()))};identity.append(av)}else identity.append(el('span','post-avatar',displayName.charAt(0).toUpperCase()));const by=el('div');const name=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),displayName):el('span','',displayName);const line=el('div','post-byline');line.append(name);by.append(line,el('div','post-time',new Date(w.created_at).toLocaleDateString('pt-BR')+' · Registro de habilidade'));identity.append(by);head.append(identity);card.append(head);
  if(owner?.user_id===user.id||isAdmin){
