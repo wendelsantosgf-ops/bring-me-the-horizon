@@ -247,7 +247,22 @@
 @media(prefers-reduced-motion:reduce){.archive-slide{transition:none}}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile1">
-<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"></head>
+<link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"><style>
+@media(max-width:700px){
+ .archive-carousel{width:calc(100% - 24px)!important;margin:16px auto 36px!important}
+ .archive-stage{aspect-ratio:16/9!important;overflow:hidden!important;background:#0a0810!important}
+ .archive-slide--shinjuku,.archive-slide--imaginary,.archive-slide--zones,.archive-slide--cleaners{background-size:contain!important;background-position:center center!important;background-repeat:no-repeat!important}
+ .archive-slide--shinjuku .archive-slide-copy{display:none!important}
+ .archive-slide--imaginary .archive-slide-copy{left:5%;bottom:7%;max-width:62%}
+ .archive-slide--imaginary .archive-slide-copy h2{font-size:clamp(15px,4vw,23px);margin:4px 0}
+ .archive-slide--imaginary .archive-slide-copy p{display:none}
+ .archive-controls{right:2%;bottom:3%;gap:6px}
+ .archive-arrow{width:35px;height:35px;font-size:20px}
+ .hero h1{font-size:clamp(34px,9vw,58px)!important;line-height:1.1!important;overflow-wrap:break-word}
+ .hero-actions{display:flex;flex-wrap:wrap;gap:10px}
+ .hero-actions a{flex:1 1 145px;min-width:0;text-align:center}
+}
+</style></head>
 <body class="manual-page">
   <div class="ambient"></div>
   <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html" aria-current="page"><span class="bmth-icon" aria-hidden="true">▧</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html"><span class="bmth-icon" aria-hidden="true">✧</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon" aria-hidden="true">◇</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
@@ -486,5 +501,5 @@
 
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(()=>{}))}</script><nav class="bmth-mobile-nav" aria-label="Navegação mobile"><a href="./index.html" aria-current="page"><span class="bmth-mobile-icon" aria-hidden="true">⌂</span><span>Início</span></a><a href="./comunidade.html"><span class="bmth-mobile-icon" aria-hidden="true">☷</span><span>Feed</span></a><a href="./personagens.html"><span class="bmth-mobile-icon" aria-hidden="true">♟</span><span>Fichas</span></a><a href="./perfil.html"><span class="bmth-mobile-icon" aria-hidden="true">♙</span><span>Perfil</span></a><a href="./admin.html"><span class="bmth-mobile-icon" aria-hidden="true">⚙</span><span>Central</span></a></nav></body>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(()=>{}))}</script><nav class="bmth-mobile-nav" aria-label="Navegação mobile"><a href="./index.html" aria-current="page"><span class="bmth-mobile-icon" aria-hidden="true">⌂</span><span>Início</span></a><a href="./comunidade.html"><span class="bmth-mobile-icon" aria-hidden="true">▤</span><span>Feed</span></a><a href="./personagens.html"><span class="bmth-mobile-icon" aria-hidden="true">✦</span><span>Fichas</span></a><a href="./perfil.html"><span class="bmth-mobile-icon" aria-hidden="true">◎</span><span>Perfil</span></a><a href="./admin.html"><span class="bmth-mobile-icon" aria-hidden="true">⚙</span><span>Central</span></a></nav></body>
 </html>
