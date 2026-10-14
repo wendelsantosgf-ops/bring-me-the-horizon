@@ -57,6 +57,17 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 <div class="profile-content" id="visao-geral"><section class="card section about"><h2><span>♟</span> SOBRE MIM</h2><div class="about-note">O Imaginário registra aqueles que ousam atravessá-lo.</div><div id="customCards" class="custom-cards"></div><p>✥ &nbsp; Limpador registrado</p><p>◈ &nbsp; <a href="./comunidade.html">Explorar a comunidade</a></p></section><section id="personagens" class="card section characters-panel"><div class="section-heading"><h2><span>♜</span> PERSONAGENS</h2><a href="./personagens.html">Ver todos →</a></div><div id="characters" class="grid"></div><div class="create-action"><a href="./personagens.html">＋ CRIAR PERSONAGEM</a></div></section></div>
 </div>
 </main>
+<div id="sheetModal" class="sheet-modal" hidden role="presentation">
+ <section id="sheetDialog" class="sheet-dialog" role="dialog" aria-modal="true" aria-labelledby="sheetName" tabindex="-1">
+  <button id="sheetClose" class="sheet-close" type="button" aria-label="Fechar ficha">×</button>
+  <header class="sheet-head"><div class="sheet-kicker">✧ ARQUIVO DOS LIMPADORES</div><h2 id="sheetName"></h2></header>
+  <div class="sheet-grid"><div id="sheetPortrait" class="sheet-portrait"></div><div class="sheet-facts" id="sheetFacts"></div></div>
+  <div class="sheet-block"><h3>PROGRESSÃO</h3><div class="sheet-meter"><b id="sheetRank"></b><div class="track"><i id="sheetFill" style="width:0%"></i></div></div><p id="sheetXP"></p></div>
+  <div class="sheet-block"><h3>APARÊNCIA</h3><p id="sheetAppearance"></p></div>
+  <div class="sheet-block"><h3>HISTÓRIA</h3><p id="sheetHistory"></p></div>
+  <p class="sheet-foot">BRING ME THE HORIZON · 清掃者</p>
+ </section>
+</div>
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
