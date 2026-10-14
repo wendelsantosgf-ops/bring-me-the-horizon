@@ -51,3 +51,25 @@ body.login-page>main{border-radius:22px;overflow:hidden;border-color:#703649;bac
 body.login-page .primary{border-radius:11px}
 @media(max-width:860px){.bmth-header{backdrop-filter:none}.bmth-nav{scroll-snap-type:x proximity}.bmth-nav a{scroll-snap-align:start}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}a,button{transition:none!important}}
+
+/* BMTH mobile app shell: desktop remains untouched. */
+.bmth-mobile-nav{display:none}
+@media(max-width:700px){
+ html{scroll-padding-top:72px}
+ body{overflow-x:hidden;padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))}
+ .bmth-header{min-height:62px!important;padding:10px 15px!important;gap:8px!important}
+ .bmth-header .bmth-brandwords b{font-size:21px!important}
+ .bmth-header .bmth-sigil{font-size:30px!important}
+ .bmth-header .bmth-brandwords small{font-size:8px!important;letter-spacing:.12em!important}
+ .bmth-header .bmth-nav{display:none!important}
+ .bmth-account{padding:8px 10px!important;max-width:42vw;overflow:hidden;text-overflow:ellipsis}
+ body:not(.manual-page) main{max-width:100%;min-width:0}
+ body:not(.manual-page) main .card,body:not(.manual-page) main .panel,body:not(.manual-page) main .formbox{border-radius:13px}
+ body:not(.manual-page) input,body:not(.manual-page) textarea,body:not(.manual-page) select{font-size:16px}
+ img,video{max-width:100%}
+ .bmth-mobile-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:9999;padding:7px max(7px,env(safe-area-inset-right,0px)) calc(7px + env(safe-area-inset-bottom,0px)) max(7px,env(safe-area-inset-left,0px));background:#100b13f5;border-top:1px solid #71354b;box-shadow:0 -12px 32px #000b;backdrop-filter:blur(18px)}
+ .bmth-mobile-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:0;min-height:53px;color:#c5b4c1;text-decoration:none;border-radius:10px;font:700 10px 'DM Sans',system-ui,sans-serif;letter-spacing:.01em}
+ .bmth-mobile-nav a .bmth-mobile-icon{font-size:22px;line-height:1.1;color:#dd8198}
+ .bmth-mobile-nav a[aria-current="page"]{color:#fff;background:#5c203a}
+ .bmth-mobile-nav a:focus-visible{outline:2px solid #ff9fb6}
+}
