@@ -88,7 +88,7 @@ body .layout>.community-sidebar{grid-column:1;grid-row:1;position:sticky;top:18p
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
-const $=id=>document.getElementById(id);let user=null;let profiles=new Map();let characterProfiles=new Map();let featuredProfiles=[];let featuredIndex=0;
+const $=id=>document.getElementById(id);let user=null;let profiles=new Map();let characterProfiles=new Map();let featuredProfiles=[];
 $('composerToggle').addEventListener('click',()=>{const opened=$('composerPanel').hidden;$('composerPanel').hidden=!opened;$('composerToggle').setAttribute('aria-expanded',String(opened));$('composerToggle').textContent=opened?'✕ Fechar':'＋ Nova publicação';if(opened)$('composerPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
 function link(href,label){const a=el('a','',label);a.href=href;return a}
@@ -173,21 +173,6 @@ async function init(){const {data:{user:u},error}=await db.auth.getUser();user=u
 async function loadOwnCharacters(){const select=$('wikiCharacter');const {data:myProfile,error:pe}=await db.from('profile').select('id').eq('user_id',user.id).maybeSingle();if(pe||!myProfile){$('wikiStatus').textContent='Crie seu perfil e personagem antes de publicar.';return}const {data,error}=await db.from('characters').select('id,first_name,last_name').eq('profile_id',myProfile.id);if(error){$('wikiStatus').textContent=error.message;return}select.replaceChildren();for(const c of data||[]){const o=document.createElement('option');o.value=c.id;o.textContent=[c.first_name,c.last_name].filter(Boolean).join(' ');select.append(o)}if(!data?.length){$('wikiStatus').textContent='Você precisa criar um personagem antes de publicar uma Wiki.';$('wikiPublish').disabled=true}}
 let coverPreviewUrl=null;$('wikiCoverFile').addEventListener('change',()=>{if(coverPreviewUrl)URL.revokeObjectURL(coverPreviewUrl);const file=$('wikiCoverFile').files[0],img=$('wikiCoverPreview');coverPreviewUrl=file?URL.createObjectURL(file):null;img.hidden=!file;if(file)img.src=coverPreviewUrl;else img.removeAttribute('src')});
 $('wikiForm').addEventListener('submit',async e=>{e.preventDefault();const character_id=$('wikiCharacter').value,title=$('wikiTitle').value.trim(),description=$('wikiDescription').value.trim(),category=$('wikiCategory').value.trim()||'HABILIDADE',limitations=$('wikiLimitations').value.trim(),cover_image=$('wikiCover').value.trim()||null;if(!character_id||!title||!description){$('wikiStatus').textContent='Preencha personagem, título e descrição.';return}const button=$('wikiPublish');button.disabled=true;let imageUrl=cover_image;const file=$('wikiCoverFile').files[0];if(file){if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024){$('wikiStatus').textContent='Use JPG, PNG ou WEBP de até 5 MB.';button.disabled=false;return}const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];const objectPath=user.id+'/'+crypto.randomUUID()+'.'+ext;const {error:uploadError}=await db.storage.from('wiki-images').upload(objectPath,file,{contentType:file.type,upsert:false});if(uploadError){$('wikiStatus').textContent='Erro no upload: '+uploadError.message+'. Verifique o SQL de armazenamento no Supabase.';button.disabled=false;return}imageUrl=db.storage.from('wiki-images').getPublicUrl(objectPath).data.publicUrl}const {error}=await db.from('ability_wikis').insert({character_id,title,description,category,limitations,cover_image:imageUrl});button.disabled=false;if(error){$('wikiStatus').textContent='Erro ao publicar: '+error.message;return}$('wikiForm').reset();$('wikiCoverPreview').hidden=true;if(coverPreviewUrl){URL.revokeObjectURL(coverPreviewUrl);coverPreviewUrl=null}$('wikiStatus').textContent='Wiki publicada!';$('composerPanel').hidden=true;$('composerToggle').textContent='＋ Nova publicação';$('composerToggle').setAttribute('aria-expanded','false');await loadPosts()});
-function renderShowcase(index){
- if(!featuredProfiles.length)return;
- featuredIndex=(index+featuredProfiles.length)%featuredProfiles.length;
- const p=featuredProfiles[featuredIndex],stage=$('showcaseStage');
- const image=safeUrl(p.banner_url)||safeUrl(p.avatar_url);
- stage.style.backgroundImage=image?'linear-gradient(90deg,rgba(9,7,12,.94) 0%,rgba(9,7,12,.68) 48%,rgba(9,7,12,.08) 100%),url("'+image.replace(/["\\]/g,'')+'")':'linear-gradient(115deg,#37131f,#19101a 55%,#09080d)';
- $('showcaseName').textContent=p.display_name||'Limpador';
- $('showcaseTagline').textContent=p.tagline||p.bio||'Um novo registro no horizonte do Imaginário.';
- $('showcaseLink').href='./perfil.html?id='+encodeURIComponent(p.id);
- $('showcaseIndex').textContent='REGISTRO '+String(featuredIndex+1).padStart(2,'0')+' / '+String(featuredProfiles.length).padStart(2,'0');
- const dots=$('showcaseDots');dots.replaceChildren();
- featuredProfiles.forEach((entry,k)=>{const b=el('button','showcase-dot'+(k===featuredIndex?' active':''));b.type='button';b.setAttribute('aria-label','Exibir '+(entry.display_name||'Limpador'));b.setAttribute('aria-pressed',String(k===featuredIndex));b.onclick=()=>renderShowcase(k);dots.append(b)});
-}
-$('showcasePrev').addEventListener('click',()=>renderShowcase(featuredIndex-1));
-$('showcaseNext').addEventListener('click',()=>renderShowcase(featuredIndex+1));
 async function loadPeople(){
  const {data,error}=await db.from('profile').select('id,user_id,display_name,bio,avatar_url,banner_url').order('created_at',{ascending:false}).limit(40);
  const area=$('people');area.replaceChildren();
