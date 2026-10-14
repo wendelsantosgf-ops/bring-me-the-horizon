@@ -21,7 +21,7 @@ create policy bmth_notifications_delete on public.bmth_notifications for delete 
 -- Notifications are generated server-side; players cannot forge messages to other users.
 create or replace function public.bmth_notify_character_event() returns trigger
 language plpgsql security definer set search_path=public,pg_temp as $$
-declare owner_user uuid; actor uuid; char_name text;
+declare owner_user uuid; actor uuid; char_name text; character_profile uuid;
 begin
  if TG_TABLE_NAME='characters' then
   select p.user_id into actor from public.profile p where p.id=new.profile_id;
@@ -30,11 +30,11 @@ begin
   select p.user_id,actor,'new_character','Nova ficha: '||char_name,'./perfil.html?id='||new.profile_id::text||'&character='||new.id::text
   from public.profile p where p.user_id<>actor;
  elsif TG_TABLE_NAME='character_comments' then
-  select p.user_id,trim(coalesce(c.first_name,'')||' '||coalesce(c.last_name,'')) into owner_user,char_name
+  select p.user_id,trim(coalesce(c.first_name,'')||' '||coalesce(c.last_name,'')),c.profile_id into owner_user,char_name,character_profile
   from public.characters c join public.profile p on p.id=c.profile_id where c.id=new.character_id;
   if owner_user is not null and owner_user<>new.user_id then
    insert into public.bmth_notifications(recipient_id,actor_id,kind,title,href)
-   values(owner_user,new.user_id,'character_comment','Comentaram na ficha de '||char_name,'./perfil.html?character='||new.character_id::text);
+   values(owner_user,new.user_id,'character_comment','Comentaram na ficha de '||char_name,'./perfil.html?id='||character_profile::text||'&character='||new.character_id::text);
   end if;
  elsif TG_TABLE_NAME='character_reactions' then
   select p.user_id,trim(coalesce(c.first_name,'')||' '||coalesce(c.last_name,'')) into owner_user,char_name
