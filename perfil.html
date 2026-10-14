@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0a10">
+<title>Perfil dos Limpadores | Bring Me the Horizon</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0a10;--panel:#17131e;--line:#393044;--red:#ed4d68;--muted:#b8aebf}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#321b36,transparent 50%),var(--bg);color:#f7f1fa;font:15px/1.55 Inter,system-ui,sans-serif}
+a{color:#f6a6b4}header{padding:18px max(18px,calc((100vw - 900px)/2));border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;background:#0b0a10dc}header a{text-decoration:none}
+main{max-width:900px;margin:28px auto;padding:0 16px}.eyebrow{color:var(--red);font-size:12px;letter-spacing:.2em;font-weight:800}.card{border:1px solid var(--line);background:var(--panel);margin:0 0 20px;overflow:hidden}.cover{height:210px;background:linear-gradient(130deg,#641c40,#261531 60%,#141019);background-position:center;background-size:cover}.profile{padding:0 24px 24px}.avatar{width:108px;height:108px;object-fit:cover;border:5px solid var(--panel);border-radius:50%;background:#42273d;margin-top:-54px;position:relative}.name{font-size:1.8rem;font-weight:800;margin:8px 0 0}.muted,small{color:var(--muted)}.section{padding:22px}.section h2{margin:0 0 15px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.tile{padding:18px;border:1px solid var(--line);background:#211b29}.tile h3{margin:0}.rank{font-size:1.6rem;font-weight:900;color:#ff8ca1}.bar{height:10px;background:#342a3c;margin:10px 0;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#a61f3d,#ed4d68)}button{background:#a92843;color:white;border:1px solid #bb4960;padding:10px 16px;font:inherit;cursor:pointer}button:disabled{opacity:.6}input,textarea{display:block;width:100%;margin:6px 0 14px;padding:11px;background:#0b0a10;border:1px solid #55455c;color:white;font:inherit}label{display:block;margin-top:12px}#notice{color:#f6a6b4;min-height:22px}[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><strong>BMTH <span style="color:#ed4d68">/ LIMPADORES</span></strong><nav><a href="./index.html.html">Manual</a> · <a href="./login.html">Conta</a></nav></header>
+<main>
+<p class="eyebrow">ARQUIVO DOS LIMPADORES / PERFIL</p>
+<p id="notice" role="status" aria-live="polite">Carregando perfil...</p>
+<div id="page" hidden>
+<article class="card"><div id="cover" class="cover"></div><div class="profile">
+<img id="avatar" class="avatar" alt="Avatar do jogador">
+<div id="displayName" class="name"></div><p id="bio" class="muted"></p><small id="member"></small>
+<p><button id="editButton" type="button" hidden>Editar meu perfil</button></p>
+</div></article>
+<section id="editor" class="card section" hidden><h2>Editar perfil</h2>
+<form id="profileForm">
+<label>Nome de exibição<input id="nameInput" maxlength="60" required></label>
+<label>Biografia<textarea id="bioInput" maxlength="1000" rows="4"></textarea></label>
+<label>URL da imagem do avatar<input id="avatarInput" type="url" placeholder="https://..."></label>
+<label>URL da imagem de capa<input id="bannerInput" type="url" placeholder="https://..."></label>
+<button id="saveButton" type="submit">Salvar alterações</button>
+</form><small>Por enquanto, as imagens são adicionadas por URL. O upload direto virá depois.</small></section>
+<section class="card section"><h2>Personagens</h2><div id="characters" class="grid"></div></section>
+</div>
+</main>
+<script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
+const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
+const $=id=>document.getElementById(id),notice=text=>$('notice').textContent=text;
+const params=new URLSearchParams(location.search),requested=params.get('id');
+let user=null,profile=null;
+const {data:auth,error:authError}=await db.auth.getUser();user=auth?.user;
+if(authError||!user){notice('Faça login para visualizar perfis.');const a=document.createElement('a');a.href='./login.html';a.textContent=' Entrar';$('notice').append(a)}
+else{
+ const {data:own,error:ownError}=await db.from('profile').select('id').eq('user_id',user.id).maybeSingle();
+ if(ownError){notice('Erro ao consultar sua conta: '+ownError.message)}
+ else{
+  const result=requested?await db.from('profile').select('id,user_id,display_name,bio,avatar_url,banner_url,created_at').eq('id',requested).maybeSingle():own?await db.from('profile').select('id,user_id,display_name,bio,avatar_url,banner_url,created_at').eq('id',own.id).maybeSingle():{data:null,error:null};
+  if(result.error)notice('Erro ao carregar perfil: '+result.error.message);
+  else if(result.data){profile=result.data;await render()}
+  else if(requested)notice('Perfil não encontrado.');
+  else{
+   const {data,error}=await db.from('profile').insert({user_id:user.id,display_name:(user.email||'Limpador').split('@')[0]}).select('id,user_id,display_name,bio,avatar_url,banner_url,created_at').single();
+   if(error)notice('Não foi possível criar seu perfil: '+error.message);
+   else{profile=data;await render()}
+  }
+ }
+}
+function imageUrl(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
+async function render(){
+ $('page').hidden=false;notice('');
+ $('displayName').textContent=profile.display_name||'Limpador';
+ $('bio').textContent=profile.bio||'Este Limpador ainda não escreveu sua história.';
+ $('member').textContent='Membro desde '+new Date(profile.created_at).toLocaleDateString('pt-BR');
+ const fallback='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="120" height="120" fill="#382239"/><text x="60" y="77" text-anchor="middle" font-size="58" fill="#ff91a4">✦</text></svg>');
+ $('avatar').src=imageUrl(profile.avatar_url)||fallback;
+ const banner=imageUrl(profile.banner_url);$('cover').style.backgroundImage=banner?'linear-gradient(0deg,#100c18b0,transparent),url('+JSON.stringify(banner)+')':'';
+ $('editButton').hidden=profile.user_id!==user.id;
+ const {data:characters,error}=await db.from('characters').select('id,first_name,last_name,spiritual_energy').eq('profile_id',profile.id).order('created_at',{ascending:false});
+ if(error){$('characters').textContent='Não foi possível carregar os personagens: '+error.message;return}
+ $('characters').replaceChildren();
+ if(!characters?.length){$('characters').textContent='Nenhum personagem cadastrado ainda.';return}
+ for(const c of characters){
+  const tile=document.createElement('div');tile.className='tile';
+  const title=document.createElement('h3');title.textContent=[c.first_name,c.last_name].filter(Boolean).join(' ')||'Sem nome';tile.append(title);
+  const energy=document.createElement('p');energy.className='muted';energy.textContent='Energia: '+(c.spiritual_energy||'Não definida');tile.append(energy);
+  const {data:progress}=await db.from('character_progression').select('rank,xp').eq('character_id',c.id).maybeSingle();
+  if(progress){const rank=document.createElement('div');rank.className='rank';rank.textContent='Rank '+progress.rank;tile.append(rank);
+   const bar=document.createElement('div');bar.className='bar';const fill=document.createElement('div');fill.className='fill';fill.style.width=(progress.rank==='A'?100:Math.min(100,Math.max(0,progress.xp%100)))+'%';bar.append(fill);tile.append(bar);
+   const xp=document.createElement('small');xp.textContent=progress.rank==='A'?progress.xp+' XP acumulados':(progress.xp%100)+' / 100 XP';tile.append(xp)}
+  $('characters').append(tile);
+ }
+}
+$('editButton').addEventListener('click',()=>{
+ const opening=$('editor').hidden;$('editor').hidden=!opening;
+ if(opening){$('nameInput').value=profile.display_name||'';$('bioInput').value=profile.bio||'';$('avatarInput').value=profile.avatar_url||'';$('bannerInput').value=profile.banner_url||'';$('editor').scrollIntoView({behavior:'smooth'})}
+});
+$('profileForm').addEventListener('submit',async event=>{
+ event.preventDefault();$('saveButton').disabled=true;
+ const patch={display_name:$('nameInput').value.trim(),bio:$('bioInput').value.trim(),avatar_url:$('avatarInput').value.trim()||null,banner_url:$('bannerInput').value.trim()||null};
+ const {data,error}=await db.from('profile').update(patch).eq('id',profile.id).eq('user_id',user.id).select('id,user_id,display_name,bio,avatar_url,banner_url,created_at').single();
+ $('saveButton').disabled=false;
+ if(error)notice('Erro ao salvar: '+error.message);else{profile=data;$('editor').hidden=true;await render();notice('Perfil atualizado com sucesso.')}
+});
+</script>
+</body></html>
