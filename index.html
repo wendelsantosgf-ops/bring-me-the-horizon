@@ -192,6 +192,13 @@
 .hero-art .art-caption,.hero-art .art-index{display:none!important}
 @media(max-width:850px){.hero-art{min-height:320px;background-position:60% center!important}}
 @media(max-width:560px){.hero-art{min-height:275px;background-position:60% center!important}}
+
+/* Banner de Shinjuku em proporção cinematográfica, abaixo das ações */
+.hero{display:block!important;padding-bottom:28px!important}
+.hero>div:first-child{max-width:880px}
+.hero h1{max-width:850px}
+.hero-art{width:calc(100% - 48px);max-width:var(--max);margin:0 auto 42px;aspect-ratio:16/9;min-height:0!important;background-position:center center!important;background-size:cover!important}
+@media(max-width:560px){.hero-art{width:calc(100% - 32px);margin-bottom:32px;aspect-ratio:16/9}}
 </style>
 <link rel="stylesheet" href="./theme.css?v=1">
 </head>
@@ -209,15 +216,17 @@
         <a class="btn btn-ghost" href="./comunidade.html">COMUNIDADE ↗</a>
       </div>
     </div>
-    <div class="hero-art" aria-label="Representação abstrata de uma ruptura dimensional">
+
+    </div>
+  </section>
+
+  <div class="hero-art" aria-label="Representação abstrata de uma ruptura dimensional">
       <div class="art-index">BMTH / ARCHIVE 00.1</div>
       <div class="portal"></div>
       <div class="art-caption">
         <strong>REALIDADE // INSTÁVEL</strong>
         <small>Nem tudo que pode ser imaginado deveria existir.</small>
       </div>
-    </div>
-  </section>
 
   <nav class="quick-nav" aria-label="Atalhos dos sistemas">
     <a href="#nucleo"><b>00 / Núcleo: Japão</b><small>Universo e origem das Zonas</small></a>
