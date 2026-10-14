@@ -8,3 +8,11 @@ h1,h2,h3{font-family:'Cinzel',Georgia,serif;letter-spacing:.025em}a{transition:c
 body:not(.manual-page) main{max-width:1350px}body:not(.manual-page) .card,body:not(.manual-page) .panel,body:not(.manual-page) .post,body:not(.manual-page) .formbox{border-color:#39313b;background:linear-gradient(145deg,#17141c,#0e0e13);box-shadow:0 15px 50px #0003}body:not(.manual-page) input,body:not(.manual-page) textarea{border-radius:7px}body:not(.manual-page) button{border-radius:6px}body:not(.manual-page) .eyebrow{color:#ef506c;letter-spacing:.22em}
 @media(max-width:1180px){.bmth-brandwords b{font-size:23px}.bmth-nav a{padding:10px 9px;font-size:10px}.bmth-nav a small{font-size:8px}.bmth-account{font-size:10px}}
 @media(max-width:860px){.bmth-header{padding:13px 15px;flex-wrap:wrap;gap:10px}.bmth-brandwords b{font-size:24px}.bmth-account{margin-left:auto}.bmth-nav{order:3;width:100%;overflow-x:auto;justify-content:flex-start;scrollbar-width:thin}.bmth-nav a{min-height:66px;padding:9px 15px}.bmth-nav a .bmth-icon{font-size:20px}}
+
+/* Portal: preserve centered form below the global header */
+body.login-page{display:block;padding:0;min-height:100vh}
+body.login-page>main{width:min(calc(100% - 32px),470px);margin:clamp(36px,6vw,80px) auto;padding:36px;background:linear-gradient(145deg,#1c151e,#100e15);border:1px solid #51313e;box-shadow:0 30px 90px #0008}
+body.login-page h1{font:600 clamp(25px,3vw,35px) 'Cinzel',Georgia,serif}
+body.login-page .bmth-header{width:100%}
+body.login-page .primary{background:linear-gradient(110deg,#921c34,#c23450);border-radius:5px}
+body.login-page .secondary{color:#ef8194}
