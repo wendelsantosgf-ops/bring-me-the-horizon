@@ -76,6 +76,9 @@ body .layout>.community-sidebar{grid-column:1;grid-row:1;position:sticky;top:18p
 .social-comments[hidden]{display:none}
 .social-post .post-head{margin-bottom:16px}
 @media(max-width:560px){.social-composer{padding:14px!important}.social-composer-actions{gap:7px}.social-composer-actions button,.social-upload{padding:9px 10px;font-size:11px}.social-composer-actions #socialPublish{margin-left:0;flex:1}}
+</style><style>
+.owner-tools{display:flex;align-items:center;gap:7px;margin-left:auto;flex-wrap:wrap}.owner-tools button{border:1px solid #75465b;border-radius:9px;padding:7px 11px;background:#2b1b2a;color:#f6dce6;font-size:12px;cursor:pointer}.owner-tools button:hover{background:#74304b}.owner-tools .danger{border-color:#8b364b;color:#ffafbd}
+.owner-edit{padding:14px;margin:12px 0;border:1px solid #694058;background:#160e18;border-radius:12px}.owner-edit label{display:block;margin:8px 0 4px}.owner-edit input,.owner-edit textarea,.owner-edit select{width:100%;padding:10px;border:1px solid #664052;background:#0e0b12;color:white;border-radius:8px;font:inherit}.owner-edit textarea{min-height:90px}.owner-edit .owner-edit-actions{display:flex;gap:8px;margin-top:12px}.owner-edit button{padding:9px 14px;border-radius:8px;border:1px solid #9e4b69;background:#702642;color:#fff;cursor:pointer}.owner-edit button.secondary{background:#241925}.owner-edit .muted{margin-top:8px}
 </style></head><body>
 <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html"><span class="bmth-icon" aria-hidden="true">▧</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html" aria-current="page"><span class="bmth-icon" aria-hidden="true">✧</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon" aria-hidden="true">◇</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
 <main><div class="eyebrow">ARQUIVO SOCIAL // LIMPADORES</div><h1>Comunidade</h1><p class="muted">Conheça outros Limpadores, descubra habilidades e participe das conversas do Imaginário.</p>
@@ -132,12 +135,56 @@ $('socialForm').addEventListener('submit',async e=>{
  }catch(err){$('socialStatus').textContent='Não foi possível publicar: '+err.message+'. Confira se a migração SQL do feed foi executada.'}
  finally{button.disabled=false}
 });
+
+function ownerTools(onEdit,onDelete){
+ const tools=el('div','owner-tools'),edit=el('button','','✎ Editar'),del=el('button','danger','▤ Apagar');
+ edit.type=del.type='button';edit.onclick=onEdit;del.onclick=onDelete;tools.append(edit,del);return tools;
+}
+function editPanel(fields,onSave){
+ const panel=el('div','owner-edit'),form=el('form'),controls={};
+ for(const field of fields){
+  const label=el('label','',field.label),control=el(field.multiline?'textarea':'input');
+  if(!field.multiline)control.type=field.type||'text';
+  control.value=field.value??'';control.maxLength=field.maxLength||5000;
+  if(field.required)control.required=true;
+  label.append(control);form.append(label);controls[field.key]=control;
+ }
+ const actions=el('div','owner-edit-actions'),save=el('button','','Salvar alterações'),cancel=el('button','secondary','Cancelar'),feedback=el('p','muted');
+ save.type='submit';cancel.type='button';cancel.onclick=()=>panel.remove();actions.append(save,cancel);form.append(actions,feedback);panel.append(form);
+ form.onsubmit=async e=>{e.preventDefault();save.disabled=true;try{await onSave(Object.fromEntries(Object.entries(controls).map(([k,v])=>[k,v.value.trim()])));panel.remove();await loadPosts()}catch(err){feedback.textContent='Não foi possível salvar: '+err.message}finally{save.disabled=false}};
+ return panel;
+}
+async function removeOwned(table,id,feedback,extraFilter){
+ if(!confirm('Tem certeza que deseja apagar? Esta ação é permanente e não pode ser desfeita.'))return;
+ let q=db.from(table).delete().eq('id',id);
+ if(extraFilter)q=q.eq(extraFilter.key,extraFilter.value);
+ const {data,error}=await q.select('id');
+ if(error){feedback.textContent='Erro ao apagar: '+error.message;return}
+ if(!data?.length){feedback.textContent='Não foi possível apagar. Verifique as permissões do proprietário no Supabase.';return}
+ await loadPosts();
+}
 async function drawSocialPost(area,p){
  const card=el('article','post social-post'),owner=profiles.get(p.user_id),name=owner?.display_name||'Limpador';
  const head=el('div','post-head'),identity=el('div','post-identity'),av=safeUrl(owner?.avatar_url);
  if(av){const img=el('img','post-avatar');img.src=av;img.alt='';identity.append(img)}else identity.append(el('span','post-avatar',name.slice(0,1).toUpperCase()));
  const by=el('div');const title=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),name):el('strong','',name);
- by.append(title,el('div','post-time',new Date(p.created_at).toLocaleString('pt-BR')+' · Publicação'));identity.append(by);head.append(identity);card.append(head);
+ by.append(title,el('div','post-time',new Date(p.created_at).toLocaleString('pt-BR')+' · Publicação'));identity.append(by);head.append(identity);
+ if(p.user_id===user.id){
+  const feedback=el('p','muted');
+  head.append(ownerTools(()=>{
+   const panel=editPanel([
+    {key:'content',label:'Texto da publicação',value:p.content,multiline:true,maxLength:5000},
+    {key:'image_url',label:'URL da imagem (opcional)',value:p.image_url||'',type:'url'}
+   ],async values=>{
+    if(!values.content&&!values.image_url)throw Error('Escreva algo ou informe uma imagem.');
+    if(values.image_url&&!safeUrl(values.image_url))throw Error('URL da imagem inválida.');
+    const {data,error}=await db.from('community_posts').update({content:values.content,image_url:values.image_url||null}).eq('id',p.id).eq('user_id',user.id).select('id');
+    if(error)throw error;if(!data?.length)throw Error('Sem permissão para editar esta publicação.');
+   });card.insertBefore(panel,card.firstChild.nextSibling);
+  },()=>removeOwned('community_posts',p.id,feedback,{key:'user_id',value:user.id})));
+  card.append(feedback);
+ }
+ card.prepend(head);
  if(p.content)card.append(el('p','social-post-body',p.content));
  const imgurl=safeUrl(p.image_url);if(imgurl){const img=el('img','social-post-image');img.src=imgurl;img.alt='Imagem publicada por '+name;img.loading='lazy';card.append(img)}
  const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','♧ Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
@@ -213,7 +260,25 @@ async function loadPosts(){
  if(!entries.length&&!wikiResult.error&&!socialResult.error)area.append(el('div','panel','Ainda não há publicações. Seja o primeiro a compartilhar algo com os Limpadores.'));
  for(const entry of entries){if(entry.kind==='wiki')await drawPost(area,entry.item);else await drawSocialPost(area,entry.item)}
 }
-async function drawPost(area,w){const card=el('article','post');const c=characterProfiles.get(w.character_id);const owner=[...profiles.values()].find(p=>p.id===c?.profile_id);const displayName=[c?.first_name,c?.last_name].filter(Boolean).join(' ')||'Limpador desconhecido';const head=el('div','post-head');const identity=el('div','post-identity');const avatarUrl=safeUrl(owner?.avatar_url);if(avatarUrl){const av=el('img','post-avatar');av.src=avatarUrl;av.alt='';av.onerror=()=>{av.replaceWith(el('span','post-avatar',displayName.charAt(0).toUpperCase()))};identity.append(av)}else identity.append(el('span','post-avatar',displayName.charAt(0).toUpperCase()));const by=el('div');const name=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),displayName):el('span','',displayName);const line=el('div','post-byline');line.append(name);by.append(line,el('div','post-time',new Date(w.created_at).toLocaleDateString('pt-BR')+' · Registro de habilidade'));identity.append(by);head.append(identity);card.append(head);card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
+async function drawPost(area,w){const card=el('article','post');const c=characterProfiles.get(w.character_id);const owner=[...profiles.values()].find(p=>p.id===c?.profile_id);const displayName=[c?.first_name,c?.last_name].filter(Boolean).join(' ')||'Limpador desconhecido';const head=el('div','post-head');const identity=el('div','post-identity');const avatarUrl=safeUrl(owner?.avatar_url);if(avatarUrl){const av=el('img','post-avatar');av.src=avatarUrl;av.alt='';av.onerror=()=>{av.replaceWith(el('span','post-avatar',displayName.charAt(0).toUpperCase()))};identity.append(av)}else identity.append(el('span','post-avatar',displayName.charAt(0).toUpperCase()));const by=el('div');const name=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),displayName):el('span','',displayName);const line=el('div','post-byline');line.append(name);by.append(line,el('div','post-time',new Date(w.created_at).toLocaleDateString('pt-BR')+' · Registro de habilidade'));identity.append(by);head.append(identity);card.append(head);
+ if(owner?.user_id===user.id){
+  const feedback=el('p','muted');
+  head.append(ownerTools(()=>{
+   const panel=editPanel([
+    {key:'title',label:'Título',value:w.title,required:true,maxLength:120},
+    {key:'category',label:'Categoria',value:w.category,maxLength:80},
+    {key:'description',label:'Descrição',value:w.description,required:true,multiline:true,maxLength:5000},
+    {key:'limitations',label:'Limitações',value:w.limitations,multiline:true,maxLength:3000},
+    {key:'cover_image',label:'URL da capa (opcional)',value:w.cover_image||'',type:'url'}
+   ],async values=>{
+    if(values.cover_image&&!safeUrl(values.cover_image))throw Error('URL da capa inválida.');
+    const {data,error}=await db.from('ability_wikis').update({...values,cover_image:values.cover_image||null}).eq('id',w.id).eq('character_id',w.character_id).select('id');
+    if(error)throw error;if(!data?.length)throw Error('Sem permissão para editar esta Wiki.');
+   });card.insertBefore(panel,head.nextSibling);
+  },()=>removeOwned('ability_wikis',w.id,feedback,{key:'character_id',value:w.character_id})));
+  card.append(feedback);
+ }
+ card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
 const media=el('div','post-media');const fallback=()=>{media.replaceChildren();const block=el('div','fallback-cover');block.append(el('b','','✧'),el('span','','BMTH // ARQUIVO DE HABILIDADE'));media.append(block)};const cover=safeUrl(w.cover_image);if(cover){const img=el('img');img.src=cover;img.alt='Capa da habilidade '+(w.title||'');img.loading='lazy';img.onerror=fallback;media.append(img)}else fallback();card.append(media);
 const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const dislike=el('button','','♧ Não curtir');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
 const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
