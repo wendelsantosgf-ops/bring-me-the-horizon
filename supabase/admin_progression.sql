@@ -97,3 +97,12 @@ begin
 end; $$;
 revoke all on function public.bmth_review_xp(uuid,boolean) from public,anon;
 grant execute on function public.bmth_review_xp(uuid,boolean) to authenticated;
+
+-- Publicação de Wikis por jogadores (somente para personagens próprios).
+grant insert on public.ability_wikis to authenticated;
+drop policy if exists bmth_publish_own_wiki on public.ability_wikis;
+create policy bmth_publish_own_wiki on public.ability_wikis for insert to authenticated
+  with check (exists (
+    select 1 from public.characters c join public.profile p on p.id=c.profile_id
+    where c.id=character_id and p.user_id=(select auth.uid())
+  ));
