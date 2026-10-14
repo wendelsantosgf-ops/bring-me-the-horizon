@@ -9,11 +9,11 @@
 :root{color-scheme:dark;--bg:#0b0a10;--panel:#17131e;--line:#393044;--red:#ed4d68;--muted:#b8aebf}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#321b36,transparent 50%),var(--bg);color:#f7f1fa;font:15px/1.55 Inter,system-ui,sans-serif}
 a{color:#f6a6b4}header{padding:18px max(18px,calc((100vw - 900px)/2));border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;background:#0b0a10dc}header a{text-decoration:none}
-main{max-width:900px;margin:28px auto;padding:0 16px}.eyebrow{color:var(--red);font-size:12px;letter-spacing:.2em;font-weight:800}.card{border:1px solid var(--line);background:var(--panel);margin:0 0 20px;overflow:hidden}.cover{height:210px;background:linear-gradient(130deg,#641c40,#261531 60%,#141019);background-position:center;background-size:cover}.profile{padding:0 24px 24px}.avatar{width:108px;height:108px;object-fit:cover;border:5px solid var(--panel);border-radius:50%;background:#42273d;margin-top:-54px;position:relative}.name{font-size:1.8rem;font-weight:800;margin:8px 0 0}.muted,small{color:var(--muted)}.section{padding:22px}.section h2{margin:0 0 15px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.tile{padding:18px;border:1px solid var(--line);background:#211b29}.tile h3{margin:0}.rank{font-size:1.6rem;font-weight:900;color:#ff8ca1}.bar{height:10px;background:#342a3c;margin:10px 0;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#a61f3d,#ed4d68)}button{background:#a92843;color:white;border:1px solid #bb4960;padding:10px 16px;font:inherit;cursor:pointer}button:disabled{opacity:.6}input,textarea{display:block;width:100%;margin:6px 0 14px;padding:11px;background:#0b0a10;border:1px solid #55455c;color:white;font:inherit}label{display:block;margin-top:12px}#notice{color:#f6a6b4;min-height:22px}[hidden]{display:none!important}
+main{max-width:900px;margin:28px auto;padding:0 16px}.eyebrow{color:var(--red);font-size:12px;letter-spacing:.2em;font-weight:800}.card{border:1px solid var(--line);background:var(--panel);margin:0 0 20px;overflow:hidden}.cover{height:210px;background:linear-gradient(130deg,#641c40,#261531 60%,#141019);background-position:center;background-size:cover}.profile{padding:0 24px 24px}.avatar{width:108px;height:108px;object-fit:cover;border:5px solid var(--panel);border-radius:50%;background:#42273d;margin-top:-54px;position:relative}.name{font-size:1.8rem;font-weight:800;margin:8px 0 0}.muted,small{color:var(--muted)}.section{padding:22px}.section h2{margin:0 0 15px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.tile{padding:18px;border:1px solid var(--line);background:#211b29}.tile h3{margin:0}.rank{font-size:1.6rem;font-weight:900;color:#ff8ca1}.bar{height:10px;background:#342a3c;margin:10px 0;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#a61f3d,#ed4d68)}button{background:#a92843;color:white;border:1px solid #bb4960;padding:10px 16px;font:inherit;cursor:pointer}button:disabled{opacity:.6}input,textarea{display:block;width:100%;margin:6px 0 14px;padding:11px;background:#0b0a10;border:1px solid #55455c;color:white;font:inherit}label{display:block;margin-top:12px}#notice{color:#f6a6b4;min-height:22px}[hidden]{display:none!important}header{align-items:center;gap:16px;flex-wrap:wrap}header nav{display:flex;gap:14px;flex-wrap:wrap}.card{border-radius:18px;box-shadow:0 20px 65px #0005}.cover{height:260px}.profile{padding:0 28px 28px}.avatar{width:124px;height:124px;margin-top:-62px;border-width:6px}.tile{border-radius:13px;transition:transform .2s,border-color .2s}.tile:hover{transform:translateY(-3px);border-color:#a94c69}button{border-radius:10px;font-weight:700}button:hover{filter:brightness(1.12)}input,textarea{border-radius:10px}input[type=file]{cursor:pointer;border-style:dashed;background:#211729;padding:16px}input[type=file]::file-selector-button{border:0;border-radius:8px;background:#a92843;color:white;padding:9px 12px;margin-right:12px;cursor:pointer}@media(max-width:600px){.cover{height:180px}.profile{padding:0 18px 20px}.avatar{width:100px;height:100px;margin-top:-50px}}[hidden]{display:none!important}
 </style>
 </head>
 <body>
-<header><strong>BMTH <span style="color:#ed4d68">/ LIMPADORES</span></strong><nav><a href="./index.html">Manual</a> · <a href="./login.html">Conta</a></nav></header>
+<header><strong>BMTH <span style="color:#ed4d68">/ LIMPADORES</span></strong><nav><a href="./index.html">Manual</a> · <a href="./comunidade.html">Comunidade</a> · <a href="./login.html">Conta</a></nav></header>
 <main>
 <p class="eyebrow">ARQUIVO DOS LIMPADORES / PERFIL</p>
 <p id="notice" role="status" aria-live="polite">Carregando perfil...</p>
@@ -27,10 +27,10 @@ main{max-width:900px;margin:28px auto;padding:0 16px}.eyebrow{color:var(--red);f
 <form id="profileForm">
 <label>Nome de exibição<input id="nameInput" maxlength="60" required></label>
 <label>Biografia<textarea id="bioInput" maxlength="1000" rows="4"></textarea></label>
-<label>URL da imagem do avatar<input id="avatarInput" type="url" placeholder="https://..."></label>
-<label>URL da imagem de capa<input id="bannerInput" type="url" placeholder="https://..."></label>
+<label>Foto de perfil (JPG, PNG ou WEBP, até 5 MB)<input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp"><small>Ou use um link:</small><input id="avatarInput" type="url" placeholder="https://..."></label>
+<label>Imagem de capa (JPG, PNG ou WEBP, até 5 MB)<input id="bannerFile" type="file" accept="image/jpeg,image/png,image/webp"><small>Ou use um link:</small><input id="bannerInput" type="url" placeholder="https://..."></label>
 <button id="saveButton" type="submit">Salvar alterações</button>
-</form><small>Por enquanto, as imagens são adicionadas por URL. O upload direto virá depois.</small></section>
+</form><small>Escolha imagens do celular ou computador. Se não selecionar um arquivo, o link informado será utilizado.</small></section>
 <section class="card section"><h2>Personagens</h2><div id="characters" class="grid"></div></section>
 </div>
 </main>
@@ -56,6 +56,16 @@ else{
    else{profile=data;await render()}
   }
  }
+}
+async function uploadPhoto(file,kind){
+ if(!file)return null;
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type))throw Error('Formato inválido. Use JPG, PNG ou WEBP.');
+ if(file.size>5*1024*1024)throw Error('A imagem deve ter até 5 MB.');
+ const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
+ const path=user.id+'/'+kind+'-'+crypto.randomUUID()+'.'+ext;
+ const {error}=await db.storage.from('profile-images').upload(path,file,{contentType:file.type,upsert:false});
+ if(error)throw Error(error.message+' (confira se o bucket profile-images foi configurado)');
+ return db.storage.from('profile-images').getPublicUrl(path).data.publicUrl;
 }
 function imageUrl(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
 async function render(){
@@ -88,7 +98,8 @@ $('editButton').addEventListener('click',()=>{
 });
 $('profileForm').addEventListener('submit',async event=>{
  event.preventDefault();$('saveButton').disabled=true;
- const patch={display_name:$('nameInput').value.trim(),bio:$('bioInput').value.trim(),avatar_url:$('avatarInput').value.trim()||null,banner_url:$('bannerInput').value.trim()||null};
+ let patch={display_name:$('nameInput').value.trim(),bio:$('bioInput').value.trim(),avatar_url:$('avatarInput').value.trim()||null,banner_url:$('bannerInput').value.trim()||null};
+ try{const avatar=await uploadPhoto($('avatarFile').files[0],'avatar');const banner=await uploadPhoto($('bannerFile').files[0],'banner');if(avatar)patch.avatar_url=avatar;if(banner)patch.banner_url=banner}catch(e){$('saveButton').disabled=false;notice('Erro ao enviar imagem: '+e.message);return}
  const {data,error}=await db.from('profile').update(patch).eq('id',profile.id).eq('user_id',user.id).select('id,user_id,display_name,bio,avatar_url,banner_url,created_at').single();
  $('saveButton').disabled=false;
  if(error)notice('Erro ao salvar: '+error.message);else{profile=data;$('editor').hidden=true;await render();notice('Perfil atualizado com sucesso.')}
