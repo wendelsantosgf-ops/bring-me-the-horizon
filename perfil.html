@@ -21,6 +21,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 @media(max-width:800px){.site-header{flex-wrap:wrap;min-height:auto;padding:15px 18px}.main-nav{order:3;width:100%;overflow-x:auto;justify-content:flex-start}.main-nav a{min-height:65px}.account{margin-left:auto}.cover{height:210px}.cover-quote{font-size:10px;right:15px}.profile{padding:75px 18px 22px}.avatar{left:18px;top:-55px;width:110px;height:110px}.name{font-size:28px}.profile #editButton{position:static;margin-top:15px}.profile-content{grid-template-columns:1fr}.profile-tabs a{padding:16px 13px;font-size:10px}}
 .hero-card{--player-accent:#d03951;border-top:2px solid var(--player-accent)}.hero-card .avatar{outline-color:var(--player-accent)}.hero-card #editButton,.create-action a{background:var(--player-accent);border-color:var(--player-accent)}.custom-tagline{font:500 13px 'Cinzel',serif;letter-spacing:.07em;color:var(--player-accent);margin:0 0 8px}.theme-editor{border:1px solid #54404c;padding:20px;margin:22px 0;border-radius:8px}.theme-editor legend{font-family:'Cinzel',serif;color:#ed9da9;padding:0 8px}.theme-editor input[type=color]{width:90px;height:46px;padding:5px;cursor:pointer}.custom-card-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.custom-field{border:1px solid #40323e;padding:12px}.custom-cards{display:grid;gap:12px}.custom-card{padding:15px;border-left:3px solid var(--player-accent,#d03951);background:#0d0c12;white-space:pre-wrap;overflow-wrap:anywhere}.custom-card strong{display:block;font-family:'Cinzel',serif;margin-bottom:8px}.profile-custom-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background-size:cover;background-position:center;opacity:.17}@media(max-width:600px){.custom-card-fields{grid-template-columns:1fr}}
 .hero-card #editButton{color:var(--player-button-text,#ffffff);-webkit-text-fill-color:var(--player-button-text,#ffffff)}
+.profile-wiki-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:15px}.profile-wiki-card{border:1px solid #43323e;background:#151119;overflow:hidden;min-width:0}.profile-wiki-cover{height:155px;background:linear-gradient(135deg,#351725,#17131e);color:#db8fa8;display:grid;place-items:center;font:700 20px 'Cinzel',serif;letter-spacing:.12em}.profile-wiki-cover img{width:100%;height:100%;object-fit:cover}.profile-wiki-info{padding:16px}.profile-wiki-info small{color:#d98ba2;letter-spacing:.06em}.profile-wiki-info h3{font:600 19px 'Cinzel',serif;margin:8px 0;overflow-wrap:anywhere}.profile-wiki-info p{color:#bdb3c0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
 </style>
 <link rel="stylesheet" href="./theme.css?v=1">
 <style>
@@ -37,7 +38,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 <img id="avatar" class="avatar" alt="Avatar do jogador">
 <div class="identity"><div><p id="tagline" class="custom-tagline" hidden></p><div id="displayName" class="name"></div><div class="role">✥ L I M P A D O R</div><p id="bio" class="muted"></p><small id="member"></small></div></div>
 <p><button id="editButton" type="button" hidden>Editar meu perfil</button></p>
-</div></article><div class="profile-tabs"><a class="active" href="#visao-geral">♟ &nbsp; VISÃO GERAL</a><a href="#personagens">♜ &nbsp; PERSONAGENS</a><a href="./comunidade.html">◈ &nbsp; WIKIS</a><a href="./comunidade.html">⌁ &nbsp; ATIVIDADES</a></div>
+</div></article><div class="profile-tabs"><a class="active" href="#visao-geral">♟ &nbsp; VISÃO GERAL</a><a href="#personagens">♜ &nbsp; PERSONAGENS</a><a href="#wikis">◈ &nbsp; WIKIS</a><a href="./comunidade.html">⌁ &nbsp; ATIVIDADES</a></div>
 <section id="editor" class="card section" hidden><h2>Editar perfil</h2>
 <form id="profileForm">
 <label>Nome de exibição<input id="nameInput" maxlength="60" required></label>
@@ -55,7 +56,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 </div></fieldset>
 <button id="saveButton" type="submit">Salvar alterações</button>
 </form><small>Escolha imagens do celular ou computador. Se não selecionar um arquivo, o link informado será utilizado.</small></section>
-<div class="profile-content" id="visao-geral"><section class="card section about"><h2><span>♟</span> SOBRE MIM</h2><div class="about-note">O Imaginário registra aqueles que ousam atravessá-lo.</div><div id="customCards" class="custom-cards"></div><p>✥ &nbsp; Limpador registrado</p><p>◈ &nbsp; <a href="./comunidade.html">Explorar a comunidade</a></p></section><section id="personagens" class="card section characters-panel"><div class="section-heading"><h2><span>♜</span> PERSONAGENS</h2><a href="./personagens.html">Ver todos →</a></div><div id="characters" class="grid"></div><div class="create-action"><a href="./personagens.html">＋ CRIAR PERSONAGEM</a></div></section></div>
+<div class="profile-content" id="visao-geral"><section class="card section about"><h2><span>♟</span> SOBRE MIM</h2><div class="about-note">O Imaginário registra aqueles que ousam atravessá-lo.</div><div id="customCards" class="custom-cards"></div><p>✥ &nbsp; Limpador registrado</p><p>◈ &nbsp; <a href="./comunidade.html">Explorar a comunidade</a></p></section><section id="personagens" class="card section characters-panel"><div class="section-heading"><h2><span>♜</span> PERSONAGENS</h2><a href="./personagens.html">Ver todos →</a></div><div id="characters" class="grid"></div><div class="create-action"><a href="./personagens.html">＋ CRIAR PERSONAGEM</a></div></section><section id="wikis" class="card section characters-panel"><div class="section-heading"><h2><span>◈</span> WIKIS DE HABILIDADES</h2><a href="./comunidade.html#posts">Ver comunidade →</a></div><div id="profileWikis" class="profile-wiki-grid"></div></section></div>
 </div>
 </main>
 <div id="sheetModal" class="sheet-modal" hidden role="presentation">
@@ -137,7 +138,9 @@ async function render(){
  const {data:characters,error}=await db.from('characters').select('id,first_name,last_name,age,spiritual_energy,appearance,history,portrait_url').eq('profile_id',profile.id).order('created_at',{ascending:false});
  if(error){$('characters').textContent='Não foi possível carregar os personagens: '+error.message;return}
  $('characters').replaceChildren();
- if(!characters?.length){$('characters').textContent='Nenhum personagem cadastrado ainda.';return}
+ if(!characters?.length){$('characters').textContent='Nenhum personagem cadastrado ainda.';await loadProfileWikis([]);return}
+ profileCharacterNames.clear();for(const c of characters)profileCharacterNames.set(c.id,[c.first_name,c.last_name].filter(Boolean).join(' ')||'Sem nome');
+ await loadProfileWikis(characters.map(c=>c.id));
  for(const c of characters){
   const {data:progress}=await db.from('character_progression').select('rank,xp').eq('character_id',c.id).maybeSingle();
   const btn=document.createElement('button');btn.type='button';btn.className='character-preview';
@@ -148,6 +151,27 @@ async function render(){
   btn.append(portrait,info,arrow);btn.setAttribute('aria-label','Abrir ficha de '+name.textContent);btn.addEventListener('click',()=>openSheet(c,progress,btn));$('characters').append(btn);
  }
 }
+async function loadProfileWikis(characterIds){
+ const area=$('profileWikis');area.replaceChildren();
+ if(!characterIds.length){area.textContent='Este jogador ainda não publicou Wikis de habilidades.';return}
+ const {data,error}=await db.from('ability_wikis').select('id,character_id,title,description,category,cover_image,created_at').in('character_id',characterIds).order('created_at',{ascending:false}).limit(60);
+ if(error){area.textContent='Não foi possível carregar as Wikis: '+error.message;return}
+ if(!data?.length){area.textContent='Este jogador ainda não publicou Wikis de habilidades.';return}
+ for(const wiki of data){
+  const article=document.createElement('article');article.className='profile-wiki-card';
+  const media=document.createElement('div');media.className='profile-wiki-cover';
+  const url=imageUrl(wiki.cover_image);
+  if(url){const img=document.createElement('img');img.src=url;img.alt='Capa de '+(wiki.title||'Wiki');img.loading='lazy';img.onerror=()=>{img.remove();media.textContent='✧ BMTH'};media.append(img)}
+  else media.textContent='✧ BMTH';
+  const info=document.createElement('div');info.className='profile-wiki-info';
+  const category=document.createElement('small');category.textContent=wiki.category||'WIKI DE HABILIDADE';
+  const title=document.createElement('h3');title.textContent=wiki.title||'Habilidade sem título';
+  const description=document.createElement('p');description.textContent=wiki.description||'';
+  const character=document.createElement('small');character.textContent='Personagem: '+(profileCharacterNames.get(wiki.character_id)||'Limpador');
+  info.append(category,title,description,character);article.append(media,info);area.append(article);
+ }
+}
+const profileCharacterNames=new Map();
 let sheetOpener=null;
 function openSheet(c,progress,opener){
  sheetOpener=opener;const name=[c.first_name,c.last_name].filter(Boolean).join(' ')||'Sem nome';
