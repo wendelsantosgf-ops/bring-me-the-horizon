@@ -164,11 +164,11 @@ async function render(){
  let {data:characters,error}=await db.from('characters').select(characterFields).eq('profile_id',profile.id);
  // Repetição pontual em caso de falha transitória de rede/sessão.
  if(error){await new Promise(resolve=>setTimeout(resolve,350));({data:characters,error}=await db.from('characters').select(characterFields).eq('profile_id',profile.id))}
- if(error){$('characters').textContent='Não foi possível carregar os personagens: '+error.message;return}
+ if(error){console.warn('Erro ao carregar personagens do perfil:',error);$('characters').textContent='Não foi possível carregar os personagens agora. Tente novamente.';return}
  $('characters').replaceChildren();
  if(!characters?.length){
   const warning=document.createElement('p');
-  warning.textContent='Nenhuma ficha visível neste perfil. Se o personagem existe no Supabase, verifique a política SELECT de public.characters para usuários autenticados.';
+  warning.textContent='Nenhum personagem encontrado neste perfil.';
   const retry=document.createElement('button');retry.type='button';retry.textContent='↻ Recarregar fichas';retry.className='character-preview';retry.onclick=()=>render();
   $('characters').append(warning,retry);await loadProfileWikis([]);return
  }
