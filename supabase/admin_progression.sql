@@ -48,6 +48,17 @@ $$;
 revoke all on function public.bmth_is_admin() from public,anon;
 grant execute on function public.bmth_is_admin() to authenticated;
 
+
+-- Leitura de fichas e progressão de todos os jogadores, somente para administradores.
+-- As políticas existentes de jogadores permanecem intactas.
+grant select on public.characters, public.character_progression to authenticated;
+drop policy if exists bmth_admin_read_characters on public.characters;
+create policy bmth_admin_read_characters on public.characters for select to authenticated
+  using (public.bmth_is_admin());
+drop policy if exists bmth_admin_read_progression on public.character_progression;
+create policy bmth_admin_read_progression on public.character_progression for select to authenticated
+  using (public.bmth_is_admin());
+
 create or replace function public.bmth_set_progression(p_character uuid, p_rank text default null, p_xp integer default null)
 returns void language plpgsql security definer set search_path = '' as $$
 declare v_rank text; v_xp integer;
