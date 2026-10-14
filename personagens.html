@@ -32,7 +32,7 @@ const $=id=>document.getElementById(id);const status=s=>$('status').textContent=
 let user=null,profile=null,editing=null,characters=[];
 const publicProfileId=new URLSearchParams(location.search).get('profile');
 let previewObjectUrl=null;function safeImage(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}function showPreview(url){if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null}const img=$('portraitPreview');img.hidden=!url;if(url)img.src=url;else img.removeAttribute('src')}
-$('portraitFile').addEventListener('change',()=>{const file=$('portraitFile').files[0];if(file){previewObjectUrl=URL.createObjectURL(file);showPreview(previewObjectUrl)}});
+$('portraitFile').addEventListener('change',()=>{const file=$('portraitFile').files[0];if(file){showPreview(null);previewObjectUrl=URL.createObjectURL(file);const img=$('portraitPreview');img.src=previewObjectUrl;img.hidden=false}});
 function showForm(character=null){$('portraitFile').value='';showPreview(safeImage(character?.portrait_url));editing=character?.id||null;$('formPanel').hidden=false;$('formTitle').textContent=editing?'Editar personagem':'Novo personagem';$('first').value=character?.first_name||'';$('last').value=character?.last_name||'';$('age').value=character?.age??'';$('energy').value=character?.spiritual_energy||'';$('appearance').value=character?.appearance||'';$('history').value=character?.history||'';$('formPanel').scrollIntoView({behavior:'smooth',block:'start'})}
 $('newBtn').onclick=()=>showForm();$('cancelBtn').onclick=()=>{$('formPanel').hidden=true;editing=null};$('reloadBtn').onclick=()=>loadCharacters();
 async function init(){
