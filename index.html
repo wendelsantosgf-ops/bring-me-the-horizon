@@ -176,30 +176,11 @@
       .rank-step b { font-size: 1.2rem; }
     }
   </style>
+<link rel="stylesheet" href="./theme.css?v=1">
 </head>
-<body>
+<body class="manual-page">
   <div class="ambient"></div>
-  <header class="topbar">
-    <nav class="nav" aria-label="Navegação principal">
-      <a class="brand" href="#inicio" aria-label="Bring Me the Horizon, início">
-        <div class="brand-mark"><span>H</span></div>
-        <div>
-          <div class="brand-title">BRING ME THE HORIZON</div>
-          <div class="brand-sub">Arquivo do sistema</div>
-        </div>
-      </a>
-      <div class="nav-links" id="navLinks">
-        <a href="#imaginario">O Imaginário</a>
-        <a href="#energias">Energias</a>
-        <a href="#zonas">Zonas</a>
-        <a href="#progressao">Progressão</a>
-        <a href="./comunidade.html">Comunidade</a>
-        <a href="./login.html">Entrar / Cadastrar</a>
-      </div>
-      <a class="nav-cta" href="./login.html">ENTRAR / CADASTRAR ↗</a>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
-    </nav>
-  </header>
+  <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html" aria-current="page"><span class="bmth-icon">▤</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html"><span class="bmth-icon">♟</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon">♜</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
 
   <section class="hero" id="inicio">
     <div>
@@ -368,25 +349,8 @@
   </footer>
 
   <script>
-    const menuToggle = document.getElementById('menuToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    menuToggle.addEventListener('click', () => {
-      const isOpen = navLinks.classList.toggle('open');
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      menuToggle.textContent = isOpen ? '✕' : '☰';
-    });
-
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.textContent = '☰';
-      });
-    });
-
     const sections = document.querySelectorAll('main section[id]');
-    const links = document.querySelectorAll('.nav-links a');
+    const links = document.querySelectorAll('.bmth-nav a');
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
