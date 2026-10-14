@@ -54,11 +54,36 @@ body .layout>.community-sidebar{grid-column:1;grid-row:1;position:sticky;top:18p
 .community-sidebar .panel a:not(.person){display:inline-flex;padding:9px 12px;border:1px solid #7a435b;border-radius:9px;margin:3px 0;color:#ffe4eb}
 @media(max-width:760px){body main{margin:18px auto}body .layout{grid-template-columns:minmax(0,1fr);gap:14px}body .layout>.feed-column{grid-column:1;grid-row:1}body .layout>.community-sidebar{grid-column:1;grid-row:2;position:static}.feed-column .feed-intro{padding:14px;gap:10px}.feed-column .feed-intro h2{font-size:21px}.feed-column .composer-toggle{padding:11px;font-size:12px}.community-sidebar #people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.community-sidebar .person{border-bottom:0;background:#241723;border-radius:10px;padding:10px}.community-sidebar .person .avatar{height:37px;width:37px}}
 @media(max-width:420px){.community-sidebar #people{grid-template-columns:1fr}.feed-column .feed-intro{flex-wrap:wrap}.feed-column .composer-toggle{width:100%}}
+</style><style>
+.social-composer{padding:20px!important;margin-bottom:20px;background:linear-gradient(130deg,#22151f,#130e17)!important;border:1px solid #573349!important}
+.social-composer-heading{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.social-composer-avatar{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:#60253f;color:#ffadc5;font-size:26px;flex:none}
+.social-composer-heading strong{display:block;color:#fff1f4;font-size:15px}
+.social-composer-heading small{display:block;color:#cbb7c2;margin-top:3px;font-size:12px}
+#socialText{width:100%;min-height:95px;resize:vertical;border:1px solid #644256;background:#100c13;color:#fff;border-radius:12px;padding:14px;font:inherit}
+.social-composer-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.social-composer-actions button,.social-upload{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;border-radius:10px;border:1px solid #7b4860;background:#2b1b2b;color:#f7dce5;font-weight:700;font-size:12px;cursor:pointer}
+.social-composer-actions #socialPublish{margin-left:auto;background:#b13356;border-color:#e66c8e;color:white}
+.social-composer-actions button:hover,.social-upload:hover{background:#74314b}
+.social-image-preview{margin:12px 0}.social-image-preview img{display:block;max-height:280px;max-width:100%;object-fit:contain;border-radius:12px}.social-image-preview button{margin-top:8px;padding:7px 12px}
+.social-post-image{display:block;width:100%;max-height:540px;object-fit:contain;background:#0a0810;border-radius:12px;margin:12px 0}
+.social-reactions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-top:1px solid #493042}
+.social-reactions button{border:1px solid #5c394c;background:#231622;border-radius:9px;color:#eacbd6;padding:10px 13px;cursor:pointer}
+.social-reactions button.active{background:#722944;border-color:#e66b8b;color:white}
+.social-reactions .muted{font-size:12px}
+.social-post-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}
+.social-comments{padding-top:12px;border-top:1px solid #493042}
+.social-comments[hidden]{display:none}
+.social-post .post-head{margin-bottom:16px}
+@media(max-width:560px){.social-composer{padding:14px!important}.social-composer-actions{gap:7px}.social-composer-actions button,.social-upload{padding:9px 10px;font-size:11px}.social-composer-actions #socialPublish{margin-left:0;flex:1}}
 </style></head><body>
 <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html"><span class="bmth-icon" aria-hidden="true">▧</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html" aria-current="page"><span class="bmth-icon" aria-hidden="true">✧</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon" aria-hidden="true">◇</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
 <main><div class="eyebrow">ARQUIVO SOCIAL // LIMPADORES</div><h1>Comunidade</h1><p class="muted">Conheça outros Limpadores, descubra habilidades e participe das conversas do Imaginário.</p>
 <p id="status" role="status" aria-live="polite">Verificando acesso...</p><section id="gate" class="panel community-gate" hidden><div class="gate-heading"><span class="eyebrow">BMTH // ACESSO À COMUNIDADE</span><span class="gate-emblem" aria-hidden="true">✧</span></div><h2>Entre para participar</h2><p>Seu registro é a porta de entrada para conhecer os Limpadores e compartilhar suas habilidades.</p><div class="gate-actions"><a class="gate-btn gate-btn-primary" href="./login.html"><span aria-hidden="true">↳</span> ENTRAR NA COMUNIDADE</a><a class="gate-btn gate-btn-secondary" href="./login.html?mode=register"><span aria-hidden="true">＋</span> CRIAR MINHA CONTA</a></div></section>
-<div id="app" hidden><div class="layout"><section class="feed-column"><div class="feed-intro"><div><h2>Publicações recentes</h2><small>Novidades, registros e conversas dos Limpadores</small></div><button id="composerToggle" class="composer-toggle" type="button" aria-expanded="false" aria-controls="composerPanel">＋ Nova publicação</button></div><section class="panel composer-panel" id="composerPanel" hidden><h2>Publicar Wiki de habilidade</h2><p class="muted">Registre técnicas, limitações e liberações do seu personagem. A publicação não significa aprovação administrativa.</p><form id="wikiForm"><label for="wikiCharacter">Personagem</label><select id="wikiCharacter" required style="width:100%;padding:11px;background:#0e0b12;color:white;border:1px solid #55415a"></select><label for="wikiTitle">Título da habilidade</label><input id="wikiTitle" required maxlength="120" placeholder="Nome da técnica ou liberação"><label for="wikiCategory">Categoria</label><input id="wikiCategory" maxlength="80" placeholder="Técnica, Liberação, Energia..."><label for="wikiDescription">Descrição</label><textarea id="wikiDescription" required maxlength="5000" placeholder="Explique como funciona..."></textarea><label for="wikiLimitations">Condições e limitações</label><textarea id="wikiLimitations" maxlength="3000"></textarea><label for="wikiCoverFile">Imagem da capa (opcional, JPG/PNG/WEBP até 5 MB)</label><input id="wikiCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><img id="wikiCoverPreview" alt="Prévia da capa" hidden style="display:block;width:100%;max-height:230px;object-fit:contain;margin:10px 0;border-radius:9px"><label for="wikiCover">Ou URL da capa (opcional)</label><input id="wikiCover" type="url" placeholder="https://..."><button id="wikiPublish" type="submit">Publicar Wiki</button></form><p id="wikiStatus" class="muted" role="status"></p></section><div id="posts" class="feed-stream"><p class="muted">Carregando Wikis...</p></div></section><aside class="community-sidebar"><section class="panel" id="peopleSection"><h2>Jogadores</h2><div id="people">Carregando jogadores...</div></section><section class="panel"><h2>Seu espaço</h2><p class="muted">Edite seu perfil e apresente seus personagens.</p><p><a href="./perfil.html">Meu perfil →</a></p><p><a href="./personagens.html">Minhas fichas →</a></p></section></aside></div></div>
+<div id="app" hidden><div class="layout"><section class="feed-column"><div class="feed-intro"><div><h2>Feed da Comunidade</h2><small>Publicações, fotos e Wikis dos Limpadores — mais recentes primeiro</small></div></div>
+<section class="social-composer panel" aria-label="Criar publicação"><div class="social-composer-heading"><span class="social-composer-avatar" aria-hidden="true">✧</span><div><strong>Compartilhe com os Limpadores</strong><small>Uma história, uma foto ou algo engraçado?</small></div></div>
+<form id="socialForm"><textarea id="socialText" maxlength="5000" rows="3" placeholder="O que está acontecendo no Imaginário?"></textarea><div class="social-image-preview" id="socialPreviewWrap" hidden><img id="socialPreview" alt="Prévia da imagem selecionada"><button type="button" id="socialRemoveImage">Remover imagem</button></div><div class="social-composer-actions"><label class="social-upload" for="socialImage">▧ Foto <input id="socialImage" type="file" accept="image/jpeg,image/png,image/webp" hidden></label><button type="button" id="composerToggle" class="social-wiki-button" aria-expanded="false" aria-controls="composerPanel">✧ Criar Wiki</button><button type="submit" id="socialPublish">Publicar ↗</button></div><p id="socialStatus" class="muted" role="status" aria-live="polite"></p></form></section>
+<section class="panel composer-panel" id="composerPanel" hidden><h2>Publicar Wiki de habilidade</h2><p class="muted">Registre técnicas, limitações e liberações do seu personagem. A publicação não significa aprovação administrativa.</p><form id="wikiForm"><label for="wikiCharacter">Personagem</label><select id="wikiCharacter" required style="width:100%;padding:11px;background:#0e0b12;color:white;border:1px solid #55415a"></select><label for="wikiTitle">Título da habilidade</label><input id="wikiTitle" required maxlength="120" placeholder="Nome da técnica ou liberação"><label for="wikiCategory">Categoria</label><input id="wikiCategory" maxlength="80" placeholder="Técnica, Liberação, Energia..."><label for="wikiDescription">Descrição</label><textarea id="wikiDescription" required maxlength="5000" placeholder="Explique como funciona..."></textarea><label for="wikiLimitations">Condições e limitações</label><textarea id="wikiLimitations" maxlength="3000"></textarea><label for="wikiCoverFile">Imagem da capa (opcional, JPG/PNG/WEBP até 5 MB)</label><input id="wikiCoverFile" type="file" accept="image/jpeg,image/png,image/webp"><img id="wikiCoverPreview" alt="Prévia da capa" hidden style="display:block;width:100%;max-height:230px;object-fit:contain;margin:10px 0;border-radius:9px"><label for="wikiCover">Ou URL da capa (opcional)</label><input id="wikiCover" type="url" placeholder="https://..."><button id="wikiPublish" type="submit">Publicar Wiki</button></form><p id="wikiStatus" class="muted" role="status"></p></section><div id="posts" class="feed-stream"><p class="muted">Carregando publicações...</p></div></section><aside class="community-sidebar"><section class="panel" id="peopleSection"><h2>Jogadores</h2><div id="people">Carregando jogadores...</div></section><section class="panel"><h2>Seu espaço</h2><p class="muted">Edite seu perfil e apresente seus personagens.</p><p><a href="./perfil.html">Meu perfil →</a></p><p><a href="./personagens.html">Minhas fichas →</a></p></section></aside></div></div>
 </main>
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
@@ -74,6 +99,76 @@ function showFeatured(n){if(!featured.length)return;featuredAt=(n+featured.lengt
 $('heroPrev').onclick=()=>showFeatured(featuredAt-1);$('heroNext').onclick=()=>showFeatured(featuredAt+1);
 function galleryItem(area,href,image,label,name,subtitle){const a=link(href,'');a.className='discovery-item';const art=el('div','discovery-item-art');const src=safeUrl(image);if(src){const img=el('img');img.src=src;img.alt='';img.loading='lazy';img.onerror=()=>{img.remove();art.textContent='✧'};art.append(img)}else art.textContent='✧';const details=el('div','discovery-item-info');details.append(el('small','',label),el('h3','',name),el('p','',subtitle));a.append(art,details);area.append(a)}
 async function loadDiscoveries(){const characters=$('characterGallery'),wikis=$('wikiGallery');const [cr,wr]=await Promise.all([db.from('characters').select('id,profile_id,first_name,last_name,portrait_url').limit(12),db.from('ability_wikis').select('id,character_id,title,category,cover_image').order('created_at',{ascending:false}).limit(12)]);characters.replaceChildren();wikis.replaceChildren();if(cr.error)characters.textContent='Fichas indisponíveis.';else for(const ch of cr.data||[])galleryItem(characters,'./perfil.html?id='+encodeURIComponent(ch.profile_id)+'#personagens',ch.portrait_url,'FICHA // PERSONAGEM',[ch.first_name,ch.last_name].filter(Boolean).join(' ')||'Personagem','CONHECER PERSONAGEM');if(!cr.error&&!cr.data?.length)characters.textContent='As primeiras fichas aparecerão aqui.';const owners=new Map();const ids=[...new Set((wr.data||[]).map(w=>w.character_id).filter(Boolean))];if(ids.length){const {data}=await db.from('characters').select('id,profile_id').in('id',ids);for(const ch of data||[])owners.set(ch.id,ch.profile_id)}if(wr.error)wikis.textContent='Wikis indisponíveis.';else for(const w of wr.data||[]){const pid=owners.get(w.character_id);galleryItem(wikis,pid?'./perfil.html?id='+encodeURIComponent(pid)+'#wikis':'#posts',w.cover_image,w.category||'WIKI // HABILIDADE',w.title||'Habilidade','ABRIR REGISTRO')}if(!wr.error&&!wr.data?.length)wikis.textContent='As primeiras Wikis aparecerão aqui.'}
+
+let socialPreviewObject=null;
+$('socialImage').addEventListener('change',()=>{
+ const file=$('socialImage').files[0];
+ if(socialPreviewObject)URL.revokeObjectURL(socialPreviewObject);
+ socialPreviewObject=file?URL.createObjectURL(file):null;
+ $('socialPreviewWrap').hidden=!file;
+ if(file)$('socialPreview').src=socialPreviewObject;
+});
+$('socialRemoveImage').addEventListener('click',()=>{
+ $('socialImage').value='';$('socialPreviewWrap').hidden=true;
+ if(socialPreviewObject)URL.revokeObjectURL(socialPreviewObject);
+ socialPreviewObject=null;
+});
+$('socialForm').addEventListener('submit',async e=>{
+ e.preventDefault();const content=$('socialText').value.trim(),file=$('socialImage').files[0],button=$('socialPublish');
+ if(!content&&!file){$('socialStatus').textContent='Escreva algo ou selecione uma foto.';return}
+ if(file&&(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024)){$('socialStatus').textContent='Use JPG, PNG ou WEBP de até 5 MB.';return}
+ button.disabled=true;$('socialStatus').textContent='Publicando...';let image_url=null;
+ try{
+  if(file){const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];const path=user.id+'/'+crypto.randomUUID()+'.'+ext;const {error}=await db.storage.from('community-images').upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;image_url=db.storage.from('community-images').getPublicUrl(path).data.publicUrl}
+  const {error}=await db.from('community_posts').insert({user_id:user.id,content,image_url});
+  if(error)throw error;
+  $('socialForm').reset();$('socialRemoveImage').click();$('socialStatus').textContent='Publicado no feed!';await loadPosts();
+ }catch(err){$('socialStatus').textContent='Não foi possível publicar: '+err.message+'. Confira se a migração SQL do feed foi executada.'}
+ finally{button.disabled=false}
+});
+async function drawSocialPost(area,p){
+ const card=el('article','post social-post'),owner=profiles.get(p.user_id),name=owner?.display_name||'Limpador';
+ const head=el('div','post-head'),identity=el('div','post-identity'),av=safeUrl(owner?.avatar_url);
+ if(av){const img=el('img','post-avatar');img.src=av;img.alt='';identity.append(img)}else identity.append(el('span','post-avatar',name.slice(0,1).toUpperCase()));
+ const by=el('div');const title=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),name):el('strong','',name);
+ by.append(title,el('div','post-time',new Date(p.created_at).toLocaleString('pt-BR')+' · Publicação'));identity.append(by);head.append(identity);card.append(head);
+ if(p.content)card.append(el('p','social-post-body',p.content));
+ const imgurl=safeUrl(p.image_url);if(imgurl){const img=el('img','social-post-image');img.src=imgurl;img.alt='Imagem publicada por '+name;img.loading='lazy';card.append(img)}
+ const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','♧ Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
+ actions.append(like,dislike,count,commentsToggle);card.append(actions);
+ const comments=el('div','social-comments');comments.hidden=true;const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
+ input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;send.type='submit';form.append(input,send);comments.append(list,form,feedback);card.append(comments);area.append(card);
+ commentsToggle.onclick=()=>{comments.hidden=!comments.hidden;if(!comments.hidden)refreshComments()};
+ async function refreshReactions(){
+  const {data,error}=await db.from('community_reactions').select('user_id,reaction').eq('post_id',p.id);
+  if(error){count.textContent='Reações indisponíveis';like.disabled=true;dislike.disabled=true;return}
+  const mine=(data||[]).find(x=>x.user_id===user.id)?.reaction;
+  like.classList.toggle('active',mine==='like');dislike.classList.toggle('active',mine==='dislike');
+  count.textContent=(data||[]).filter(x=>x.reaction==='like').length+' curtidas · '+(data||[]).filter(x=>x.reaction==='dislike').length+' dislikes';
+  like.dataset.active=String(mine==='like');dislike.dataset.active=String(mine==='dislike');
+ }
+ async function react(kind){
+  like.disabled=dislike.disabled=true;
+  const active=(kind==='like'?like:dislike).dataset.active==='true';
+  const query=active?db.from('community_reactions').delete().eq('post_id',p.id).eq('user_id',user.id):db.from('community_reactions').upsert({post_id:p.id,user_id:user.id,reaction:kind},{onConflict:'post_id,user_id'});
+  const {error}=await query;if(error)feedback.textContent='Erro na reação: '+error.message;else await refreshReactions();
+  like.disabled=dislike.disabled=false;
+ }
+ like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
+ async function refreshComments(){
+  const {data,error}=await db.from('community_comments').select('user_id,content,created_at').eq('post_id',p.id).order('created_at',{ascending:true}).limit(60);
+  list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
+  if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
+  for(const c of data||[]){const item=el('div','comment');item.append(el('strong','',profiles.get(c.user_id)?.display_name||'Limpador'),el('small','',' · '+new Date(c.created_at).toLocaleString('pt-BR')),el('div','',c.content));list.append(item)}
+ }
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;
+  const {error}=await db.from('community_comments').insert({post_id:p.id,user_id:user.id,content});
+  if(error)feedback.textContent='Erro ao comentar: '+error.message;else{input.value='';feedback.textContent='Comentário enviado.';await refreshComments()}
+  send.disabled=false;
+ });
+ await refreshReactions();
+}
 async function init(){const {data:{user:u},error}=await db.auth.getUser();user=u;if(error||!u){$('gate').hidden=false;msg('Faça login para acessar a comunidade.');return}$('app').hidden=false;msg('');await loadPeople();await Promise.all([loadPosts(),loadOwnCharacters()])}
 async function loadOwnCharacters(){const select=$('wikiCharacter');const {data:myProfile,error:pe}=await db.from('profile').select('id').eq('user_id',user.id).maybeSingle();if(pe||!myProfile){$('wikiStatus').textContent='Crie seu perfil e personagem antes de publicar.';return}const {data,error}=await db.from('characters').select('id,first_name,last_name').eq('profile_id',myProfile.id);if(error){$('wikiStatus').textContent=error.message;return}select.replaceChildren();for(const c of data||[]){const o=document.createElement('option');o.value=c.id;o.textContent=[c.first_name,c.last_name].filter(Boolean).join(' ');select.append(o)}if(!data?.length){$('wikiStatus').textContent='Você precisa criar um personagem antes de publicar uma Wiki.';$('wikiPublish').disabled=true}}
 let coverPreviewUrl=null;$('wikiCoverFile').addEventListener('change',()=>{if(coverPreviewUrl)URL.revokeObjectURL(coverPreviewUrl);const file=$('wikiCoverFile').files[0],img=$('wikiCoverPreview');coverPreviewUrl=file?URL.createObjectURL(file):null;img.hidden=!file;if(file)img.src=coverPreviewUrl;else img.removeAttribute('src')});
@@ -112,14 +207,43 @@ async function loadPeople(){
  if(!players.length){area.textContent='Nenhum Limpador cadastrado ainda.';return}
 }
 
-async function loadPosts(){const area=$('posts');const {data,error}=await db.from('ability_wikis').select('id,character_id,title,description,category,limitations,cover_image,created_at').order('created_at',{ascending:false}).limit(30);area.replaceChildren();if(error){area.textContent='Erro ao carregar Wikis: '+error.message;return}if(!data?.length){area.append(el('div','panel','Ainda não há Wikis publicadas. Em breve os Limpadores poderão compartilhar suas habilidades.'));return}const ids=[...new Set(data.map(w=>w.character_id).filter(Boolean))];characterProfiles=new Map();if(ids.length){const {data:owners}=await db.from('characters').select('id,first_name,last_name,profile_id').in('id',ids);for(const c of owners||[])characterProfiles.set(c.id,c)}for(const w of data)await drawPost(area,w)}
+async function loadPosts(){
+ const area=$('posts');area.replaceChildren();
+ const [wikiResult,socialResult]=await Promise.all([
+  db.from('ability_wikis').select('id,character_id,title,description,category,limitations,cover_image,created_at').order('created_at',{ascending:false}).limit(40),
+  db.from('community_posts').select('id,user_id,content,image_url,created_at').order('created_at',{ascending:false}).limit(40)
+ ]);
+ if(wikiResult.error){area.append(el('p','muted','Erro ao carregar Wikis: '+wikiResult.error.message))}
+ if(socialResult.error){area.append(el('p','muted','Postagens sociais aguardando configuração do Supabase. Execute supabase/community_social_feed.sql para ativá-las.'))}
+ const wikis=wikiResult.data||[],social=socialResult.data||[];
+ const ids=[...new Set(wikis.map(w=>w.character_id).filter(Boolean))];characterProfiles=new Map();
+ if(ids.length){const {data:owners}=await db.from('characters').select('id,first_name,last_name,profile_id').in('id',ids);for(const c of owners||[])characterProfiles.set(c.id,c)}
+ const entries=[...wikis.map(w=>({kind:'wiki',item:w})),...social.map(p=>({kind:'social',item:p}))].sort((a,b)=>new Date(b.item.created_at)-new Date(a.item.created_at));
+ if(!entries.length&&!wikiResult.error&&!socialResult.error)area.append(el('div','panel','Ainda não há publicações. Seja o primeiro a compartilhar algo com os Limpadores.'));
+ for(const entry of entries){if(entry.kind==='wiki')await drawPost(area,entry.item);else await drawSocialPost(area,entry.item)}
+}
 async function drawPost(area,w){const card=el('article','post');const c=characterProfiles.get(w.character_id);const owner=[...profiles.values()].find(p=>p.id===c?.profile_id);const displayName=[c?.first_name,c?.last_name].filter(Boolean).join(' ')||'Limpador desconhecido';const head=el('div','post-head');const identity=el('div','post-identity');const avatarUrl=safeUrl(owner?.avatar_url);if(avatarUrl){const av=el('img','post-avatar');av.src=avatarUrl;av.alt='';av.onerror=()=>{av.replaceWith(el('span','post-avatar',displayName.charAt(0).toUpperCase()))};identity.append(av)}else identity.append(el('span','post-avatar',displayName.charAt(0).toUpperCase()));const by=el('div');const name=owner?link('./perfil.html?id='+encodeURIComponent(owner.id),displayName):el('span','',displayName);const line=el('div','post-byline');line.append(name);by.append(line,el('div','post-time',new Date(w.created_at).toLocaleDateString('pt-BR')+' · Registro de habilidade'));identity.append(by);head.append(identity);card.append(head);card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
 const media=el('div','post-media');const fallback=()=>{media.replaceChildren();const block=el('div','fallback-cover');block.append(el('b','','✧'),el('span','','BMTH // ARQUIVO DE HABILIDADE'));media.append(block)};const cover=safeUrl(w.cover_image);if(cover){const img=el('img');img.src=cover;img.alt='Capa da habilidade '+(w.title||'');img.loading='lazy';img.onerror=fallback;media.append(img)}else fallback();card.append(media);
-const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,count,commentToggle);card.append(actions);
+const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const dislike=el('button','','♧ Não curtir');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
 const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
-async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥ Curtido':'♡ Curtir';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked)}
+async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥ Curtido':'♡ Curtir';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked);await refreshDislikes()}
 async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of data||[]){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));list.append(item)}}
-like.addEventListener('click',async()=>{like.disabled=true;const liked=like.dataset.liked==='true';const q=liked?db.from('wiki_likes').delete().eq('wiki_id',w.id).eq('user_id',user.id):db.from('wiki_likes').insert({wiki_id:w.id,user_id:user.id});const {error}=await q;if(error)feedback.textContent='Erro ao curtir: '+error.message;else await refreshLikes();like.disabled=false});
+
+async function refreshDislikes(){
+ const {data,error}=await db.from('wiki_dislikes').select('user_id').eq('wiki_id',w.id);
+ if(error){dislike.disabled=true;return}
+ const mine=(data||[]).some(x=>x.user_id===user.id);
+ dislike.textContent=mine?'▼ Não curtiu':'♧ Não curtir';dislike.dataset.active=String(mine);
+ count.textContent+=' · '+(data||[]).length+' dislikes';
+}
+dislike.addEventListener('click',async()=>{
+ dislike.disabled=true;const active=dislike.dataset.active==='true';
+ const {error}=await (active?db.from('wiki_dislikes').delete().eq('wiki_id',w.id).eq('user_id',user.id):db.from('wiki_dislikes').insert({wiki_id:w.id,user_id:user.id}));
+ if(error)feedback.textContent='Erro no dislike: '+error.message;
+ else{if(!active&&like.dataset.liked==='true')await db.from('wiki_likes').delete().eq('wiki_id',w.id).eq('user_id',user.id);await refreshLikes()}
+ dislike.disabled=false;
+});
+like.addEventListener('click',async()=>{like.disabled=true;const liked=like.dataset.liked==='true';const q=liked?db.from('wiki_likes').delete().eq('wiki_id',w.id).eq('user_id',user.id):db.from('wiki_likes').insert({wiki_id:w.id,user_id:user.id});const {error}=await q;if(error)feedback.textContent='Erro ao curtir: '+error.message;else{if(!liked)await db.from('wiki_dislikes').delete().eq('wiki_id',w.id).eq('user_id',user.id);await refreshLikes()}like.disabled=false});
 form.addEventListener('submit',async e=>{e.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;const {error}=await db.from('wiki_comments').insert({wiki_id:w.id,user_id:user.id,content});if(error)feedback.textContent='Erro ao comentar: '+error.message;else{input.value='';feedback.textContent='Comentário enviado.';await refreshComments()}send.disabled=false});
 await Promise.all([refreshLikes(),refreshComments()])}
 init().catch(e=>msg('Não foi possível abrir a comunidade: '+e.message));
