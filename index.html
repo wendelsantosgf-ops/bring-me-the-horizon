@@ -199,6 +199,41 @@
 .hero h1{max-width:850px}
 .hero-art{display:block;position:relative;width:calc(100% - 48px);max-width:var(--max);margin:20px auto 64px;aspect-ratio:16/9;min-height:0!important;background-position:center center!important;background-size:cover!important}
 @media(max-width:560px){.hero-art{width:calc(100% - 32px);margin-top:12px;margin-bottom:40px;aspect-ratio:16/9}}
+
+/* Arquivos BMTH — carrossel acessível e responsivo */
+.archive-carousel{width:calc(100% - 48px);max-width:var(--max);margin:20px auto 64px}
+.archive-stage{position:relative;aspect-ratio:16/9;overflow:hidden;background:#0c080d;border:1px solid #663347;isolation:isolate}
+.archive-slide{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s ease,visibility .5s ease;overflow:hidden}
+.archive-slide.is-active{opacity:1;visibility:visible;pointer-events:auto}
+.archive-slide--shinjuku{background:#120c12 url('./544c32c9-9646-4a9a-b7c1-4d180a6a3767.png') center/cover no-repeat}
+.archive-slide--imaginary{background:radial-gradient(ellipse at 64% 52%,#812b65 0%,#30112c 28%,#0b0914 68%),linear-gradient(140deg,#1b0e1b,#07080c)}
+.archive-slide--zones{background:radial-gradient(ellipse at 60% 45%,#a83449 0%,#36101f 27%,#09090e 74%)}
+.archive-slide--cleaners{background:radial-gradient(circle at 65% 29%,#662b44 0%,#1a1120 34%,#09090f 78%)}
+.archive-slide--imaginary:after,.archive-slide--zones:after,.archive-slide--cleaners:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(8,6,11,.94),rgba(8,6,11,.4) 50%,transparent 88%),linear-gradient(0deg,#07070dc9,transparent 45%)}
+.archive-scene{position:absolute;inset:0;overflow:hidden}
+.archive-orb{position:absolute;left:65%;top:48%;width:34%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 40% 40%,#fbb1dd,#bc4c8c 15%,#4b174e 44%,#100d27 68%);box-shadow:0 0 70px #db41878c,0 0 200px #a72f7a70,inset -25px -30px 45px #090b20}
+.archive-ring{position:absolute;left:65%;top:48%;width:47%;height:54%;transform:translate(-50%,-50%) rotate(-25deg);border:2px solid #f58abf88;border-radius:50%;box-shadow:0 0 25px #dd5b9a55}
+.archive-ring--two{transform:translate(-50%,-50%) rotate(40deg);width:38%;height:65%;border-color:#9e68db88}
+.archive-rift{position:absolute;left:65%;top:42%;width:38%;height:84%;transform:translate(-50%,-50%) rotate(-13deg);border-radius:50%;background:radial-gradient(ellipse,#07000b 25%,#390b24 54%,#e04565 68%,transparent 71%);box-shadow:0 0 75px #ef365870}
+.archive-city{position:absolute;inset:62% 0 0;background:repeating-linear-gradient(90deg,#07070b 0 35px,#140e16 35px 48px,#07070b 48px 76px);clip-path:polygon(0 36%,5% 36%,5% 10%,12% 10%,12% 28%,20% 28%,20% 0,27% 0,27% 44%,38% 44%,38% 8%,45% 8%,45% 30%,54% 30%,54% 0,62% 0,62% 22%,72% 22%,72% 10%,79% 10%,79% 33%,88% 33%,88% 3%,95% 3%,95% 40%,100% 40%,100% 100%,0 100%)}
+.archive-moon{position:absolute;left:67%;top:12%;width:29%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 42% 38%,#edafc1,#ac4b6b 45%,#4a1b37 73%);box-shadow:0 0 110px #bf426680}
+.archive-figure{position:absolute;bottom:-10%;width:13%;height:72%;background:linear-gradient(90deg,#07080d,#20141f 45%,#08080c);clip-path:polygon(38% 0,65% 0,79% 16%,70% 27%,94% 46%,100% 100%,0 100%,9% 46%,30% 27%,23% 16%);filter:drop-shadow(0 0 18px #000)}
+.archive-figure--one{left:58%;transform:scale(1.12)}.archive-figure--two{left:73%;height:60%}.archive-figure--three{left:44%;height:54%}
+.archive-slide-copy{position:absolute;left:6%;bottom:13%;z-index:2;max-width:47%;color:#fff}
+.archive-slide-copy>span{font-size:clamp(9px,1.1vw,13px);letter-spacing:.23em;color:#f08fa8;font-weight:800}
+.archive-slide-copy h2{font:700 clamp(24px,4.4vw,65px)/1.1 'Cinzel',Georgia,serif;letter-spacing:.04em;margin:12px 0}
+.archive-slide-copy p{font-size:clamp(12px,1.4vw,18px);line-height:1.5;color:#f1dfe8;margin:0 0 24px}
+.archive-slide-copy a{display:inline-block;padding:12px 19px;border:1px solid #d9708f;background:#a62d4e;color:white;font-size:12px;font-weight:800;letter-spacing:.07em;text-decoration:none}
+.archive-slide-copy a:hover{background:#c33c61}
+.archive-controls{position:absolute;z-index:5;right:3%;bottom:8%;display:flex;gap:10px}
+.archive-arrow{display:grid;place-items:center;width:43px;height:43px;border:1px solid #a74d69;background:#160d17d9;color:#ffc2d4;font:400 36px/1 Georgia,serif;cursor:pointer}
+.archive-arrow:hover,.archive-arrow:focus-visible{background:#ad3154;color:white}
+.archive-dots{position:absolute;z-index:5;right:3%;bottom:3%;display:flex;gap:12px}
+.archive-dots button{width:25px;height:4px;border:0;background:#b6a2aa6b;cursor:pointer;padding:0}
+.archive-dots button.is-active{background:#ef5e83}
+.archive-caption{margin:10px 2px 0;color:#c58ba1;letter-spacing:.18em;font-size:11px}
+@media(max-width:560px){.archive-carousel{width:calc(100% - 32px);margin:12px auto 40px}.archive-stage{aspect-ratio:4/3}.archive-slide--shinjuku{background-position:62% center}.archive-slide-copy{left:5%;bottom:21%;max-width:76%}.archive-slide-copy h2{font-size:clamp(23px,6vw,35px)}.archive-slide-copy p{font-size:12px;margin-bottom:12px}.archive-slide-copy a{font-size:10px;padding:9px 12px}.archive-controls{bottom:5%}.archive-dots{bottom:3%;right:auto;left:5%}.archive-orb,.archive-rift,.archive-moon{left:72%}}
+@media(prefers-reduced-motion:reduce){.archive-slide{transition:none}}
 </style>
 <link rel="stylesheet" href="./theme.css?v=1">
 </head>
@@ -218,14 +253,26 @@
     </div>
   </section>
 
-  <div class="hero-art" aria-label="Representação abstrata de uma ruptura dimensional">
-      <div class="art-index">BMTH / ARCHIVE 00.1</div>
-      <div class="portal"></div>
-      <div class="art-caption">
-        <strong>REALIDADE // INSTÁVEL</strong>
-        <small>Nem tudo que pode ser imaginado deveria existir.</small>
-      </div>
-  </div>
+  <section class="archive-carousel" aria-label="Arquivos do universo Bring Me the Horizon" aria-roledescription="carrossel">
+    <div class="archive-stage" id="archiveStage" tabindex="0" aria-label="Use as setas do teclado para navegar pelos arquivos">
+      <article class="archive-slide archive-slide--shinjuku is-active" data-archive-slide aria-hidden="false" aria-label="Arquivo 1: Ruptura de Shinjuku"></article>
+      <article class="archive-slide archive-slide--imaginary" data-archive-slide aria-hidden="true" aria-label="Arquivo 2: O Imaginário">
+        <div class="archive-scene archive-scene--imaginary" aria-hidden="true"><span class="archive-orb"></span><span class="archive-ring archive-ring--one"></span><span class="archive-ring archive-ring--two"></span></div>
+        <div class="archive-slide-copy"><span>ARQUIVO 02 / FONTE PRIMORDIAL</span><h2>O IMAGINÁRIO</h2><p>Sonhos, medos e desejos alimentam uma força capaz de alterar a realidade.</p><a href="#imaginario">EXPLORAR ARQUIVO ↗</a></div>
+      </article>
+      <article class="archive-slide archive-slide--zones" data-archive-slide aria-hidden="true" aria-label="Arquivo 3: As Zonas">
+        <div class="archive-scene archive-scene--zones" aria-hidden="true"><span class="archive-rift"></span><span class="archive-city"></span></div>
+        <div class="archive-slide-copy"><span>ARQUIVO 03 / ANOMALIAS</span><h2>AS ZONAS</h2><p>Territórios instáveis, criaturas desconhecidas e expedições de alto risco.</p><a href="#zonas">EXPLORAR ARQUIVO ↗</a></div>
+      </article>
+      <article class="archive-slide archive-slide--cleaners" data-archive-slide aria-hidden="true" aria-label="Arquivo 4: Os Limpadores">
+        <div class="archive-scene archive-scene--cleaners" aria-hidden="true"><span class="archive-moon"></span><span class="archive-figure archive-figure--one"></span><span class="archive-figure archive-figure--two"></span><span class="archive-figure archive-figure--three"></span></div>
+        <div class="archive-slide-copy"><span>ARQUIVO 04 / OPERAÇÕES</span><h2>OS LIMPADORES</h2><p>Profissionais que enfrentam as anomalias e sobrevivem ao impossível.</p><a href="#nucleo">EXPLORAR ARQUIVO ↗</a></div>
+      </article>
+      <div class="archive-controls"><button class="archive-arrow" id="archivePrev" type="button" aria-label="Arquivo anterior">‹</button><button class="archive-arrow" id="archiveNext" type="button" aria-label="Próximo arquivo">›</button></div>
+      <div class="archive-dots" role="group" aria-label="Selecionar arquivo"><button type="button" class="is-active" aria-label="Mostrar arquivo 1" aria-current="true"></button><button type="button" aria-label="Mostrar arquivo 2"></button><button type="button" aria-label="Mostrar arquivo 3"></button><button type="button" aria-label="Mostrar arquivo 4"></button></div>
+    </div>
+    <p class="archive-caption" aria-live="polite" id="archiveCaption">01 / 04 — RUPTURA DE SHINJUKU</p>
+  </section>
 
   <nav class="quick-nav" aria-label="Atalhos dos sistemas">
     <a href="#nucleo"><b>00 / Núcleo: Japão</b><small>Universo e origem das Zonas</small></a>
@@ -402,6 +449,29 @@
       });
     }, { rootMargin: '-25% 0px -65% 0px' });
     sections.forEach(section => observer.observe(section));
+
+
+    // Navegação dos arquivos: setas, indicadores, teclado e gesto de deslizar.
+    (() => {
+      const stage=document.getElementById('archiveStage');
+      const slides=[...stage.querySelectorAll('[data-archive-slide]')];
+      const dots=[...stage.querySelectorAll('.archive-dots button')];
+      const captions=['RUPTURA DE SHINJUKU','O IMAGINÁRIO','AS ZONAS','OS LIMPADORES'];
+      let current=0,startX=null;
+      function show(index){
+        current=(index+slides.length)%slides.length;
+        slides.forEach((slide,i)=>{const active=i===current;slide.classList.toggle('is-active',active);slide.setAttribute('aria-hidden',String(!active));slide.querySelectorAll('a').forEach(a=>a.tabIndex=active?0:-1)});
+        dots.forEach((dot,i)=>{dot.classList.toggle('is-active',i===current);if(i===current)dot.setAttribute('aria-current','true');else dot.removeAttribute('aria-current')});
+        document.getElementById('archiveCaption').textContent=String(current+1).padStart(2,'0')+' / 04 — '+captions[current];
+      }
+      document.getElementById('archivePrev').addEventListener('click',()=>show(current-1));
+      document.getElementById('archiveNext').addEventListener('click',()=>show(current+1));
+      dots.forEach((dot,i)=>dot.addEventListener('click',()=>show(i)));
+      stage.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();show(current+(e.key==='ArrowRight'?1:-1))}});
+      stage.addEventListener('touchstart',e=>{startX=e.changedTouches[0].screenX},{passive:true});
+      stage.addEventListener('touchend',e=>{if(startX===null)return;const delta=e.changedTouches[0].screenX-startX;if(Math.abs(delta)>45)show(current+(delta<0?1:-1));startX=null},{passive:true});
+      show(0);
+    })();
 
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
