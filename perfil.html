@@ -92,6 +92,9 @@ const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable
 const $=id=>document.getElementById(id),notice=text=>$('notice').textContent=text;
 const params=new URLSearchParams(location.search),requested=params.get('id');
 let user=null,profile=null,customization=null;
+// Must be initialized before the top-level await that calls render().
+const profileCharacterNames=new Map();
+let sheetOpener=null;
 const {data:auth,error:authError}=await db.auth.getUser();user=auth?.user;
 if(authError||!user){notice('Faça login para visualizar perfis.');const a=document.createElement('a');a.href='./login.html';a.textContent=' Entrar';$('notice').append(a)}
 else{
@@ -198,8 +201,6 @@ async function loadProfileWikis(characterIds){
   info.append(category,title,description,character);article.append(media,info);area.append(article);
  }
 }
-const profileCharacterNames=new Map();
-let sheetOpener=null;
 function openSheet(c,progress,opener){
  sheetOpener=opener;const name=[c.first_name,c.last_name].filter(Boolean).join(' ')||'Sem nome';
  $('sheetName').textContent=name;$('sheetPortrait').replaceChildren();if(imageUrl(c.portrait_url)){const img=document.createElement('img');img.src=imageUrl(c.portrait_url);img.alt='Retrato de '+name;$('sheetPortrait').append(img)}else $('sheetPortrait').textContent=(c.first_name||'✦').charAt(0).toUpperCase();
