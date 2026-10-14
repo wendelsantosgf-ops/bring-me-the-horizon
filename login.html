@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0a10">
+<title>Portal dos Limpadores | Bring Me the Horizon</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0a10;--panel:#17131e;--line:#393044;--red:#ed4d68;--muted:#b8aebf}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 85% 10%,#382038 0,transparent 45%),radial-gradient(ellipse at 0 90%,#31131e 0,transparent 45%),var(--bg);color:#f7f1fa;font-family:Inter,system-ui,sans-serif;display:grid;place-items:center;padding:24px}
+main{width:min(100%,430px);border:1px solid var(--line);background:#14111be8;padding:32px;box-shadow:0 25px 80px #0008}
+.eyebrow{color:var(--red);font-size:12px;letter-spacing:.22em;font-weight:800}h1{font-size:2rem;line-height:1.1;margin:12px 0}p{color:var(--muted);line-height:1.55}
+label{display:block;margin:18px 0 6px;font-size:13px;color:#e9dfed}input{width:100%;padding:13px;background:#0b0a10;border:1px solid #4a3a50;border-radius:3px;color:white;font:inherit}input:focus{outline:2px solid #b62942}
+button{cursor:pointer;font:inherit}button:disabled{opacity:.65;cursor:wait}.primary{width:100%;margin-top:22px;padding:14px;border:0;background:#b62942;color:white;font-weight:800}.secondary{background:none;border:0;color:#ff879b;padding:10px 0}
+#message{min-height:24px;font-size:14px;overflow-wrap:anywhere}a{color:#d8b5ff}footer{margin-top:20px;font-size:13px;color:var(--muted)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<div class="eyebrow">BMTH // ACESSO RESTRITO</div>
+<h1>Portal dos Limpadores</h1>
+<p id="intro">Entre na sua conta ou registre-se para iniciar sua jornada.</p>
+<section id="auth">
+<form id="authForm">
+<label for="email">E-mail</label><input id="email" type="email" autocomplete="email" required maxlength="254">
+<label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" required minlength="6">
+<button class="primary" id="submit" type="submit">ENTRAR</button>
+</form>
+<button class="secondary" id="switch" type="button">Não tem conta? Criar cadastro</button>
+</section>
+<section id="logged" hidden>
+<p>Autenticação realizada. Seu perfil de jogador será disponibilizado nas próximas etapas.</p>
+<p id="account"></p>
+<button class="primary" id="logout" type="button">SAIR DA CONTA</button>
+</section>
+<p id="message" role="status" aria-live="polite"></p>
+<footer><a href="./index.html.html">← Voltar ao manual do RPG</a></footer>
+</main>
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+const supabase=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
+const $=id=>document.getElementById(id);
+let registering=false;
+function message(text){$('message').textContent=text}
+function busy(on){$('submit').disabled=on;$('submit').textContent=on?'AGUARDE...':registering?'CRIAR CONTA':'ENTRAR'}
+function render(session){const user=session?.user;$('auth').hidden=!!user;$('logged').hidden=!user;$('account').textContent=user?'Conectado como: '+(user.email||'jogador'):''}
+$('switch').addEventListener('click',()=>{registering=!registering;$('submit').textContent=registering?'CRIAR CONTA':'ENTRAR';$('switch').textContent=registering?'Já tem conta? Entrar':'Não tem conta? Criar cadastro';$('password').autocomplete=registering?'new-password':'current-password';message('')});
+$('authForm').addEventListener('submit',async e=>{e.preventDefault();busy(true);message('');const email=$('email').value.trim(),password=$('password').value;try{if(registering){const {data,error}=await supabase.auth.signUp({email,password,emailRedirectTo:location.origin+location.pathname});if(error)throw error;message(data.session?'Conta criada e conectada!':'Cadastro enviado. Confira seu e-mail para confirmar a conta, caso solicitado.')}else{const {error}=await supabase.auth.signInWithPassword({email,password});if(error)throw error;message('Login realizado com sucesso.')}}catch(err){message('Não foi possível concluir: '+err.message)}finally{busy(false)}});
+$('logout').addEventListener('click',async()=>{const {error}=await supabase.auth.signOut();message(error?error.message:'Você saiu da conta.')});
+supabase.auth.onAuthStateChange((_event,session)=>render(session));
+const {data:{session}}=await supabase.auth.getSession();render(session);
+</script>
+</body></html>
