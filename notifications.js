@@ -20,37 +20,13 @@ if(user){
  const heading=document.createElement('strong');heading.textContent='Notificações';
  const close=document.createElement('button');close.textContent='Fechar';close.style.float='right';close.onclick=()=>panel.hidden=true;
  const items=document.createElement('div');panel.append(heading,close,items);document.body.append(bell,panel);
- let seenIds=null, audioContext=null, audioEnabled=false, busy=false;
- const unlockSound=()=>{
-  try{const AudioContextClass=window.AudioContext||window.webkitAudioContext;if(!AudioContextClass)return;
-   audioContext ||=new AudioContextClass();audioContext.resume().then(()=>{audioEnabled=audioContext.state==='running'}).catch(()=>{});
-  }catch(e){console.debug('Audio not available',e)}
- };
- // Browsers only allow notification sounds after a user gesture.
- document.addEventListener('pointerdown',unlockSound,{once:true});
- document.addEventListener('keydown',unlockSound,{once:true});
- function playSound(){
-  if(!audioEnabled||!audioContext||audioContext.state!=='running')return;
-  try{
-   const t=audioContext.currentTime;
-   for(const [offset,freq] of [[0,659.25],[0.12,880]]){
-    const oscillator=audioContext.createOscillator(),gain=audioContext.createGain();
-    oscillator.type='sine';oscillator.frequency.value=freq;
-    gain.gain.setValueAtTime(0.0001,t+offset);
-    gain.gain.exponentialRampToValueAtTime(0.09,t+offset+0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001,t+offset+0.19);
-    oscillator.connect(gain);gain.connect(audioContext.destination);
-    oscillator.start(t+offset);oscillator.stop(t+offset+0.20);
-   }
-  }catch(e){console.debug('Notification audio failed',e)}
- }
+ let seenIds=null, busy=false;
  async function refresh(){
   if(busy)return;busy=true;
   try{
    const {data,error}=await client.from('bmth_notifications').select('id,title,href,created_at,read_at').eq('recipient_id',user.id).is('read_at',null).order('created_at',{ascending:false}).limit(40);
    if(error){items.textContent='Não foi possível carregar as notificações.';count.hidden=true;return}
    const notifications=data||[], ids=new Set(notifications.map(n=>n.id));
-   if(seenIds!==null&&notifications.some(n=>!seenIds.has(n.id)))playSound();
    seenIds=ids;
    count.hidden=notifications.length===0;count.textContent=String(notifications.length);
    if(!panel.hidden){
@@ -66,7 +42,7 @@ if(user){
   }finally{busy=false}
  }
  bell.onclick=async()=>{
-  unlockSound();panel.hidden=!panel.hidden;
+  panel.hidden=!panel.hidden;
   if(panel.hidden)return;
   await refresh();
   // Opening the notification drawer acknowledges all currently unread items.
