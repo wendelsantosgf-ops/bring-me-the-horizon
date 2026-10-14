@@ -24,3 +24,7 @@ create policy "Owners update profile themes"
 on public.profile_customization for update to authenticated
 using (exists (select 1 from public.profile p where p.id=profile_id and p.user_id=(select auth.uid())))
 with check (exists (select 1 from public.profile p where p.id=profile_id and p.user_id=(select auth.uid())));
+
+-- Campo independente do quadro Sobre mim (seguro para instalações existentes)
+alter table public.profile_customization
+  add column if not exists about_text text not null default '';
