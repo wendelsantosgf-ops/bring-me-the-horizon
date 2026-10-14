@@ -73,3 +73,6 @@ body.login-page .primary{border-radius:11px}
  .bmth-mobile-nav a[aria-current="page"]{color:#fff;background:#5c203a}
  .bmth-mobile-nav a:focus-visible{outline:2px solid #ff9fb6}
 }
+
+/* Consistent outlined navigation icons matching BMTH mobile concept */
+@media(max-width:700px){.bmth-mobile-nav a .bmth-mobile-icon{display:flex;align-items:center;justify-content:center;width:27px;height:27px;color:#d2bdc9}.bmth-mobile-nav a .bmth-mobile-icon svg{display:block;width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}.bmth-mobile-nav a[aria-current="page"] .bmth-mobile-icon{color:#ff9eb8}}
