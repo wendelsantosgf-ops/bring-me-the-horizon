@@ -35,3 +35,19 @@ body.manual-page .quick-nav a{border-radius:13px}body.manual-page .card,body.man
 body.login-page main{border-radius:22px;border-color:#613648;box-shadow:0 30px 80px #0009}
 body.login-page .primary{border-radius:11px}
 @media(max-width:760px){.bmth-header{box-shadow:0 6px 24px #0008}body.login-page main{border-radius:18px}}
+
+/* BMTH 2.0 — refinamento visual compartilhado */
+:root{--bg:#09080c;--panel:#151017;--line:#4b2b39;--red:#cf3855;--muted:#b9aab6}
+body{background:radial-gradient(ellipse at 85% -12%,#371422 0%,transparent 44%),radial-gradient(ellipse at 0 75%,#1c101c 0%,transparent 44%),#09080c}
+.bmth-header{background:#09080deb;border-bottom-color:#63263b;backdrop-filter:blur(16px)}
+.bmth-nav a .bmth-icon{font-family:'DM Sans',sans-serif;color:#ed6982}
+.bmth-nav a:hover,.bmth-nav a[aria-current=page]{background:linear-gradient(180deg,#2b1621,#150d15);border-bottom-color:#ee6682}
+.bmth-account{border-radius:12px;background:#25141e}
+body:not(.manual-page) .card,body:not(.manual-page) .panel,body:not(.manual-page) .post,body:not(.manual-page) .formbox{border-color:#50303e;background:linear-gradient(145deg,#1d141d,#100e14);box-shadow:0 18px 55px #0005;border-radius:16px}
+body:not(.manual-page) button{border-radius:11px}
+body:not(.manual-page) input,body:not(.manual-page) textarea,body:not(.manual-page) select{border-radius:10px}
+body:not(.manual-page) a:focus-visible,body:not(.manual-page) button:focus-visible{outline:2px solid #f28ba1;outline-offset:3px}
+body.login-page>main{border-radius:22px;overflow:hidden;border-color:#703649;background:linear-gradient(145deg,#24141f,#100c14);box-shadow:0 30px 95px #000a}
+body.login-page .primary{border-radius:11px}
+@media(max-width:860px){.bmth-header{backdrop-filter:none}.bmth-nav{scroll-snap-type:x proximity}.bmth-nav a{scroll-snap-align:start}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}a,button{transition:none!important}}
