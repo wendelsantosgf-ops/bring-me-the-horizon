@@ -19,10 +19,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:radial-gradient(ellip
 main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{margin-bottom:18px;letter-spacing:.25em;font-size:11px}.hero-card{border-radius:0;background:#101016;border-color:#332832;box-shadow:0 25px 65px #0006}.cover{height:340px;position:relative;background-color:#211b23;background-image:linear-gradient(90deg,#09080c45 0%,#08070a05 52%,#08070abf 100%);background-blend-mode:multiply;background-position:center;background-size:cover}.cover-quote{position:absolute;right:5%;top:23%;text-align:left;font:500 clamp(13px,1.25vw,19px)/2 'Cinzel',serif;letter-spacing:.17em;color:#e6dce1;text-shadow:0 2px 8px #000}.cover-quote i{display:block;width:55px;border-top:2px solid #cf3851;margin-top:15px}.profile{min-height:155px;position:relative;padding:22px 35px 24px 230px}.avatar{position:absolute;left:34px;top:-105px;margin:0;width:168px;height:168px;border:5px solid #0c0b10;outline:2px solid #b52d46;box-shadow:0 10px 25px #0009}.name{font:500 38px 'Cinzel',serif;margin:0 0 4px}.role{font:600 11px 'Cinzel',serif;letter-spacing:.18em;color:#d3b7bf}.profile p.muted{margin:12px 0;color:#bbb5bf}.profile #editButton{position:absolute;right:35px;top:40px;background:linear-gradient(120deg,#8b152b,#b52943);border:1px solid #d34b60;padding:13px 24px}.profile-tabs{display:flex;gap:0;align-items:center;overflow-x:auto;border-bottom:1px solid #42303b;margin:15px 0 28px}.profile-tabs a{flex-shrink:0;padding:19px 24px;font:600 12px 'Cinzel',serif;letter-spacing:.08em;color:#c4bfc5;border-bottom:2px solid transparent;text-decoration:none}.profile-tabs a.active,.profile-tabs a:hover{border-bottom-color:#c8334c;color:#f2647a}.profile-content{display:grid;grid-template-columns:1fr 1fr;gap:24px}.profile-content .card{border-radius:9px;min-height:260px;padding:25px;background:linear-gradient(145deg,#16141b,#0f0f14);box-shadow:none}.section h2{font:600 17px 'Cinzel',serif;letter-spacing:.07em}.section h2 span{color:#d13c55;margin-right:8px}.about-note{border:1px solid #302b35;background:#0b0b10;padding:18px;color:#b6b0bb;margin:20px 0}.about p{font-size:13px;color:#a7a0ad}.section-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.section-heading>a{font-size:12px}.create-action{margin-top:20px;text-align:center}.create-action a{display:inline-block;border:1px solid #a42d43;background:#811c2e;color:#fff;padding:10px 18px;text-decoration:none;border-radius:5px;font-weight:700;font-size:12px}.characters-panel #characters:empty{min-height:50px}.tile{background:#121017;border-color:#3c313b}.card.section#editor{max-width:900px;margin:24px auto}.card.section#editor h2{font-family:'Cinzel',serif}
 @media(max-width:1150px){.main-nav a{padding:12px 9px;font-size:10px}.main-nav a small{font-size:8px}.brand-words b{font-size:24px}.brand-words small{font-size:8px}}
 @media(max-width:800px){.site-header{flex-wrap:wrap;min-height:auto;padding:15px 18px}.main-nav{order:3;width:100%;overflow-x:auto;justify-content:flex-start}.main-nav a{min-height:65px}.account{margin-left:auto}.cover{height:210px}.cover-quote{font-size:10px;right:15px}.profile{padding:75px 18px 22px}.avatar{left:18px;top:-55px;width:110px;height:110px}.name{font-size:28px}.profile #editButton{position:static;margin-top:15px}.profile-content{grid-template-columns:1fr}.profile-tabs a{padding:16px 13px;font-size:10px}}
+.hero-card{--player-accent:#d03951;border-top:2px solid var(--player-accent)}.hero-card .avatar{outline-color:var(--player-accent)}.hero-card #editButton,.create-action a{background:var(--player-accent);border-color:var(--player-accent)}.custom-tagline{font:500 13px 'Cinzel',serif;letter-spacing:.07em;color:var(--player-accent);margin:0 0 8px}.theme-editor{border:1px solid #54404c;padding:20px;margin:22px 0;border-radius:8px}.theme-editor legend{font-family:'Cinzel',serif;color:#ed9da9;padding:0 8px}.theme-editor input[type=color]{width:90px;height:46px;padding:5px;cursor:pointer}.custom-card-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.custom-field{border:1px solid #40323e;padding:12px}.custom-cards{display:grid;gap:12px}.custom-card{padding:15px;border-left:3px solid var(--player-accent,#d03951);background:#0d0c12;white-space:pre-wrap;overflow-wrap:anywhere}.custom-card strong{display:block;font-family:'Cinzel',serif;margin-bottom:8px}.profile-custom-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background-size:cover;background-position:center;opacity:.17}@media(max-width:600px){.custom-card-fields{grid-template-columns:1fr}}
 </style>
 <link rel="stylesheet" href="./theme.css?v=1">
 </head>
-<body>
+<body><div id="profileBackground" class="profile-custom-bg" aria-hidden="true"></div>
 <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html"><span class="bmth-icon">▤</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html"><span class="bmth-icon">♟</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon">♜</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html" aria-current="page"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
 <main>
 <p class="eyebrow">✧ ARQUIVO DOS LIMPADORES / PERFIL</p>
@@ -30,7 +31,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 <div id="page" hidden>
 <article class="card hero-card"><div id="cover" class="cover"><div class="cover-quote">HÁ COISAS QUE SÓ<br>A ESCURIDÃO PODE LIMPAR.<i></i></div></div><div class="profile">
 <img id="avatar" class="avatar" alt="Avatar do jogador">
-<div class="identity"><div><div id="displayName" class="name"></div><div class="role">✥ L I M P A D O R</div><p id="bio" class="muted"></p><small id="member"></small></div></div>
+<div class="identity"><div><p id="tagline" class="custom-tagline" hidden></p><div id="displayName" class="name"></div><div class="role">✥ L I M P A D O R</div><p id="bio" class="muted"></p><small id="member"></small></div></div>
 <p><button id="editButton" type="button" hidden>Editar meu perfil</button></p>
 </div></article><div class="profile-tabs"><a class="active" href="#visao-geral">♟ &nbsp; VISÃO GERAL</a><a href="#personagens">♜ &nbsp; PERSONAGENS</a><a href="./comunidade.html">◈ &nbsp; WIKIS</a><a href="./comunidade.html">⌁ &nbsp; ATIVIDADES</a></div>
 <section id="editor" class="card section" hidden><h2>Editar perfil</h2>
@@ -39,9 +40,18 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 <label>Biografia<textarea id="bioInput" maxlength="1000" rows="4"></textarea></label>
 <label>Foto de perfil (JPG, PNG ou WEBP, até 5 MB)<input id="avatarFile" type="file" accept="image/jpeg,image/png,image/webp"><small>Ou use um link:</small><input id="avatarInput" type="url" placeholder="https://..."></label>
 <label>Imagem de capa (JPG, PNG ou WEBP, até 5 MB)<input id="bannerFile" type="file" accept="image/jpeg,image/png,image/webp"><small>Ou use um link:</small><input id="bannerInput" type="url" placeholder="https://..."></label>
+<fieldset class="theme-editor"><legend>✧ Personalização do meu espaço</legend>
+<label>Cor de destaque <input id="accentInput" type="color" value="#d03951"></label>
+<label>Frase de apresentação <input id="taglineInput" maxlength="140" placeholder="Uma frase que representa seu Limpador"></label>
+<label>Imagem ou textura de fundo (JPG, PNG, WEBP, até 5 MB)<input id="backgroundFile" type="file" accept="image/jpeg,image/png,image/webp"></label>
+<label>Ou link HTTPS do fundo<input id="backgroundInput" type="url" placeholder="https://..."></label>
+<p class="muted">Até 4 cartões personalizados. Você pode deixar campos vazios.</p>
+<div class="custom-card-fields">
+<div class="custom-field"><strong>Cartão 1</strong><input id="cardTitle1" maxlength="60" placeholder="Título"><textarea id="cardText1" maxlength="500" rows="2" placeholder="Seu texto"></textarea></div><div class="custom-field"><strong>Cartão 2</strong><input id="cardTitle2" maxlength="60" placeholder="Título"><textarea id="cardText2" maxlength="500" rows="2" placeholder="Seu texto"></textarea></div><div class="custom-field"><strong>Cartão 3</strong><input id="cardTitle3" maxlength="60" placeholder="Título"><textarea id="cardText3" maxlength="500" rows="2" placeholder="Seu texto"></textarea></div><div class="custom-field"><strong>Cartão 4</strong><input id="cardTitle4" maxlength="60" placeholder="Título"><textarea id="cardText4" maxlength="500" rows="2" placeholder="Seu texto"></textarea></div>
+</div></fieldset>
 <button id="saveButton" type="submit">Salvar alterações</button>
 </form><small>Escolha imagens do celular ou computador. Se não selecionar um arquivo, o link informado será utilizado.</small></section>
-<div class="profile-content" id="visao-geral"><section class="card section about"><h2><span>♟</span> SOBRE MIM</h2><div class="about-note">O Imaginário registra aqueles que ousam atravessá-lo.</div><p>✥ &nbsp; Limpador registrado</p><p>◈ &nbsp; <a href="./comunidade.html">Explorar a comunidade</a></p></section><section id="personagens" class="card section characters-panel"><div class="section-heading"><h2><span>♜</span> PERSONAGENS</h2><a href="./personagens.html">Ver todos →</a></div><div id="characters" class="grid"></div><div class="create-action"><a href="./personagens.html">＋ CRIAR PERSONAGEM</a></div></section></div>
+<div class="profile-content" id="visao-geral"><section class="card section about"><h2><span>♟</span> SOBRE MIM</h2><div class="about-note">O Imaginário registra aqueles que ousam atravessá-lo.</div><div id="customCards" class="custom-cards"></div><p>✥ &nbsp; Limpador registrado</p><p>◈ &nbsp; <a href="./comunidade.html">Explorar a comunidade</a></p></section><section id="personagens" class="card section characters-panel"><div class="section-heading"><h2><span>♜</span> PERSONAGENS</h2><a href="./personagens.html">Ver todos →</a></div><div id="characters" class="grid"></div><div class="create-action"><a href="./personagens.html">＋ CRIAR PERSONAGEM</a></div></section></div>
 </div>
 </main>
 <script type="module">
@@ -49,7 +59,7 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
 const $=id=>document.getElementById(id),notice=text=>$('notice').textContent=text;
 const params=new URLSearchParams(location.search),requested=params.get('id');
-let user=null,profile=null;
+let user=null,profile=null,customization=null;
 const {data:auth,error:authError}=await db.auth.getUser();user=auth?.user;
 if(authError||!user){notice('Faça login para visualizar perfis.');const a=document.createElement('a');a.href='./login.html';a.textContent=' Entrar';$('notice').append(a)}
 else{
@@ -77,6 +87,23 @@ async function uploadPhoto(file,kind){
  if(error)throw Error(error.message+' (confira se o bucket profile-images foi configurado)');
  return db.storage.from('profile-images').getPublicUrl(path).data.publicUrl;
 }
+async function loadCustomization(){
+ const {data,error}=await db.from('profile_customization').select('accent_color,background_url,tagline,custom_cards').eq('profile_id',profile.id).maybeSingle();
+ if(error){console.warn('Personalização indisponível: execute supabase/profile_customization.sql',error.message);customization=null}else customization=data;
+ const color=/^#[0-9a-f]{6}$/i.test(customization?.accent_color||'')?customization.accent_color:'#d03951';
+ document.querySelector('.hero-card').style.setProperty('--player-accent',color);
+ document.querySelector('.about').style.setProperty('--player-accent',color);
+ const tagline=$('tagline');tagline.textContent=customization?.tagline||'';tagline.hidden=!tagline.textContent;
+ const bg=imageUrl(customization?.background_url);$('profileBackground').style.backgroundImage=bg?'linear-gradient(#09090d99,#09090d99),url('+JSON.stringify(bg)+')':'none';
+ const cards=$('customCards');cards.replaceChildren();
+ for(const c of (Array.isArray(customization?.custom_cards)?customization.custom_cards:[]).slice(0,4)){
+  if(typeof c.title!=='string'||typeof c.text!=='string')continue;
+  const tile=document.createElement('div');tile.className='custom-card';
+  const heading=document.createElement('strong');heading.textContent=c.title;
+  const body=document.createElement('div');body.textContent=c.text;
+  tile.append(heading,body);cards.append(tile);
+ }
+}
 function imageUrl(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
 async function render(){
  $('page').hidden=false;notice('');
@@ -86,6 +113,7 @@ async function render(){
  const fallback='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="120" height="120" fill="#382239"/><text x="60" y="77" text-anchor="middle" font-size="58" fill="#ff91a4">✦</text></svg>');
  $('avatar').src=imageUrl(profile.avatar_url)||fallback;
  const banner=imageUrl(profile.banner_url);$('cover').style.backgroundImage=banner?'linear-gradient(0deg,#100c18b0,transparent),url('+JSON.stringify(banner)+')':'';
+ await loadCustomization();
  $('editButton').hidden=profile.user_id!==user.id;
  const {data:characters,error}=await db.from('characters').select('id,first_name,last_name,spiritual_energy').eq('profile_id',profile.id).order('created_at',{ascending:false});
  if(error){$('characters').textContent='Não foi possível carregar os personagens: '+error.message;return}
@@ -104,7 +132,7 @@ async function render(){
 }
 $('editButton').addEventListener('click',()=>{
  const opening=$('editor').hidden;$('editor').hidden=!opening;
- if(opening){$('nameInput').value=profile.display_name||'';$('bioInput').value=profile.bio||'';$('avatarInput').value=profile.avatar_url||'';$('bannerInput').value=profile.banner_url||'';$('editor').scrollIntoView({behavior:'smooth'})}
+ if(opening){$('accentInput').value=customization?.accent_color||'#d03951';$('taglineInput').value=customization?.tagline||'';$('backgroundInput').value=customization?.background_url||'';for(let i=1;i<=4;i++){const c=customization?.custom_cards?.[i-1];$('cardTitle'+i).value=c?.title||'';$('cardText'+i).value=c?.text||''}$('nameInput').value=profile.display_name||'';$('bioInput').value=profile.bio||'';$('avatarInput').value=profile.avatar_url||'';$('bannerInput').value=profile.banner_url||'';$('editor').scrollIntoView({behavior:'smooth'})}
 });
 $('profileForm').addEventListener('submit',async event=>{
  event.preventDefault();$('saveButton').disabled=true;
@@ -112,7 +140,7 @@ $('profileForm').addEventListener('submit',async event=>{
  try{const avatar=await uploadPhoto($('avatarFile').files[0],'avatar');const banner=await uploadPhoto($('bannerFile').files[0],'banner');if(avatar)patch.avatar_url=avatar;if(banner)patch.banner_url=banner}catch(e){$('saveButton').disabled=false;notice('Erro ao enviar imagem: '+e.message);return}
  const {data,error}=await db.from('profile').update(patch).eq('id',profile.id).eq('user_id',user.id).select('id,user_id,display_name,bio,avatar_url,banner_url,created_at').single();
  $('saveButton').disabled=false;
- if(error)notice('Erro ao salvar: '+error.message);else{profile=data;$('editor').hidden=true;await render();notice('Perfil atualizado com sucesso.')}
+ if(error)notice('Erro ao salvar: '+error.message);else{profile=data;let themeError=null;try{const background=await uploadPhoto($('backgroundFile').files[0],'background');const cards=[];for(let i=1;i<=4;i++){const title=$('cardTitle'+i).value.trim(),text=$('cardText'+i).value.trim();if(title&&text)cards.push({title,text})}const payload={profile_id:profile.id,accent_color:$('accentInput').value,tagline:$('taglineInput').value.trim(),background_url:background||$('backgroundInput').value.trim()||null,custom_cards:cards,updated_at:new Date().toISOString()};const {error:err}=await db.from('profile_customization').upsert(payload,{onConflict:'profile_id'});if(err)throw err}catch(e){themeError=e.message} $('editor').hidden=true;await render();notice(themeError?'Perfil salvo, mas o tema não foi salvo: '+themeError+' — execute o SQL de personalização no Supabase.':'Perfil e personalização atualizados!')}
 });
 </script>
 </body></html>
