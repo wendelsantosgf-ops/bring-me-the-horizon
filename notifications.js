@@ -13,19 +13,71 @@ const css=document.createElement('style');css.textContent=`
 `;document.head.append(css);
 const {data:{user}}=await client.auth.getUser();
 if(user){
- const bell=document.createElement('button');bell.className='bmth-bell';bell.type='button';bell.setAttribute('aria-label','Notificações');bell.textContent='♧ Avisos';
+ const bell=document.createElement('button');bell.className='bmth-bell';bell.type='button';bell.setAttribute('aria-label','Notificações');
+ bell.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
  const count=document.createElement('span');count.className='bmth-bell-count';count.hidden=true;bell.append(count);
  const panel=document.createElement('section');panel.className='bmth-bell-panel';panel.hidden=true;
  const heading=document.createElement('strong');heading.textContent='Notificações';
  const close=document.createElement('button');close.textContent='Fechar';close.style.float='right';close.onclick=()=>panel.hidden=true;
  const items=document.createElement('div');panel.append(heading,close,items);document.body.append(bell,panel);
- const refresh=async()=>{
-  const {data,error}=await client.from('bmth_notifications').select('id,title,href,created_at,read_at').eq('recipient_id',user.id).order('created_at',{ascending:false}).limit(40);
-  items.replaceChildren();if(error){items.textContent='Ative as notificações no Supabase com supabase/notifications.sql.';count.hidden=true;return}
-  const unread=(data||[]).filter(n=>!n.read_at).length;count.hidden=!unread;count.textContent=String(unread);
-  if(!data?.length)items.textContent='Nenhuma notificação por enquanto.';
-  for(const n of data||[]){const a=document.createElement('a');a.href=n.href.startsWith('./')?n.href:'./comunidade.html';a.textContent=(n.read_at?'':'● ')+n.title;const date=document.createElement('small');date.textContent=new Date(n.created_at).toLocaleString('pt-BR');a.append(date);a.addEventListener('click',()=>{if(!n.read_at)client.from('bmth_notifications').update({read_at:new Date().toISOString()}).eq('id',n.id).eq('recipient_id',user.id).then(()=>{})});items.append(a)}
+ let seenIds=null, audioContext=null, audioEnabled=false, busy=false;
+ const unlockSound=()=>{
+  try{const AudioContextClass=window.AudioContext||window.webkitAudioContext;if(!AudioContextClass)return;
+   audioContext ||=new AudioContextClass();audioContext.resume().then(()=>{audioEnabled=audioContext.state==='running'}).catch(()=>{});
+  }catch(e){console.debug('Audio not available',e)}
  };
- bell.onclick=async()=>{panel.hidden=!panel.hidden;if(!panel.hidden)await refresh()};
- await refresh();document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+ // Browsers only allow notification sounds after a user gesture.
+ document.addEventListener('pointerdown',unlockSound,{once:true});
+ document.addEventListener('keydown',unlockSound,{once:true});
+ function playSound(){
+  if(!audioEnabled||!audioContext||audioContext.state!=='running')return;
+  try{
+   const t=audioContext.currentTime;
+   for(const [offset,freq] of [[0,659.25],[0.12,880]]){
+    const oscillator=audioContext.createOscillator(),gain=audioContext.createGain();
+    oscillator.type='sine';oscillator.frequency.value=freq;
+    gain.gain.setValueAtTime(0.0001,t+offset);
+    gain.gain.exponentialRampToValueAtTime(0.09,t+offset+0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+offset+0.19);
+    oscillator.connect(gain);gain.connect(audioContext.destination);
+    oscillator.start(t+offset);oscillator.stop(t+offset+0.20);
+   }
+  }catch(e){console.debug('Notification audio failed',e)}
+ }
+ async function refresh(){
+  if(busy)return;busy=true;
+  try{
+   const {data,error}=await client.from('bmth_notifications').select('id,title,href,created_at,read_at').eq('recipient_id',user.id).is('read_at',null).order('created_at',{ascending:false}).limit(40);
+   if(error){items.textContent='Não foi possível carregar as notificações.';count.hidden=true;return}
+   const notifications=data||[], ids=new Set(notifications.map(n=>n.id));
+   if(seenIds!==null&&notifications.some(n=>!seenIds.has(n.id)))playSound();
+   seenIds=ids;
+   count.hidden=notifications.length===0;count.textContent=String(notifications.length);
+   if(!panel.hidden){
+    items.replaceChildren();
+    if(!notifications.length)items.textContent='Nenhuma notificação nova.';
+    for(const n of notifications){
+     const a=document.createElement('a');a.href=n.href.startsWith('./')?n.href:'./comunidade.html';a.textContent='● '+n.title;
+     const date=document.createElement('small');date.textContent=new Date(n.created_at).toLocaleString('pt-BR');a.append(date);
+     a.addEventListener('click',()=>{client.from('bmth_notifications').update({read_at:new Date().toISOString()}).eq('id',n.id).eq('recipient_id',user.id).then(()=>{})});
+     items.append(a);
+    }
+   }
+  }finally{busy=false}
+ }
+ bell.onclick=async()=>{
+  unlockSound();panel.hidden=!panel.hidden;
+  if(panel.hidden)return;
+  await refresh();
+  // Opening the notification drawer acknowledges all currently unread items.
+  const ids=[...(seenIds||[])];
+  if(ids.length){
+   const {error}=await client.from('bmth_notifications').update({read_at:new Date().toISOString()}).eq('recipient_id',user.id).in('id',ids);
+   if(!error){seenIds=new Set();count.hidden=true;items.replaceChildren();items.textContent='Notificações visualizadas. Nenhuma pendente.'}
+   else{const warning=document.createElement('p');warning.textContent='Não foi possível marcar como lidas.';items.prepend(warning)}
+  }
+ };
+ await refresh();
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+ window.setInterval(()=>{if(!document.hidden)refresh()},20000);
 }
