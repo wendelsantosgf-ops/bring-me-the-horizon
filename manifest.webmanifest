@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Bring Me the Horizon — BMTH RPG",
+  "short_name": "BMTH",
+  "description": "Comunidade, personagens e universo do RPG Bring Me the Horizon",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0b0a10",
+  "theme_color": "#0b0a10",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "/bmth-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
