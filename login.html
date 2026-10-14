@@ -14,7 +14,7 @@ button{cursor:pointer;font:inherit}button:disabled{opacity:.65;cursor:wait}.prim
 #message{min-height:24px;font-size:14px;overflow-wrap:anywhere}a{color:#d8b5ff}footer{margin-top:20px;font-size:13px;color:var(--muted)}
 .oauth-divider{display:flex;align-items:center;gap:12px;margin:20px 0 14px;color:#a99ba8;font-size:12px;letter-spacing:.12em}.oauth-divider:before,.oauth-divider:after{content:"";flex:1;height:1px;background:#44323d}.google-login{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:13px 15px;background:#f6f5f6;border:1px solid #ddd;color:#242027;border-radius:6px;font-weight:700}.google-login:hover{background:#fff}.google-login svg{width:20px;height:20px;flex-shrink:0}.google-login:disabled{opacity:.55;cursor:wait}.oauth-note{font-size:11px;text-align:center;margin:10px 0 0}[hidden]{display:none!important}
 </style>
-<link rel="stylesheet" href="./theme.css?v=1">
+<link rel="stylesheet" href="./theme.css?v=mobile1">
 <style>
 .login-page .portal-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:25px 0 22px}
 .login-page .portal-action{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;min-height:112px;padding:17px 12px;border-radius:15px;border:1px solid #ae3755;background:linear-gradient(145deg,#9e2949,#5e1a36);color:#fff;text-decoration:none;text-align:center;font-size:12px;font-weight:800;letter-spacing:.07em;line-height:1.4;box-shadow:0 10px 24px #0005;transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
@@ -71,4 +71,4 @@ $('logout').addEventListener('click',async()=>{const {error}=await supabase.auth
 supabase.auth.onAuthStateChange((_event,session)=>render(session));
 const {data:{session}}=await supabase.auth.getSession();render(session);
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(()=>{}))}</script></body></html>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(()=>{}))}</script><nav class="bmth-mobile-nav" aria-label="Navegação mobile"><a href="./index.html"><span class="bmth-mobile-icon" aria-hidden="true">⌂</span><span>Início</span></a><a href="./comunidade.html"><span class="bmth-mobile-icon" aria-hidden="true">☷</span><span>Feed</span></a><a href="./personagens.html"><span class="bmth-mobile-icon" aria-hidden="true">♟</span><span>Fichas</span></a><a href="./perfil.html"><span class="bmth-mobile-icon" aria-hidden="true">♙</span><span>Perfil</span></a><a href="./admin.html"><span class="bmth-mobile-icon" aria-hidden="true">⚙</span><span>Central</span></a></nav></body></html>
