@@ -165,6 +165,8 @@ async function render(){
   const meta=document.createElement('span');meta.className='mini-meta';meta.textContent='RANK '+(progress?.rank||'D')+' · '+(c.spiritual_energy||'ENERGIA INDEFINIDA');
   info.append(name,meta);const arrow=document.createElement('span');arrow.className='mini-arrow';arrow.textContent='↗';
   btn.append(portrait,info,arrow);btn.setAttribute('aria-label','Abrir ficha de '+name.textContent);btn.addEventListener('click',()=>openSheet(c,progress,btn));$('characters').append(btn);
+  const target=new URLSearchParams(location.search).get('character');
+  if(target===c.id)requestAnimationFrame(()=>openSheet(c,progress,btn));
  }
 }
 async function loadProfileWikis(characterIds){
