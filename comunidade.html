@@ -136,7 +136,7 @@ const initialStatus=document.getElementById('status');if(initialStatus)initialSt
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
 const $=id=>document.getElementById(id);let user=null;let profiles=new Map();let characterProfiles=new Map();let featuredProfiles=[];let isAdmin=false;
-$('composerToggle').addEventListener('click',()=>{const opened=$('composerPanel').hidden;$('composerPanel').hidden=!opened;$('composerToggle').setAttribute('aria-expanded',String(opened));$('composerToggle').innerHTML=opened?'${ico('close')} Fechar Wiki':'${ico('book')} Criar Wiki';if(opened)$('composerPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
+$('composerToggle').addEventListener('click',()=>{const opened=$('composerPanel').hidden;$('composerPanel').hidden=!opened;$('composerToggle').setAttribute('aria-expanded',String(opened));$('composerToggle').lastChild.textContent=opened?' Fechar Wiki':' Criar Wiki';if(opened)$('composerPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
 function link(href,label){const a=el('a','',label);a.href=href;return a}
 function safeUrl(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
