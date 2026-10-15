@@ -25,6 +25,8 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 .bmth-inline-svg{width:1em;height:1em;vertical-align:-.14em;display:inline-block;flex:none}.about h2 .bmth-inline-svg{width:1.15em;height:1.15em;color:#d13c55;margin-right:8px}.about p .bmth-inline-svg{color:#d39ab0;margin-right:8px}
 .profile-create-overlay{position:fixed;inset:0;z-index:10000;background:#07050bdf;display:grid;place-items:center;padding:12px}.profile-create-dialog{width:min(720px,100%);height:min(800px,94dvh);background:#18111e;border:1px solid #b44e6b;border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 70px #000b}.profile-create-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid #603b51}.profile-create-header button{background:#3a2232;border:1px solid #a44d6c;color:#fff;padding:8px 12px;border-radius:7px;cursor:pointer}.profile-create-dialog iframe{width:100%;flex:1;border:0;background:#151019}
 .bmth-stats{margin-top:16px;padding:14px;border:1px solid #b77c96;background:#221720;border-radius:12px;color:#f5e4eb}.bmth-stats-title{font-size:13px;font-weight:800;letter-spacing:.09em;margin-bottom:10px;color:#f2bed2}.bmth-stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bmth-stat{background:#321e2c;border:1px solid #8c526d;border-radius:9px;padding:12px;min-width:0}.bmth-stat-label{display:flex;align-items:center;gap:6px;color:#efb5ce;font-size:11px;font-weight:700}.bmth-stat-label svg{width:17px;height:17px;flex:none}.bmth-stat-value{font-size:clamp(19px,4vw,25px);font-weight:800;color:white}.bmth-stat-value small{font-size:12px;color:#e2bccc}.bmth-next{margin-top:10px;background:#30202d;padding:10px;border-radius:8px;font-size:12px;color:#f1ccdb}.bmth-next b{color:white}.bmth-stats-note{font-size:11px;color:#c4a4b2;margin-top:8px}
+
+.bmth-member-tags{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 10px}.bmth-member-tag{font-size:11px;font-weight:800;letter-spacing:.045em;border:1px solid var(--tag-color);color:var(--tag-color);background:color-mix(in srgb,var(--tag-color) 14%,#16111c);padding:4px 10px;border-radius:20px}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile5">
 <style>
@@ -56,7 +58,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 <div id="page" hidden>
 <article class="card hero-card"><div id="cover" class="cover"></div><div class="profile">
 <img id="avatar" class="avatar" alt="Avatar do jogador">
-<div class="identity"><div><p id="tagline" class="custom-tagline" hidden></p><div id="displayName" class="name"></div><div class="role"><svg class="bmth-inline-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg> L I M P A D O R</div><p id="bio" class="muted"></p><small id="member"></small></div></div>
+<div class="identity"><div><p id="tagline" class="custom-tagline" hidden></p><div id="displayName" class="name"></div><div id="memberTags" class="bmth-member-tags" aria-label="Tags do membro"></div><div class="role"><svg class="bmth-inline-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg> L I M P A D O R</div><p id="bio" class="muted"></p><small id="member"></small></div></div>
 <p><button id="editButton" type="button" hidden>Editar meu perfil</button></p>
 </div></article><div class="profile-tabs"><a class="active" href="#visao-geral"><svg class="bmth-inline-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M12 7C9 5 5 5 2 6v14c4-1 7-1 10 1"/><path d="M12 7c3-2 7-2 10-1v14c-4-1-7-1-10 1"/></svg> &nbsp; VISÃO GERAL</a><a href="#personagens"><svg class="bmth-inline-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg> &nbsp; PERSONAGENS</a><a href="#wikis"><svg class="bmth-inline-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3h11a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4h1Z"/><path d="M8 3v14a3 3 0 0 1-3 3"/></svg> &nbsp; WIKIS</a><a href="./comunidade.html"><svg class="bmth-inline-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg> &nbsp; ATIVIDADES</a></div>
 <section id="editor" class="card section" hidden><h2>Editar perfil</h2>
@@ -150,9 +152,20 @@ async function loadCustomization(){
  }
 }
 function imageUrl(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
+
+async function loadMemberTags(){
+ const area=$('memberTags');area.replaceChildren();
+ const {data:assigned,error}=await db.from('bmth_profile_tag_assignments').select('tag_id').eq('profile_id',profile.id);
+ if(error){console.warn('Tags ainda nao configuradas:',error.message);return}
+ if(!assigned?.length)return;
+ const {data:tags,error:te}=await db.from('bmth_profile_tags').select('id,name,color').in('id',assigned.map(x=>x.tag_id));
+ if(te){console.warn('Nao foi possivel carregar tags:',te.message);return}
+ for(const tag of tags||[]){const el=document.createElement('span');el.className='bmth-member-tag';el.textContent=tag.name;el.style.setProperty('--tag-color',/^#[0-9a-fA-F]{6}$/.test(tag.color)?tag.color:'#d96a9b');area.append(el)}
+}
 async function render(){
  $('page').hidden=false;notice('');
  $('displayName').textContent=profile.display_name||'Limpador';
+ await loadMemberTags();
  $('bio').textContent=profile.bio||'Este Limpador ainda não escreveu sua história.';
  $('member').textContent='Membro desde '+new Date(profile.created_at).toLocaleDateString('pt-BR');
  const fallback='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="120" height="120" fill="#382239"/><text x="60" y="77" text-anchor="middle" font-size="58" fill="#ff91a4">✦</text></svg>');
