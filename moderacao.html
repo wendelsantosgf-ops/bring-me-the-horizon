@@ -23,3 +23,4 @@ $('removePost').onclick=()=>act('bmth_moderate_post',{p_post:$('postId').value,p
 async function init(){const {data:{user}}=await db.auth.getUser();if(!user){say('Faça login para acessar.');return}const {data,error}=await db.rpc('bmth_staff_level',{p_user:user.id});if(error){say('Execute o SQL de moderação antes de usar esta página.');return}level=data;if(level<1){say('Acesso restrito à equipe.');return}$('app').hidden=false;$('staffPanel').hidden=level<2;$('postPanel').hidden=level<2;if(level<3)$('staffRole').querySelector('option[value="moderator"]').remove();if(level===1)$('kind').querySelector('option[value="ban"]').remove();say('Painel de moderação autorizado.');await refresh()}
 init().catch(e=>say(e.message));
 </script></body></html>
+<!-- Redeploy trigger: moderation console publishing -->
