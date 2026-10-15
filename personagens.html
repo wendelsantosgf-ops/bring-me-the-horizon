@@ -13,6 +13,18 @@
 .crop-stage{position:relative;width:min(280px,75vw);aspect-ratio:4/5;overflow:hidden;touch-action:none;cursor:grab;margin:14px auto;border:3px solid #d25579;background:#0c0910}
 .crop-stage:active{cursor:grabbing}.crop-stage img{position:absolute;max-width:none;max-height:none;pointer-events:none;user-select:none}
 .crop-dialog input[type=range]{width:100%}.crop-dialog .actions{justify-content:center}
+
+/* Mobile-only character carousel: desktop grid remains unchanged. */
+.carousel-controls{display:none}
+@media(max-width:700px){
+ #cards.grid{display:flex;overflow-x:auto;overflow-y:hidden;gap:14px;scroll-snap-type:x mandatory;scroll-padding-inline:0;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;padding:0 0 12px;scrollbar-width:none}
+ #cards.grid::-webkit-scrollbar{display:none}
+ #cards.grid>.card{flex:0 0 100%;width:100%;max-width:100%;scroll-snap-align:start;scroll-snap-stop:always;margin:0;align-self:flex-start}
+ .carousel-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin:10px 0 22px}
+ .carousel-controls button{min-width:44px;min-height:44px;padding:8px 13px;border-radius:9px}
+ .carousel-controls button:disabled{opacity:.35}
+ .carousel-position{font-size:13px;color:#eab5c7;min-width:72px;text-align:center}
+}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile4">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"></head>
@@ -29,7 +41,7 @@
 <label for="portraitFile">Imagem do personagem (JPG, PNG ou WEBP, até 5 MB)</label><input id="portraitFile" type="file" accept="image/jpeg,image/png,image/webp"><img id="portraitPreview" class="photo-preview" alt="Prévia do retrato" hidden><p class="photo-note">Opcional. Ao selecionar uma foto, você poderá ajustar o recorte ou manter a imagem original. Nenhuma imagem é alterada até salvar a ficha.</p><label for="appearance">Aparência</label><textarea id="appearance" rows="4" maxlength="10000" placeholder="Descreva o visual do personagem..."></textarea>
 <label for="history">História</label><textarea id="history" rows="6" maxlength="20000" placeholder="Conte a origem do seu Limpador..."></textarea>
 <div class="actions"><button id="saveBtn" type="submit">Salvar ficha</button><button id="cancelBtn" type="button" class="ghost">Cancelar</button></div></form></section>
-<section class="formbox" id="xpRequestPanel" hidden><h2>Solicitar XP de missão</h2><p class="muted">Descreva a atividade concluída. Apenas a administração pode aprovar e creditar experiência.</p><form id="xpRequestForm"><label for="xpCharacter">Personagem</label><select id="xpCharacter" required style="width:100%;padding:12px;background:#0d0b13;color:white;border:1px solid #5b485e"></select><label for="xpAmount">XP solicitado</label><input id="xpAmount" type="number" min="1" max="1000" required><label for="xpReason">Missão / justificativa</label><textarea id="xpReason" minlength="5" maxlength="1000" required placeholder="Informe a missão e o motivo da recompensa..."></textarea><button id="xpSend" type="submit">Enviar para aprovação</button></form></section><h2 id="listTitle">Todos os personagens</h2><div id="cards" class="grid"></div>
+<section class="formbox" id="xpRequestPanel" hidden><h2>Solicitar XP de missão</h2><p class="muted">Descreva a atividade concluída. Apenas a administração pode aprovar e creditar experiência.</p><form id="xpRequestForm"><label for="xpCharacter">Personagem</label><select id="xpCharacter" required style="width:100%;padding:12px;background:#0d0b13;color:white;border:1px solid #5b485e"></select><label for="xpAmount">XP solicitado</label><input id="xpAmount" type="number" min="1" max="1000" required><label for="xpReason">Missão / justificativa</label><textarea id="xpReason" minlength="5" maxlength="1000" required placeholder="Informe a missão e o motivo da recompensa..."></textarea><button id="xpSend" type="submit">Enviar para aprovação</button></form></section><h2 id="listTitle">Todos os personagens</h2><div id="cards" class="grid" aria-label="Fichas de personagens"></div><div id="carouselControls" class="carousel-controls" hidden><button id="carouselPrev" type="button" class="ghost" aria-label="Ficha anterior">‹</button><span id="carouselPosition" class="carousel-position" aria-live="polite"></span><button id="carouselNext" type="button" class="ghost" aria-label="Próxima ficha">›</button></div>
 </section>
 </main>
 <script type="module">
@@ -102,6 +114,26 @@ async function init(){
  $('listTitle').textContent=publicProfileId?'Personagens do jogador':personal?'Minhas fichas':'Todos os personagens';
  $('app').hidden=false;await loadCharacters();
 }
+
+function updateCharacterCarousel(){
+ const cards=$('cards'),items=[...cards.children],controls=$('carouselControls');
+ const mobile=window.matchMedia('(max-width:700px)').matches;
+ controls.hidden=!mobile||items.length<2;
+ if(!mobile||!items.length)return;
+ const index=Math.max(0,Math.min(items.length-1,Math.round(cards.scrollLeft/(items[0].getBoundingClientRect().width+14))));
+ $('carouselPosition').textContent=(index+1)+' / '+items.length;
+ $('carouselPrev').disabled=index===0;$('carouselNext').disabled=index===items.length-1;
+}
+function moveCharacterCarousel(direction){
+ const cards=$('cards'),items=[...cards.children];if(!items.length)return;
+ const current=Math.round(cards.scrollLeft/(items[0].getBoundingClientRect().width+14));
+ const target=Math.max(0,Math.min(items.length-1,current+direction));
+ items[target].scrollIntoView({behavior:'smooth',block:'nearest',inline:'start'});
+}
+$('carouselPrev').onclick=()=>moveCharacterCarousel(-1);
+$('carouselNext').onclick=()=>moveCharacterCarousel(1);
+$('cards').addEventListener('scroll',()=>requestAnimationFrame(updateCharacterCarousel),{passive:true});
+window.addEventListener('resize',updateCharacterCarousel);
 async function loadCharacters(){status('Carregando personagens...');let query=db.from('characters').select('id,profile_id,first_name,last_name,age,spiritual_energy,appearance,history,portrait_url,created_at').order('created_at',{ascending:false});
  if(publicProfileId)query=query.eq('profile_id',publicProfileId);
  else if(mineMode)query=query.eq('profile_id',profile.id);
@@ -136,7 +168,7 @@ async function loadCharacters(){status('Carregando personagens...');let query=db
    grant.disabled=false;if(error){status('Erro ao conceder XP: '+error.message);return}
    await loadCharacters();status(amount+' XP concedidos a '+title.textContent+'.');
   };actions.append(grant);
- }card.append(actions);$('cards').append(card)}status('')}
+ }card.append(actions);$('cards').append(card)}status('');updateCharacterCarousel()}
 $('characterForm').addEventListener('submit',async e=>{e.preventDefault();if(!profile||(profile.user_id!==user.id&&!isAdmin))return;const payload={first_name:$('first').value.trim(),last_name:$('last').value.trim(),age:$('age').value===''?null:Number($('age').value),spiritual_energy:$('energy').value.trim(),appearance:$('appearance').value.trim(),history:$('history').value.trim()};if(!payload.first_name){status('Informe o nome do personagem.');return}if(payload.age!==null&&(!Number.isInteger(payload.age)||payload.age<0||payload.age>999)){status('Idade inválida.');return}
  $('saveBtn').disabled=true;status('Salvando ficha...');let result;if(editing){result=await db.from('characters').update(payload).eq('id',editing).select('id').single()}else{result=await db.from('characters').insert({...payload,profile_id:profile.id}).select('id').single()}
  if(!result.error&&croppedPortraitFile){try{const file=croppedPortraitFile;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024)throw Error('Use JPG, PNG ou WEBP de até 5 MB.');const extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];const path=user.id+'/'+result.data.id+'/'+crypto.randomUUID()+'.'+extension;const {error:uploadError}=await db.storage.from('character-images').upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;const url=db.storage.from('character-images').getPublicUrl(path).data.publicUrl;const {error:photoError}=await db.from('characters').update({portrait_url:url}).eq('id',result.data.id).eq('profile_id',profile.id);if(photoError)throw photoError}catch(e){$('saveBtn').disabled=false;status('Ficha salva, mas não foi possível enviar a imagem: '+e.message+' — configure o SQL de imagens no Supabase.');await loadCharacters();return}}
