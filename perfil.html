@@ -28,9 +28,16 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 
 .bmth-member-tags{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 10px}.bmth-member-tag{font-size:11px;font-weight:800;letter-spacing:.045em;border:1px solid var(--tag-color);color:var(--tag-color);background:color-mix(in srgb,var(--tag-color) 14%,#16111c);padding:4px 10px;border-radius:20px}
 
-.bmth-community-level{width:min(100%,430px);margin:12px auto 16px;text-align:left;color:var(--level-color)}
-.bmth-level-heading{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}.bmth-level-crown{font-size:24px;line-height:1}.bmth-level-heading strong{font-size:12px;letter-spacing:.07em}.bmth-level-heading small{margin-left:auto;color:#c6b9c9;font-size:11px}
-.bmth-level-track{height:8px;border-radius:20px;background:#332735;border:1px solid #59465d;overflow:hidden}.bmth-level-track i{display:block;height:100%;background:var(--level-color);border-radius:20px;box-shadow:0 0 12px var(--level-color);transition:width .3s}
+.bmth-community-level{width:min(100%,300px);max-width:calc(100vw - 48px);margin:13px auto 18px;padding:0 0 0 10px;display:flex;align-items:center;gap:0;min-height:31px;color:#fff;background:rgba(21,16,30,.58);border:1px solid color-mix(in srgb,var(--level-color) 58%,transparent);border-radius:999px;box-shadow:0 2px 16px rgba(0,0,0,.15);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);position:relative;overflow:visible}
+.bmth-community-level[hidden]{display:none!important}
+.bmth-level-heading{display:flex;align-items:center;gap:6px;min-width:0;width:100%;margin:0;padding:4px 11px 7px 0;position:relative;z-index:1;white-space:nowrap}
+.bmth-level-crown{display:inline-flex;align-items:center;justify-content:center;width:27px;height:25px;flex:none;color:var(--level-color);filter:drop-shadow(0 0 4px var(--level-color))}
+.bmth-level-crown svg{width:24px;height:24px;display:block}
+.bmth-level-heading strong{font-size:11px;letter-spacing:.015em;font-weight:750;color:#f7eef9;overflow:hidden;text-overflow:ellipsis}
+.bmth-level-heading small{margin-left:auto;color:#e1d5e5;font-size:10px;flex:none}
+.bmth-level-track{position:absolute;bottom:0;left:0;right:0;height:4px;background:rgba(255,255,255,.13);border-radius:0 0 999px 999px;overflow:hidden}
+.bmth-level-track i{display:block;height:100%;background:var(--level-color);box-shadow:0 0 9px var(--level-color);transition:width .3s}
+@media(max-width:420px){.bmth-community-level{width:min(100%,285px)}.bmth-level-heading strong{font-size:10px}.bmth-level-heading small{font-size:9px}}
 .profile-wiki-gallery{display:flex;gap:6px;overflow-x:auto;margin:9px 0}.profile-wiki-gallery img{width:76px;height:70px;object-fit:cover;border-radius:8px;border:1px solid #76516a}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile5">
@@ -191,7 +198,7 @@ async function loadCommunityLevel(){
   const progress=max?Math.max(0,Math.min(100,(xp-bmthThresholds[index])/(max-bmthThresholds[index])*100)):100;
   area.style.setProperty('--level-color',color);area.replaceChildren();
   const line=document.createElement('div');line.className='bmth-level-heading';
-  const crown=document.createElement('span');crown.textContent='♛';crown.className='bmth-level-crown';
+  const crown=document.createElement('span');crown.className='bmth-level-crown';crown.setAttribute('aria-hidden','true');crown.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linejoin="round"><path d="M3 7.5 7.2 12l4.8-7 4.8 7L21 7.5l-2 11H5L3 7.5Z"/><path d="M5.5 20h13M6 16h12"/><circle cx="3" cy="6.5" r="1"/><circle cx="12" cy="4" r="1"/><circle cx="21" cy="6.5" r="1"/></svg>';
   const label=document.createElement('strong');label.textContent='LVL '+(index+1)+' · '+name;
   const value=document.createElement('small');value.textContent=max?xp.toFixed(1)+' / '+max+' XP':xp.toFixed(1)+' XP · NÍVEL MÁXIMO';
   line.append(crown,label,value);const bar=document.createElement('div');bar.className='bmth-level-track';const fill=document.createElement('i');fill.style.width=progress+'%';bar.append(fill);area.append(line,bar);area.hidden=false;
