@@ -48,6 +48,16 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
  .bmth-mobile-nav .bmth-mobile-icon svg{display:block!important;width:24px!important;height:24px!important;stroke:#d2bdc9!important;fill:none!important;stroke-width:1.9!important}
  .bmth-mobile-nav a[aria-current="page"] .bmth-mobile-icon svg{stroke:#ff9eb8!important}
 }
+
+/* BMTH: identidade do perfil centralizada em desktop e mobile. */
+.hero-card .profile{padding:88px 28px 30px;min-height:0;text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-card .avatar{position:relative;left:auto;top:auto;margin:-172px auto 22px;display:block;width:168px;height:168px;flex-shrink:0}
+.hero-card .identity{width:100%;max-width:100%;min-width:0;text-align:center}
+.hero-card .name,.hero-card .role,.hero-card .custom-tagline{text-align:center}
+.hero-card .bmth-member-tags{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin:10px auto 12px;max-width:100%}
+.hero-card .bmth-member-tag{max-width:100%;overflow-wrap:anywhere;text-align:center}
+.hero-card #editButton{position:static;margin:16px auto 0;align-self:center}
+@media(max-width:700px){.hero-card .profile{padding:65px 16px 24px}.hero-card .avatar{width:110px;height:110px;margin:-120px auto 20px}.hero-card .name{font-size:28px}.hero-card .bmth-member-tags{gap:7px}}
 </style><!-- BMTH: production deployment refresh; no visual or functional changes. -->
 </head>
 <body><div id="profileBackground" class="profile-custom-bg" aria-hidden="true"></div>
