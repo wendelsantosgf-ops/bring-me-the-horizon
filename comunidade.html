@@ -80,6 +80,34 @@ body .layout>.community-sidebar{grid-column:1;grid-row:1;position:sticky;top:18p
 .social-comments[hidden]{display:none}
 .social-post .post-head{margin-bottom:16px}
 @media(max-width:560px){.social-composer{padding:14px!important}.social-composer-actions{gap:7px}.social-composer-actions button,.social-upload{padding:9px 10px;font-size:11px}.social-composer-actions #socialPublish{margin-left:0;flex:1}}
+
+/* BMTH: editor social glass, SVGs e galerias compactas */
+.social-composer{background:linear-gradient(125deg,rgba(87,35,70,.32),rgba(24,13,31,.48) 60%,rgba(91,42,72,.19))!important;backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid rgba(220,135,182,.36)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 12px 30px rgba(0,0,0,.18);border-radius:18px!important}
+.social-composer-avatar{background:rgba(160,57,105,.36);border:1px solid rgba(238,139,186,.26)}
+.social-composer-avatar svg{width:25px;height:25px}
+.social-composer-prompt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:20px 17px;background:rgba(9,7,14,.46);border:1px solid rgba(208,169,196,.35);border-radius:13px;color:#c9bac9;font-size:14px;min-height:80px}
+.social-composer-prompt:hover{background:rgba(86,38,67,.35)}
+.social-composer-prompt svg{width:20px;height:20px;flex:none;color:#d9789e}
+.social-composer-actions button{display:inline-flex;gap:7px;align-items:center;background:rgba(74,40,65,.36);backdrop-filter:blur(9px);border:1px solid rgba(204,132,169,.37);border-radius:11px}
+.social-composer-actions svg,.bmth-post-add svg,#socialPublish svg{width:17px;height:17px;flex:none}
+.social-composer-actions .social-create-button{margin-left:auto;background:rgba(167,47,91,.58);border-color:#d26b92;color:#fff}
+.bmth-modal-open{overflow:hidden}
+.bmth-post-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:16px}
+.bmth-post-modal[hidden]{display:none!important}
+.bmth-post-backdrop{position:absolute;inset:0;background:rgba(4,3,9,.78);backdrop-filter:blur(10px)}
+.bmth-post-dialog{position:relative;width:min(100%,590px);max-height:min(90dvh,850px);overflow-y:auto;border:1px solid rgba(226,142,189,.5);border-radius:20px;background:linear-gradient(140deg,rgba(57,28,53,.96),rgba(17,12,26,.97));box-shadow:0 28px 85px #000b,inset 0 1px 0 #ffffff19;padding:23px}
+.bmth-post-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ffffff20;margin-bottom:18px;padding-bottom:14px}
+.bmth-post-dialog-head h2{margin:0;font-size:21px}.bmth-post-dialog-head button{display:grid;place-items:center;width:35px;height:35px;padding:7px;border-radius:50%;background:#ffffff13;border:1px solid #ffffff30}.bmth-post-dialog-head svg{width:19px;height:19px}
+#socialModal #socialText{min-height:170px;resize:vertical;background:rgba(9,7,15,.6);border-color:#ffffff30}
+.bmth-post-add{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border:1px dashed #a85b85;border-radius:12px;background:rgba(120,58,94,.19);cursor:pointer;color:#f6d7e5}
+.bmth-post-hint{font-size:11px;color:#bdaabd}
+.bmth-post-previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px;margin:12px 0}
+.bmth-post-preview{position:relative;aspect-ratio:1}.bmth-post-preview img{width:100%;height:100%;object-fit:cover;border-radius:10px}.bmth-post-preview button{position:absolute;top:5px;right:5px;border-radius:50%;width:27px;height:27px;padding:0;background:#220d1cdb;border:1px solid #fff7;color:white}
+#socialModal #socialPublish{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:12px;margin-top:15px;background:#a83462;padding:13px}
+.bmth-social-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:13px 0;border-radius:12px;overflow:hidden;max-height:520px}
+.bmth-social-gallery.single{grid-template-columns:1fr}.bmth-social-gallery a{display:block;min-width:0;min-height:0;overflow:hidden;background:#110c15}
+.bmth-social-gallery img{display:block;width:100%;height:210px;object-fit:cover}.bmth-social-gallery.single img{height:auto;max-height:520px;object-fit:contain}
+@media(max-width:560px){.social-composer-actions .social-create-button{margin-left:0}.bmth-post-dialog{padding:16px}.bmth-social-gallery img{height:155px}}
 </style><style>
 .owner-tools{display:flex;align-items:center;gap:7px;margin-left:auto;flex-wrap:wrap}.owner-tools button{border:1px solid #75465b;border-radius:9px;padding:7px 11px;background:#2b1b2a;color:#f6dce6;font-size:12px;cursor:pointer}.owner-tools button:hover{background:#74304b}.owner-tools .danger{border-color:#8b364b;color:#ffafbd}
 .owner-edit{padding:14px;margin:12px 0;border:1px solid #694058;background:#160e18;border-radius:12px}.owner-edit label{display:block;margin:8px 0 4px}.owner-edit input,.owner-edit textarea,.owner-edit select{width:100%;padding:10px;border:1px solid #664052;background:#0e0b12;color:white;border-radius:8px;font:inherit}.owner-edit textarea{min-height:90px}.owner-edit .owner-edit-actions{display:flex;gap:8px;margin-top:12px}.owner-edit button{padding:9px 14px;border-radius:8px;border:1px solid #9e4b69;background:#702642;color:#fff;cursor:pointer}.owner-edit button.secondary{background:#241925}.owner-edit .muted{margin-top:8px}
@@ -88,8 +116,8 @@ body .layout>.community-sidebar{grid-column:1;grid-row:1;position:sticky;top:18p
 <main><div class="eyebrow">ARQUIVO SOCIAL // LIMPADORES</div><h1>Comunidade</h1><p class="muted">Conheça outros Limpadores, descubra habilidades e participe das conversas do Imaginário.</p>
 <p id="status" role="status" aria-live="polite">Verificando acesso...</p><section id="gate" class="panel community-gate" hidden><div class="gate-heading"><span class="eyebrow">BMTH // ACESSO À COMUNIDADE</span><span class="gate-emblem" aria-hidden="true">✧</span></div><h2>Entre para participar</h2><p>Seu registro é a porta de entrada para conhecer os Limpadores e compartilhar suas habilidades.</p><div class="gate-actions"><a class="gate-btn gate-btn-primary" href="./login.html"><span aria-hidden="true">↳</span> ENTRAR NA COMUNIDADE</a><a class="gate-btn gate-btn-secondary" href="./login.html?mode=register"><span aria-hidden="true">＋</span> CRIAR MINHA CONTA</a></div></section>
 <div id="app" hidden><div class="layout"><section class="feed-column"><div class="feed-intro"><div><h2>Feed da Comunidade</h2><small>Publicações, fotos e Wikis dos Limpadores — mais recentes primeiro</small></div></div>
-<section class="social-composer panel" aria-label="Criar publicação"><div class="social-composer-heading"><span class="social-composer-avatar" aria-hidden="true">✧</span><div><strong>Compartilhe com os Limpadores</strong><small>Uma história, uma foto ou algo engraçado?</small></div></div>
-<form id="socialForm"><textarea id="socialText" maxlength="5000" rows="3" placeholder="O que está acontecendo no Imaginário?"></textarea><div class="social-image-preview" id="socialPreviewWrap" hidden><img id="socialPreview" alt="Prévia da imagem selecionada"><button type="button" id="socialRemoveImage">Remover imagem</button></div><div class="social-composer-actions"><label class="social-upload" for="socialImage">▧ Foto <input id="socialImage" type="file" accept="image/jpeg,image/png,image/webp" hidden></label><button type="button" id="composerToggle" class="social-wiki-button" aria-expanded="false" aria-controls="composerPanel">✧ Criar Wiki</button><button type="submit" id="socialPublish">Publicar ↗</button></div><p id="socialStatus" class="muted" role="status" aria-live="polite"></p></form></section>
+<section class="social-composer panel" aria-label="Criar publicação"><div class="social-composer-heading"><span class="social-composer-avatar" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5L12 2Z"/></svg></span><div><strong>Compartilhe com os Limpadores</strong><small>Uma história, uma foto ou algo engraçado?</small></div></div><button type="button" id="openSocialComposer" class="social-composer-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 16h8M8 12h8M8 8h5"/></svg><span>O que está acontecendo no Imaginário?</span></button><div class="social-composer-actions"><button type="button" id="openSocialPhotos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 16-5-5L5 21"/></svg> Foto / GIF</button><button type="button" id="composerToggle" class="social-wiki-button" aria-expanded="false" aria-controls="composerPanel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14"/></svg> Criar Wiki</button><button type="button" id="openSocialComposerButton" class="social-create-button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 16h8M8 12h8M8 8h5"/></svg> Criar publicação</button></div><p id="socialStatus" class="muted" role="status" aria-live="polite"></p></section>
+<div id="socialModal" class="bmth-post-modal" hidden><div class="bmth-post-backdrop" data-close-post></div><section class="bmth-post-dialog" role="dialog" aria-modal="true" aria-labelledby="socialModalTitle"><div class="bmth-post-dialog-head"><h2 id="socialModalTitle">Criar publicação</h2><button type="button" id="closeSocialModal" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5 19 19M19 5 5 19"/></svg></button></div><form id="socialForm"><textarea id="socialText" maxlength="5000" rows="6" placeholder="O que está acontecendo no Imaginário?"></textarea><div id="socialPreviewWrap" class="bmth-post-previews" hidden></div><label class="bmth-post-add" for="socialImage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 16-5-5L5 21"/></svg> Adicionar fotos e GIFs <input id="socialImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden></label><p class="bmth-post-hint">Fotos até 5 MB · GIFs até 15 MB por arquivo · máximo de 20 mídias por publicação.</p><button type="submit" id="socialPublish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 12 16-8-5 16-3-7-8-1Zm8 1 8-9"/></svg> Publicar</button><p id="socialModalStatus" class="muted" role="status" aria-live="polite"></p></form></section></div>
 <section class="panel composer-panel" id="composerPanel" hidden><h2>Publicar Wiki de habilidade</h2><p class="muted">Registre técnicas, limitações e liberações do seu personagem. A publicação não significa aprovação administrativa.</p><form id="wikiForm"><label for="wikiCharacter">Personagem</label><select id="wikiCharacter" required style="width:100%;padding:11px;background:#0e0b12;color:white;border:1px solid #55415a"></select><label for="wikiTitle">Título da habilidade</label><input id="wikiTitle" required maxlength="120" placeholder="Nome da técnica ou liberação"><label for="wikiCategory">Categoria</label><input id="wikiCategory" maxlength="80" placeholder="Técnica, Liberação, Energia..."><label for="wikiDescription">Descrição</label><textarea id="wikiDescription" required maxlength="5000" placeholder="Explique como funciona..."></textarea><label for="wikiLimitations">Condições e limitações</label><textarea id="wikiLimitations" maxlength="3000"></textarea><label for="wikiCoverFile">Imagem da capa (opcional, JPG/PNG/WEBP até 5 MB ou GIF até 15 MB)</label><input id="wikiCoverFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif"><img id="wikiCoverPreview" alt="Prévia da capa" hidden style="display:block;width:100%;max-height:230px;object-fit:contain;margin:10px 0;border-radius:9px"><label for="wikiGalleryFiles">Galeria de fotos e GIFs (selecione vários arquivos)</label><input id="wikiGalleryFiles" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple><div id="wikiGalleryPreview" class="bmth-gallery-preview"></div><label for="wikiCover">Ou URL da capa (opcional)</label><input id="wikiCover" type="url" placeholder="https://..."><button id="wikiPublish" type="submit">Publicar Wiki</button></form><p id="wikiStatus" class="muted" role="status"></p></section><div id="posts" class="feed-stream"><p class="muted">Carregando publicações...</p></div></section><aside class="community-sidebar"><section class="panel" id="peopleSection"><h2>Jogadores</h2><div id="people">Carregando jogadores...</div></section><section class="panel"><h2>Seu espaço</h2><p class="muted">Edite seu perfil e apresente seus personagens.</p><p><a href="./perfil.html">Meu perfil →</a></p><p><a href="./personagens.html">Minhas fichas →</a></p></section></aside></div></div>
 </main>
 <script>
@@ -108,35 +136,32 @@ const initialStatus=document.getElementById('status');if(initialStatus)initialSt
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
 const $=id=>document.getElementById(id);let user=null;let profiles=new Map();let characterProfiles=new Map();let featuredProfiles=[];let isAdmin=false;
-$('composerToggle').addEventListener('click',()=>{const opened=$('composerPanel').hidden;$('composerPanel').hidden=!opened;$('composerToggle').setAttribute('aria-expanded',String(opened));$('composerToggle').textContent=opened?'✕ Fechar Wiki':'✧ Criar Wiki';if(opened)$('composerPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
+$('composerToggle').addEventListener('click',()=>{const opened=$('composerPanel').hidden;$('composerPanel').hidden=!opened;$('composerToggle').setAttribute('aria-expanded',String(opened));$('composerToggle').innerHTML=opened?'${ico('close')} Fechar Wiki':'${ico('book')} Criar Wiki';if(opened)$('composerPanel').scrollIntoView({behavior:'smooth',block:'nearest'})});
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
 function link(href,label){const a=el('a','',label);a.href=href;return a}
 function safeUrl(value){try{const u=new URL(value);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}
 function msg(s){$('status').textContent=s}
-let socialPreviewObject=null;
-$('socialImage').addEventListener('change',()=>{
- const file=$('socialImage').files[0];
- if(socialPreviewObject)URL.revokeObjectURL(socialPreviewObject);
- socialPreviewObject=file?URL.createObjectURL(file):null;
- $('socialPreviewWrap').hidden=!file;
- if(file)$('socialPreview').src=socialPreviewObject;
-});
-$('socialRemoveImage').addEventListener('click',()=>{
- $('socialImage').value='';$('socialPreviewWrap').hidden=true;
- if(socialPreviewObject)URL.revokeObjectURL(socialPreviewObject);
- socialPreviewObject=null;
-});
+const socialModal=$('socialModal'),socialFiles=[];
+function setSocialModal(open){socialModal.hidden=!open;document.body.classList.toggle('bmth-modal-open',open);if(open){$('socialText').focus()}else{$('openSocialComposer').focus()}}
+$('openSocialComposer').addEventListener('click',()=>setSocialModal(true));
+$('openSocialComposerButton').addEventListener('click',()=>setSocialModal(true));
+$('openSocialPhotos').addEventListener('click',()=>{setSocialModal(true);$('socialImage').click()});
+$('closeSocialModal').addEventListener('click',()=>setSocialModal(false));
+socialModal.querySelector('[data-close-post]').addEventListener('click',()=>setSocialModal(false));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!socialModal.hidden)setSocialModal(false)});
+function validSocialFile(f){return ['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)&&f.size<=(f.type==='image/gif'?15:5)*1048576}
+function renderSocialPreviews(){const area=$('socialPreviewWrap');area.replaceChildren();area.hidden=!socialFiles.length;socialFiles.forEach((f,i)=>{const tile=el('div','bmth-post-preview');const img=el('img');const url=URL.createObjectURL(f);img.src=url;img.onload=()=>URL.revokeObjectURL(url);const remove=el('button','','×');remove.type='button';remove.setAttribute('aria-label','Remover '+f.name);remove.addEventListener('click',()=>{socialFiles.splice(i,1);renderSocialPreviews()});tile.append(img,remove);area.append(tile)})}
+$('socialImage').addEventListener('change',()=>{const files=[...$('socialImage').files];$('socialImage').value='';if(files.some(f=>!validSocialFile(f))){$('socialModalStatus').textContent='Fotos até 5 MB e GIFs até 15 MB, apenas JPG, PNG, WEBP ou GIF.';return}if(socialFiles.length+files.length>20){$('socialModalStatus').textContent='O limite é 20 mídias por publicação.';return}socialFiles.push(...files);$('socialModalStatus').textContent='';renderSocialPreviews()});
 $('socialForm').addEventListener('submit',async e=>{
- e.preventDefault();const content=$('socialText').value.trim(),file=$('socialImage').files[0],button=$('socialPublish');
- if(!content&&!file){$('socialStatus').textContent='Escreva algo ou selecione uma foto.';return}
- if(file&&(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024)){$('socialStatus').textContent='Use JPG, PNG ou WEBP de até 5 MB.';return}
- button.disabled=true;$('socialStatus').textContent='Publicando...';let image_url=null;
+ e.preventDefault();const content=$('socialText').value.trim(),button=$('socialPublish');
+ if(!content&&!socialFiles.length){$('socialModalStatus').textContent='Escreva algo ou selecione uma imagem.';return}
+ button.disabled=true;$('socialModalStatus').textContent='Publicando...';
  try{
-  if(file){const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];const path=user.id+'/'+crypto.randomUUID()+'.'+ext;const {error}=await db.storage.from('community-images').upload(path,file,{contentType:file.type,upsert:false});if(error)throw error;image_url=db.storage.from('community-images').getPublicUrl(path).data.publicUrl}
-  const {error}=await db.from('community_posts').insert({user_id:user.id,content,image_url});
-  if(error)throw error;
-  $('socialForm').reset();$('socialRemoveImage').click();$('socialStatus').textContent='Publicado no feed!';await loadPosts();
- }catch(err){$('socialStatus').textContent='Não foi possível publicar: '+err.message+'. Confira se a migração SQL do feed foi executada.'}
+  const urls=[];for(const f of socialFiles){const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'}[f.type];const path=user.id+'/'+crypto.randomUUID()+'.'+ext;const {error}=await db.storage.from('community-images').upload(path,f,{contentType:f.type,upsert:false});if(error)throw error;urls.push(db.storage.from('community-images').getPublicUrl(path).data.publicUrl)}
+  const {data:post,error}=await db.from('community_posts').insert({user_id:user.id,content,image_url:urls[0]||null}).select('id').single();if(error)throw error;
+  if(urls.length){const {error:mediaError}=await db.from('bmth_post_media').insert(urls.map((url,position)=>({post_id:post.id,url,position})));if(mediaError)throw Error('Publicação criada, mas a galeria falhou: '+mediaError.message)}
+  $('socialForm').reset();socialFiles.length=0;renderSocialPreviews();$('socialStatus').textContent='Publicado no feed!';$('socialModalStatus').textContent='';setSocialModal(false);await loadPosts();
+ }catch(err){$('socialModalStatus').textContent='Não foi possível concluir: '+err.message}
  finally{button.disabled=false}
 });
 
@@ -167,7 +192,7 @@ async function removeOwned(table,id,feedback,extraFilter){
  if(!data?.length){feedback.textContent='Não foi possível apagar. Verifique as permissões do proprietário no Supabase.';return}
  await loadPosts();
 }
-async function drawSocialPost(area,p){
+async function drawSocialPost(area,p,gallery=[]){
  const card=el('article','post social-post'),owner=profiles.get(p.user_id),name=owner?.display_name||'Limpador';
  const head=el('div','post-head'),identity=el('div','post-identity'),av=safeUrl(owner?.avatar_url);
  if(av){const img=el('img','post-avatar');img.src=av;img.alt='';identity.append(img)}else identity.append(el('span','post-avatar',name.slice(0,1).toUpperCase()));
@@ -190,7 +215,7 @@ async function drawSocialPost(area,p){
  }
  card.prepend(head);
  if(p.content)card.append(el('p','social-post-body',p.content));
- const imgurl=safeUrl(p.image_url);if(imgurl){const img=el('img','social-post-image');img.src=imgurl;img.alt='Imagem publicada por '+name;img.loading='lazy';card.append(img)}
+ const urls=gallery.length?gallery:[p.image_url].filter(Boolean);if(urls.length){const grid=el('div','bmth-social-gallery'+(urls.length===1?' single':''));for(const url of urls){const safe=safeUrl(url);if(!safe)continue;const a=el('a');a.href=safe;a.target='_blank';a.rel='noopener noreferrer';const img=el('img');img.src=safe;img.alt='Mídia publicada por '+name;img.loading='lazy';a.append(img);grid.append(a)}card.append(grid)}
  const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','👎 Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
  actions.append(like,dislike,count,commentsToggle);card.append(actions);
  const comments=el('div','social-comments');comments.hidden=true;const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
@@ -264,11 +289,12 @@ async function loadPosts(){
  if(socialResult.error){area.append(el('p','muted','Postagens sociais aguardando configuração do Supabase. Execute supabase/community_social_feed.sql para ativá-las.'))}
  if(characterResult.error)area.append(el('p','muted','Não foi possível carregar fichas recentes: '+characterResult.error.message));
  const wikis=wikiResult.data||[],social=socialResult.data||[],characters=characterResult.data||[];const galleryByWiki=new Map();if(wikis.length){const {data:media}=await db.from('bmth_wiki_media').select('wiki_id,url,position').in('wiki_id',wikis.map(w=>w.id)).order('position');for(const m of media||[]){if(!galleryByWiki.has(m.wiki_id))galleryByWiki.set(m.wiki_id,[]);galleryByWiki.get(m.wiki_id).push(m.url)}}
+ const socialGalleries=new Map();if(social.length){const {data:media}=await db.from('bmth_post_media').select('post_id,url,position').in('post_id',social.map(p=>p.id)).order('position');for(const m of media||[]){if(!socialGalleries.has(m.post_id))socialGalleries.set(m.post_id,[]);socialGalleries.get(m.post_id).push(m.url)}}
  const ids=[...new Set(wikis.map(w=>w.character_id).filter(Boolean))];characterProfiles=new Map();
  if(ids.length){const {data:owners}=await db.from('characters').select('id,first_name,last_name,profile_id').in('id',ids);for(const c of owners||[])characterProfiles.set(c.id,c)}
  const entries=[...wikis.map(w=>({kind:'wiki',item:w})),...social.map(p=>({kind:'social',item:p})),...characters.map(c=>({kind:'character',item:c}))].sort((a,b)=>new Date(b.item.created_at)-new Date(a.item.created_at));
  if(!entries.length&&!wikiResult.error&&!socialResult.error)area.append(el('div','panel','Ainda não há publicações. Seja o primeiro a compartilhar algo com os Limpadores.'));
- for(const entry of entries){if(entry.kind==='wiki')await drawPost(area,entry.item,galleryByWiki.get(entry.item.id)||[]);else if(entry.kind==='character')await drawCharacterPost(area,entry.item);else await drawSocialPost(area,entry.item)}
+ for(const entry of entries){if(entry.kind==='wiki')await drawPost(area,entry.item,galleryByWiki.get(entry.item.id)||[]);else if(entry.kind==='character')await drawCharacterPost(area,entry.item);else await drawSocialPost(area,entry.item,socialGalleries.get(entry.item.id)||[])}
 }
 async function drawCharacterPost(area,c){
  const card=el('article','post');
