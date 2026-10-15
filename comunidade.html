@@ -33,6 +33,23 @@ main{max-width:1180px}.layout{grid-template-columns:minmax(0,1fr) 310px;align-it
 #wikiForm #wikiPublish{width:100%;margin-top:20px;min-height:47px;border-radius:12px;font-weight:700;background:linear-gradient(125deg,rgba(193,54,102,.9),rgba(144,39,87,.9));border:1px solid #d975a0;box-shadow:inset 0 1px 0 #ffffff30}
 #wikiForm #wikiCoverPreview{max-width:100%}
 @media(max-width:760px){#composerPanel.composer-panel{padding:18px 15px!important;margin-top:12px;border-radius:16px}#composerPanel h2{font-size:20px}#composerPanel>p.muted{font-size:12px}#wikiForm>label{margin-top:14px}#wikiForm input:not([type=file]),#wikiForm select,#wikiForm textarea{font-size:16px!important;padding:12px!important}#wikiForm #wikiDescription{min-height:120px}.bmth-wiki-file{min-height:90px}#wikiForm #wikiPublish{font-size:15px}}
+
+/* Galerias estilo Facebook: GIF prioritário, grade 2x2, +N e visualizador */
+.bmth-social-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:4px;margin:13px 0;max-height:none;border-radius:12px;overflow:hidden;aspect-ratio:1.25;background:#100b15}
+.bmth-social-gallery.single{grid-template-columns:1fr;aspect-ratio:auto;max-height:550px}
+.bmth-social-gallery.three .bmth-social-gallery-tile:first-child{grid-row:span 2}
+.bmth-social-gallery-tile{position:relative;display:block;width:100%;height:100%;min-height:0;min-width:0;overflow:hidden;padding:0;border:0;border-radius:0;background:#150e19;cursor:pointer}
+.bmth-social-gallery-tile img{display:block;width:100%;height:100%;min-height:0;object-fit:cover;transition:transform .2s}
+.bmth-social-gallery-tile:hover img{transform:scale(1.025)}
+.bmth-social-gallery.single .bmth-social-gallery-tile img{max-height:550px;object-fit:contain}
+.bmth-social-gallery-more{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.58);font-size:clamp(26px,5vw,45px);font-weight:750;color:white;text-shadow:0 2px 10px #000}
+.bmth-gallery-lightbox{position:fixed;inset:0;z-index:10020;display:grid;place-items:center;padding:52px 55px;background:#050309ef}
+.bmth-gallery-lightbox-bg{position:absolute;inset:0}
+.bmth-gallery-lightbox>img{position:relative;max-width:100%;max-height:calc(100dvh - 110px);object-fit:contain;pointer-events:none}
+.bmth-gallery-lightbox button{position:absolute;z-index:1;border:1px solid #ffffff40;border-radius:50%;background:#291a30d9;color:#fff;width:42px;height:42px;font-size:30px;display:grid;place-items:center;cursor:pointer;padding:0}
+.bmth-gallery-lightbox-close{right:18px;top:18px}.bmth-gallery-lightbox-prev{left:9px;top:50%}.bmth-gallery-lightbox-next{right:9px;top:50%}
+.bmth-gallery-lightbox-count{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font-size:13px;color:#f6e8f2}
+@media(max-width:560px){.bmth-social-gallery{gap:3px;border-radius:9px;aspect-ratio:1}.bmth-social-gallery.single{aspect-ratio:auto}.bmth-gallery-lightbox{padding:54px 35px}}
 </style><link rel="stylesheet" href="./theme.css?v=mobile4">
 <style>
 /* BMTH / Comunidade 2.0 — somente apresentação, preservando autenticação e publicações */
@@ -216,6 +233,10 @@ async function removeOwned(table,id,feedback,extraFilter){
  if(!data?.length){feedback.textContent='Não foi possível apagar. Verifique as permissões do proprietário no Supabase.';return}
  await loadPosts();
 }
+function bmthIsGif(url){return /\\.gif(?:[?#]|$)/i.test(url)}
+function bmthMediaSorted(urls){return urls.map(safeUrl).filter(Boolean).sort((a,b)=>Number(bmthIsGif(b))-Number(bmthIsGif(a)))}
+function openBmthGallery(urls,start=0){let idx=start;const overlay=el('div','bmth-gallery-lightbox');overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Galeria de mídias');const backdrop=el('div','bmth-gallery-lightbox-bg');const image=el('img');image.alt='Mídia ampliada';const count=el('span','bmth-gallery-lightbox-count');const close=el('button','bmth-gallery-lightbox-close','×'),prev=el('button','bmth-gallery-lightbox-prev','‹'),next=el('button','bmth-gallery-lightbox-next','›');[close,prev,next].forEach(btn=>btn.type='button');close.setAttribute('aria-label','Fechar galeria');prev.setAttribute('aria-label','Imagem anterior');next.setAttribute('aria-label','Próxima imagem');const update=()=>{image.src=urls[idx];count.textContent=(idx+1)+' / '+urls.length;prev.hidden=next.hidden=urls.length<2};const cleanup=()=>{document.removeEventListener('keydown',onKey);overlay.remove()};const onKey=e=>{if(e.key==='Escape')cleanup();else if(e.key==='ArrowRight'){idx=(idx+1)%urls.length;update()}else if(e.key==='ArrowLeft'){idx=(idx+urls.length-1)%urls.length;update()}};backdrop.onclick=close.onclick=cleanup;prev.onclick=()=>{idx=(idx+urls.length-1)%urls.length;update()};next.onclick=()=>{idx=(idx+1)%urls.length;update()};overlay.append(backdrop,image,count,close,prev,next);document.body.append(overlay);document.addEventListener('keydown',onKey);update();close.focus()}
+function buildBmthMediaGrid(input,alt){const urls=bmthMediaSorted(input),grid=el('div','bmth-social-gallery'+(urls.length===1?' single':''));if(urls.length===3)grid.classList.add('three');urls.slice(0,4).forEach((url,i)=>{const tile=el('button','bmth-social-gallery-tile');tile.type='button';tile.setAttribute('aria-label','Abrir mídia '+(i+1)+' de '+urls.length);const img=el('img');img.src=url;img.alt=alt;img.loading='lazy';tile.append(img);if(i===3&&urls.length>4){const more=el('span','bmth-social-gallery-more','+'+(urls.length-4));tile.append(more)}tile.onclick=()=>openBmthGallery(urls,i);grid.append(tile)});return grid}
 async function drawSocialPost(area,p,gallery=[]){
  const card=el('article','post social-post'),owner=profiles.get(p.user_id),name=owner?.display_name||'Limpador';
  const head=el('div','post-head'),identity=el('div','post-identity'),av=safeUrl(owner?.avatar_url);
@@ -239,7 +260,7 @@ async function drawSocialPost(area,p,gallery=[]){
  }
  card.prepend(head);
  if(p.content)card.append(el('p','social-post-body',p.content));
- const urls=gallery.length?gallery:[p.image_url].filter(Boolean);if(urls.length){const grid=el('div','bmth-social-gallery'+(urls.length===1?' single':''));for(const url of urls){const safe=safeUrl(url);if(!safe)continue;const a=el('a');a.href=safe;a.target='_blank';a.rel='noopener noreferrer';const img=el('img');img.src=safe;img.alt='Mídia publicada por '+name;img.loading='lazy';a.append(img);grid.append(a)}card.append(grid)}
+ const urls=gallery.length?gallery:[p.image_url].filter(Boolean);if(urls.length)card.append(buildBmthMediaGrid(urls,'Mídia publicada por '+name));
  const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','👎 Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
  actions.append(like,dislike,count,commentsToggle);card.append(actions);
  const comments=el('div','social-comments');comments.hidden=true;const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
@@ -404,7 +425,7 @@ async function drawPost(area,w,gallery=[]){const card=el('article','post');const
   card.append(feedback);
  }
  card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
-const media=el('div','post-media');const fallback=()=>{media.replaceChildren();const block=el('div','fallback-cover');block.append(el('b','','✧'),el('span','','BMTH // ARQUIVO DE HABILIDADE'));media.append(block)};const cover=safeUrl(w.cover_image);if(cover){const img=el('img');img.src=cover;img.alt='Capa da habilidade '+(w.title||'');img.loading='lazy';img.onerror=fallback;media.append(img)}else fallback();card.append(media);if(gallery.length){const strip=el('div','bmth-wiki-gallery');for(const url of gallery){const safe=safeUrl(url);if(!safe)continue;const a=el('a','');a.href=safe;a.target='_blank';a.rel='noopener noreferrer';const img=el('img');img.src=safe;img.loading='lazy';img.alt='Imagem da galeria de '+(w.title||'Wiki');a.append(img);strip.append(a)}card.append(strip)}
+const wikiMedia=[w.cover_image,...gallery].filter(Boolean);if(wikiMedia.length){card.append(buildBmthMediaGrid([...new Set(wikiMedia)],'Mídia da Wiki '+(w.title||'')))}else{const media=el('div','post-media'),block=el('div','fallback-cover');block.append(el('b','','✧'),el('span','','BMTH // ARQUIVO DE HABILIDADE'));media.append(block);card.append(media)}
 const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const dislike=el('button','','👎 Não curtir');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
 const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
 async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥ Curtido':'♡ Curtir';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked);await refreshDislikes()}
