@@ -29,6 +29,7 @@
  .carousel-controls button:disabled{opacity:.35}
  .carousel-position{font-size:13px;color:#eab5c7;min-width:72px;text-align:center}
 }
+body.embed-create{background:#151019}body.embed-create header,body.embed-create .bmth-mobile-nav,body.embed-create .bmth-bell,body.embed-create .bmth-bell-panel,body.embed-create main>.eyebrow,body.embed-create main>h1,body.embed-create main>.muted,body.embed-create #app>.actions,body.embed-create #catalogIntro,body.embed-create #xpRequestPanel,body.embed-create #listTitle,body.embed-create #cards,body.embed-create #carouselControls{display:none!important}body.embed-create main{margin:0;max-width:none;padding:0 8px}body.embed-create #formPanel{margin:0;padding:16px;border-radius:12px}body.embed-create #status{font-size:13px;min-height:0;margin:4px 0 10px}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile4">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"></head>
@@ -53,7 +54,7 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
 const $=id=>document.getElementById(id);const status=s=>$('status').textContent=s;
 let user=null,profile=null,editing=null,characters=[],isAdmin=false;
-const urlParams=new URLSearchParams(location.search);const publicProfileId=urlParams.get('profile');const mineMode=urlParams.get('mine')==='1';let owners=new Map();
+const urlParams=new URLSearchParams(location.search);const embedCreate=urlParams.get('embed')==='create';if(embedCreate)document.body.classList.add('embed-create');const publicProfileId=urlParams.get('profile');const mineMode=urlParams.get('mine')==='1';let owners=new Map();
 let previewObjectUrl=null;function safeImage(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}function showPreview(url){if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null}const img=$('portraitPreview');img.hidden=!url;if(url)img.src=url;else img.removeAttribute('src')}
 $('portraitFile').addEventListener('change',async()=>{
  const file=$('portraitFile').files[0];croppedPortraitFile=null;
@@ -101,7 +102,7 @@ function editPortrait(file){
  });
 }
 function showForm(character=null){croppedPortraitFile=null;$('portraitFile').value='';showPreview(safeImage(character?.portrait_url));editing=character?.id||null;$('formPanel').hidden=false;$('formTitle').textContent=editing?'Editar personagem':'Novo personagem';$('first').value=character?.first_name||'';$('last').value=character?.last_name||'';$('age').value=character?.age??'';$('energy').value=character?.spiritual_energy||'';$('appearance').value=character?.appearance||'';$('history').value=character?.history||'';$('formPanel').scrollIntoView({behavior:'smooth',block:'start'})}
-$('newBtn').onclick=()=>showForm();$('cancelBtn').onclick=()=>{$('formPanel').hidden=true;editing=null};$('reloadBtn').onclick=()=>loadCharacters();
+$('newBtn').onclick=()=>showForm();$('cancelBtn').onclick=()=>{if(embedCreate){window.parent.postMessage({type:'bmth-character-cancel'},location.origin);return}$('formPanel').hidden=true;editing=null};$('reloadBtn').onclick=()=>loadCharacters();
 async function init(){
  const {data:{user:current},error}=await db.auth.getUser();if(error||!current){status('Faça login para acessar as fichas.');const a=document.createElement('a');a.href='./login.html';a.textContent=' Entrar';$('status').append(a);return}
  user=current;const {data:adminFlag}=await db.rpc('bmth_is_admin');isAdmin=adminFlag===true;
@@ -113,7 +114,7 @@ async function init(){
   if(created.error){status('Erro ao criar perfil: '+created.error.message);return}profile=created.data;
  }
  const personal=mineMode;
- $('xpRequestPanel').hidden=!personal;$('newBtn').hidden=!personal;
+ $('xpRequestPanel').hidden=!personal;$('newBtn').hidden=!personal;if(embedCreate&&personal)showForm();
  $('catalogIntro').textContent=publicProfileId?'Fichas públicas deste jogador.':personal?'Gerencie suas fichas e solicite XP.':'Clique numa ficha para conhecer o personagem e seu criador.';
  $('listTitle').textContent=publicProfileId?'Personagens do jogador':personal?'Minhas fichas':'Todos os personagens';
  $('app').hidden=false;await loadCharacters();
@@ -177,7 +178,7 @@ $('characterForm').addEventListener('submit',async e=>{e.preventDefault();if(!pr
  $('saveBtn').disabled=true;status('Salvando ficha...');let result;if(editing){result=await db.from('characters').update(payload).eq('id',editing).select('id').single()}else{result=await db.from('characters').insert({...payload,profile_id:profile.id}).select('id').single()}
  if(!result.error&&croppedPortraitFile){try{const file=croppedPortraitFile;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>5*1024*1024)throw Error('Use JPG, PNG ou WEBP de até 5 MB.');const extension={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];const path=user.id+'/'+result.data.id+'/'+crypto.randomUUID()+'.'+extension;const {error:uploadError}=await db.storage.from('character-images').upload(path,file,{contentType:file.type,upsert:false});if(uploadError)throw uploadError;const url=db.storage.from('character-images').getPublicUrl(path).data.publicUrl;const {error:photoError}=await db.from('characters').update({portrait_url:url}).eq('id',result.data.id).eq('profile_id',profile.id);if(photoError)throw photoError}catch(e){$('saveBtn').disabled=false;status('Ficha salva, mas não foi possível enviar a imagem: '+e.message+' — configure o SQL de imagens no Supabase.');await loadCharacters();return}}
  $('saveBtn').disabled=false;if(result.error){status('Não foi possível salvar: '+result.error.message);return}
- $('formPanel').hidden=true;editing=null;croppedPortraitFile=null;showPreview(null);await loadCharacters();status('Ficha salva! O rank e o XP dependem da progressão administrativa.')
+ $('formPanel').hidden=true;editing=null;croppedPortraitFile=null;showPreview(null);if(embedCreate){window.parent.postMessage({type:'bmth-character-created'},location.origin);return}await loadCharacters();status('Ficha salva! O rank e o XP dependem da progressão administrativa.')
 });
 $('xpRequestForm').addEventListener('submit',async e=>{e.preventDefault();const character_id=$('xpCharacter').value,amount=Number($('xpAmount').value),reason=$('xpReason').value.trim();if(!character_id||!Number.isInteger(amount)||amount<1||amount>1000||reason.length<5){status('Preencha o pedido de XP corretamente.');return}if(!characters.some(c=>c.id===character_id)){status('Personagem inválido.');return}$('xpSend').disabled=true;const {error}=await db.from('bmth_xp_requests').insert({character_id,amount,reason,requested_by:user.id});$('xpSend').disabled=false;if(error){status('Não foi possível solicitar XP: '+error.message);return}$('xpRequestForm').reset();status('Pedido de XP enviado para análise administrativa.')});
 init();
