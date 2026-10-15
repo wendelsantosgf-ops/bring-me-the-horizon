@@ -227,7 +227,7 @@ function openSheet(c,progress,opener){
   $('sheetStatRank').textContent='RANK '+ranks[idx];
   $('sheetSpeed').textContent=speed.toLocaleString('pt-BR');
   $('sheetStrength').textContent=strength.toLocaleString('pt-BR');
-  $('sheetNextStats').textContent=idx<ranks.length-1?'PRÓXIMO RANK '+ranks[idx+1]+' · '+(speed+150).toLocaleString('pt-BR')+' km/h · '+(strength+180).toLocaleString('pt-BR')+' kg':'RANK S · Classificação máxima';
+  $('sheetNextStats').textContent=idx<3?'PRÓXIMO RANK '+ranks[idx+1]+' · '+(speed+150).toLocaleString('pt-BR')+' km/h · '+(strength+180).toLocaleString('pt-BR')+' kg':idx===3?'RANK A · Classificação máxima conhecida':'RANK S · Classificação revelada';
  }
  $('sheetAppearance').textContent=c.appearance||'A aparência ainda não foi registrada.';
  $('sheetHistory').textContent=c.history||'A história deste Limpador ainda não foi registrada.';
