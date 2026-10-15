@@ -115,6 +115,9 @@ const $=id=>document.getElementById(id),notice=text=>$('notice').textContent=tex
 const params=new URLSearchParams(location.search),requested=params.get('id');
 let user=null,profile=null,customization=null;
 // Must be initialized before the top-level await that calls render().
+const bmthLevelNames=['Novato','Gari','Veterano','Herói','Limpador','Ameaça','Rank C','Rank B','Rank A','Rank Dragão'];
+const bmthLevelColors=['#9c939c','#b77c4a','#58a968','#b9a24e','#df7b59','#cf487c','#9869d7','#8b4fc9','#e6a94a','#38baff'];
+const bmthThresholds=[0,5,15,30,50,75,105,140,180,225];
 const profileCharacterNames=new Map();
 let sheetOpener=null;
 const {data:auth,error:authError}=await db.auth.getUser();user=auth?.user;
@@ -178,9 +181,6 @@ async function loadMemberTags(){
  for(const tag of tags||[]){const el=document.createElement('span');el.className='bmth-member-tag';el.textContent=tag.name;el.style.setProperty('--tag-color',/^#[0-9a-fA-F]{6}$/.test(tag.color)?tag.color:'#d96a9b');area.append(el)}
 }
 
-const bmthLevelNames=['Novato','Gari','Veterano','Herói','Limpador','Ameaça','Rank C','Rank B','Rank A','Rank Dragão'];
-const bmthLevelColors=['#9c939c','#b77c4a','#58a968','#b9a24e','#df7b59','#cf487c','#9869d7','#8b4fc9','#e6a94a','#38baff'];
-const bmthThresholds=[0,5,15,30,50,75,105,140,180,225];
 async function loadCommunityLevel(){
  const area=$('communityLevel');area.hidden=true;
  try{
