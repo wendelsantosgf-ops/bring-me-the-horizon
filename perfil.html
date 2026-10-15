@@ -218,8 +218,8 @@ function openSheet(c,progress,opener){
   const row=document.createElement('div');row.className='sheet-fact';const key=document.createElement('b');key.textContent=label;const val=document.createElement('span');val.textContent=String(value);row.append(key,val);$('sheetFacts').append(row);
  }
  const rank=progress?.rank||'D',xp=Number(progress?.xp)||0;
- $('sheetRank').textContent='RANK '+rank;$('sheetFill').style.width=(rank==='A'?100:Math.max(0,Math.min(100,xp%100)))+'%';
- $('sheetXP').textContent=rank==='A'?xp+' XP acumulados':(xp%100)+' / 100 XP para a próxima etapa';
+ $('sheetRank').textContent='RANK '+rank;$('sheetFill').style.width=(rank==='S'?100:Math.max(0,Math.min(100,xp%100)))+'%';
+ $('sheetXP').textContent=rank==='S'?xp+' XP acumulados':(xp%100)+' / 100 XP para a próxima etapa';
  const ranks=['D','C','B','A','S'],idx=ranks.indexOf(String(rank).toUpperCase());
  $('sheetPhysicalStats').hidden=idx<0;
  if(idx>=0){
