@@ -62,6 +62,13 @@ begin
   if length(trim(new.content))<10 then return new; end if;
   select p.user_id into v_owner from public.ability_wikis w join public.characters c on c.id=w.character_id join public.profile p on p.id=c.profile_id where w.id=new.wiki_id;
   v_target:=new.wiki_id;v_kind:='wiki_comment';
+ elsif tg_table_name='character_comments' then
+  if length(trim(new.content))<10 then return new; end if;
+  select p.user_id into v_owner from public.characters c join public.profile p on p.id=c.profile_id where c.id=new.character_id;
+  v_target:=new.character_id;v_kind:='character_comment';
+ elsif tg_table_name='character_reactions' then
+  select p.user_id into v_owner from public.characters c join public.profile p on p.id=c.profile_id where c.id=new.character_id;
+  v_target:=new.character_id;v_kind:='character_reaction';
  elsif tg_table_name='community_comments' then
   if length(trim(new.content))<10 then return new; end if;
   select user_id into v_owner from public.community_posts where id=new.post_id;
@@ -69,7 +76,7 @@ begin
  else return new;
  end if;
  if v_owner is null or v_owner=new.user_id or public.bmth_is_restricted(new.user_id,'comment') then return new; end if;
- select count(*) into v_count from public.bmth_member_xp_events where user_id=new.user_id and awarded_on=(now() at time zone 'America/Sao_Paulo')::date and event_type in ('wiki_comment','feed_comment');
+ select count(*) into v_count from public.bmth_member_xp_events where user_id=new.user_id and awarded_on=(now() at time zone 'America/Sao_Paulo')::date and event_type in ('wiki_comment','feed_comment','character_comment','character_reaction');
  if v_count>=20 then return new; end if;
  insert into public.bmth_member_xp_events(user_id,event_type,target_id)
  values(new.user_id,v_kind,v_target) on conflict do nothing;
@@ -83,3 +90,8 @@ drop trigger if exists bmth_wiki_comment_xp on public.wiki_comments;
 create trigger bmth_wiki_comment_xp after insert on public.wiki_comments for each row execute function public.bmth_reward_engagement();
 drop trigger if exists bmth_feed_comment_xp on public.community_comments;
 create trigger bmth_feed_comment_xp after insert on public.community_comments for each row execute function public.bmth_reward_engagement();
+
+drop trigger if exists bmth_character_comment_xp on public.character_comments;
+create trigger bmth_character_comment_xp after insert on public.character_comments for each row execute function public.bmth_reward_engagement();
+drop trigger if exists bmth_character_reaction_xp on public.character_reactions;
+create trigger bmth_character_reaction_xp after insert on public.character_reactions for each row execute function public.bmth_reward_engagement();
