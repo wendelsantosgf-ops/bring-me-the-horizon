@@ -12,6 +12,28 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
 const $=id=>document.getElementById(id);const msg=s=>$('status').textContent=s;let characters=[],progress=new Map();
 const err=e=>{msg('Erro: '+(e?.message||String(e)));};
+
+async function loadTags(){
+ const [tr,pr,ar]=await Promise.all([db.from('bmth_profile_tags').select('id,name,color').order('name'),db.from('profile').select('id,display_name').order('display_name'),db.from('bmth_profile_tag_assignments').select('profile_id,tag_id')]);
+ const status=$('tagStatus');
+ if(tr.error||pr.error||ar.error){status.textContent='Configure primeiro supabase/profile_tags.sql no Supabase.';return}
+ const tags=tr.data||[],assignments=ar.data||[],member=$('tagProfile'),tag=$('tagSelect'),oldMember=member.value,oldTag=tag.value;
+ member.replaceChildren();tag.replaceChildren();$('tagList').replaceChildren();
+ for(const p of pr.data||[]){const o=document.createElement('option');o.value=p.id;o.textContent=p.display_name||'Membro';member.append(o)}
+ for(const t of tags){
+ const o=document.createElement('option');o.value=t.id;o.textContent=t.name;tag.append(o);
+ const row=document.createElement('div');row.className='item';const badge=document.createElement('span');badge.textContent=t.name;badge.style.color=t.color;badge.style.border='1px solid '+t.color;badge.style.padding='4px 10px';badge.style.borderRadius='20px';row.append(badge);
+ const count=document.createElement('small');count.textContent=' · '+assignments.filter(a=>a.tag_id===t.id).length+' membro(s)';row.append(count);
+ const del=document.createElement('button');del.className='secondary';del.textContent='Excluir';del.style.marginLeft='12px';del.onclick=async()=>{if(!confirm('Excluir esta tag de todos os perfis?'))return;const {error}=await db.from('bmth_profile_tags').delete().eq('id',t.id);if(error)status.textContent=error.message;else await loadTags()};row.append(del);$('tagList').append(row)
+ }
+ if([...member.options].some(x=>x.value===oldMember))member.value=oldMember;
+ if([...tag.options].some(x=>x.value===oldTag))tag.value=oldTag;
+ const show=()=>{status.textContent='Tags do membro: '+(assignments.filter(a=>a.profile_id===member.value).map(a=>tags.find(t=>t.id===a.tag_id)?.name).filter(Boolean).join(', ')||'nenhuma')};member.onchange=show;show();
+}
+$('createTag').onclick=async()=>{const name=$('tagName').value.trim(),color=$('tagColor').value;if(name.length<2||name.length>24){$('tagStatus').textContent='Use de 2 a 24 caracteres.';return}const {error}=await db.from('bmth_profile_tags').insert({name,color});if(error){$('tagStatus').textContent=error.message;return}$('tagName').value='';await loadTags()};
+$('assignTag').onclick=async()=>{const profile_id=$('tagProfile').value,tag_id=$('tagSelect').value;if(!profile_id||!tag_id)return;const {error}=await db.from('bmth_profile_tag_assignments').upsert({profile_id,tag_id},{onConflict:'profile_id,tag_id'});if(error)$('tagStatus').textContent=error.message;else await loadTags()};
+$('removeTag').onclick=async()=>{const profile_id=$('tagProfile').value,tag_id=$('tagSelect').value;if(!profile_id||!tag_id)return;const {error}=await db.from('bmth_profile_tag_assignments').delete().eq('profile_id',profile_id).eq('tag_id',tag_id);if(error)$('tagStatus').textContent=error.message;else await loadTags()};
+
 async function init(){const {data:{user},error}=await db.auth.getUser();if(error||!user){msg('Entre na sua conta para continuar.');return}const {data:admin,error:ae}=await db.rpc('bmth_is_admin');if(ae){msg('O banco ainda precisa da configuração administrativa (supabase/admin_progression.sql).');return}if(!admin){msg('Acesso restrito: esta conta não foi autorizada como administradora.');return}$('panel').hidden=false;msg('Acesso administrativo autorizado.');await Promise.all([loadCharacters(),loadRequests(),loadTags()])}
 async function loadCharacters(){const {data,error}=await db.from('characters').select('id,first_name,last_name,profile_id').order('first_name');if(error)return err(error);characters=data||[];const {data:rows,error:pe}=await db.from('character_progression').select('character_id,rank,xp');if(pe)return err(pe);progress=new Map((rows||[]).map(p=>[p.character_id,p]));const select=$('character');select.replaceChildren();for(const c of characters){const o=document.createElement('option');o.value=c.id;o.textContent=[c.first_name,c.last_name].filter(Boolean).join(' ')||c.id;select.append(o)}if(!characters.length){msg('Nenhum personagem encontrado.');return}select.onchange=sync;sync()}
 function sync(){const p=progress.get($('character').value);$('rank').value=p?.rank||'D';$('xp').value=p?.xp??0}
