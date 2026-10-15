@@ -66,6 +66,37 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 /* Perfil em abas: feed principal; demais painéis apenas sob seleção */
 .profile-content{display:none!important}.profile-content.bmth-show-all{display:grid!important}.profile-content.bmth-show-one{display:block!important}.profile-content.bmth-show-one>section{display:none!important}.profile-content.bmth-show-one>section.bmth-selected-section{display:block!important;max-width:900px;margin:0 auto}.bmth-profile-posts-section{display:none}.bmth-profile-posts-section.bmth-selected-section{display:block}.bmth-profile-wiki-title{font:600 19px/1.4 Georgia,serif;color:#f3d5e3;margin:14px 0 5px}
 .bmth-profile-post-link{display:inline-block;margin-top:13px;color:#efa2bf;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+
+/* Ficha de personagem: leitura clara, identidade BMTH e ícones vetoriais */
+.sheet-modal{background:rgba(4,3,8,.86)!important;backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);padding:clamp(10px,2.5vw,24px)!important}
+.sheet-dialog{width:min(100%,760px)!important;max-height:calc(100dvh - 32px)!important;background:linear-gradient(155deg,#211823 0%,#15111b 55%,#1b1420 100%)!important;color:#f7ecf2!important;border:1px solid rgba(228,137,178,.5)!important;border-radius:17px!important;clip-path:none!important;box-shadow:0 0 0 1px #ffffff09,0 24px 85px #000d!important;padding:clamp(18px,3.5vw,30px)!important;scrollbar-color:#92506d #19121c;scrollbar-width:thin}
+.sheet-head{background:linear-gradient(115deg,rgba(119,44,79,.3),rgba(29,20,35,.45))!important;border:1px solid rgba(221,127,170,.25)!important;border-radius:12px!important;padding:19px 55px 18px 20px!important;margin-bottom:21px!important}
+.sheet-kicker{display:flex;align-items:center;gap:8px;color:#f18eb3!important;font-size:11px!important;font-weight:750!important;letter-spacing:.15em!important}
+.sheet-head h2{color:#fff0f7!important;font:700 clamp(24px,4vw,36px)/1.2 'Cinzel',Georgia,serif!important;letter-spacing:.035em;margin:10px 0 0!important;overflow-wrap:anywhere}
+.sheet-close{display:grid!important;place-items:center;position:absolute;right:18px!important;top:18px!important;width:39px;height:39px;padding:0!important;border:1px solid rgba(244,170,204,.4)!important;border-radius:10px!important;background:rgba(24,14,26,.95)!important;color:#ffe7f1!important;z-index:2}
+.sheet-close:hover{background:#8c3159!important}
+.sheet-grid{grid-template-columns:minmax(115px,160px) minmax(0,1fr)!important;gap:20px!important;align-items:start}
+.sheet-portrait{height:auto!important;aspect-ratio:3/4;border:1px solid #ae6889!important;border-radius:10px!important;overflow:hidden;background:#241622!important}
+.sheet-portrait img{width:100%;height:100%;object-fit:cover;display:block}
+.sheet-facts{gap:8px!important;min-width:0}
+.sheet-fact{padding:8px 12px!important;border:1px solid rgba(200,142,170,.2)!important;border-radius:9px;background:rgba(255,255,255,.035);min-width:0}
+.sheet-fact b{color:#ed8db5!important;font-size:10px!important;letter-spacing:.1em}
+.sheet-fact span{display:block;color:#f6eaf0!important;font-size:13px!important;line-height:1.55;overflow-wrap:anywhere}
+.sheet-block{margin-top:23px!important}
+.sheet-block h3{font:700 14px 'Cinzel',Georgia,serif!important;color:#f6c4d8!important;letter-spacing:.09em;border-bottom:1px solid rgba(222,141,176,.42)!important;padding-bottom:10px!important;margin-bottom:13px}
+.sheet-block p{color:#eadce5!important;font-size:14px!important;line-height:1.85!important;letter-spacing:.005em}
+.sheet-meter{gap:12px!important}.sheet-meter b{color:#f5d3e1!important;font-size:12px}
+.sheet-meter .track{height:13px!important;background:rgba(255,255,255,.12)!important;border:1px solid rgba(240,174,203,.4)!important;border-radius:99px;overflow:hidden}
+.sheet-meter .track i{border-radius:99px;background:linear-gradient(90deg,#a82e5b,#ef7aa7)!important}
+.sheet-foot{color:#b8a0ae!important;border-top:1px solid rgba(231,151,187,.24)!important;margin-top:28px}
+.sheet-modal a{color:#f3a0c0!important}
+.sheet-dialog .bmth-stats{background:linear-gradient(135deg,#241723,#1b1320)!important;border:1px solid rgba(222,131,172,.38)!important;border-radius:13px!important;padding:16px!important;color:#f7e7ef!important}
+.sheet-dialog .bmth-stats-title,.sheet-dialog .bmth-stat-label,.sheet-dialog .bmth-stat-value{color:#f7e7ef!important}
+.sheet-dialog .bmth-stat{background:rgba(255,255,255,.04)!important;border:1px solid rgba(224,154,188,.35)!important;border-radius:9px!important}
+.sheet-dialog .bmth-stat small,.sheet-dialog .bmth-stats-note{color:#d4b6c6!important}
+.sheet-dialog .bmth-next{background:rgba(225,137,177,.1)!important;color:#f1c7da!important;border-radius:8px}
+@media(max-width:600px){.sheet-dialog{max-height:calc(100dvh - 16px)!important;padding:15px!important;border-radius:13px!important}.sheet-head{padding:15px 47px 15px 14px!important}.sheet-grid{grid-template-columns:100px minmax(0,1fr)!important;gap:11px!important}.sheet-fact{padding:6px 9px!important}.sheet-portrait{height:auto!important}.sheet-block p{font-size:13px!important}.sheet-dialog .bmth-stats{padding:11px!important}.sheet-close{right:12px!important;top:12px!important}}
+@media(max-width:390px){.sheet-grid{grid-template-columns:82px minmax(0,1fr)!important}.sheet-fact span{font-size:12px!important}}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile5">
 <style>
@@ -139,8 +170,8 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 </main>
 <div id="sheetModal" class="sheet-modal" hidden role="presentation">
  <section id="sheetDialog" class="sheet-dialog" role="dialog" aria-modal="true" aria-labelledby="sheetName" tabindex="-1">
-  <button id="sheetClose" class="sheet-close" type="button" aria-label="Fechar ficha">×</button>
-  <header class="sheet-head"><div class="sheet-kicker">✧ ARQUIVO DOS LIMPADORES</div><h2 id="sheetName"></h2></header>
+  <button id="sheetClose" class="sheet-close" type="button" aria-label="Fechar ficha"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  <header class="sheet-head"><div class="sheet-kicker"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 0-3 0V4Zm0 0v16a3 3 0 0 1 3-3h12"/></svg><span>ARQUIVO DOS LIMPADORES</span></div><h2 id="sheetName"></h2></header>
   <div class="sheet-grid"><div id="sheetPortrait" class="sheet-portrait"></div><div class="sheet-facts" id="sheetFacts"></div></div>
   <div class="sheet-block"><h3>PROGRESSÃO</h3><div class="sheet-meter"><b id="sheetRank"></b><div class="track"><i id="sheetFill" style="width:0%"></i></div></div><p id="sheetXP"></p></div>
   <div id="sheetPhysicalStats" class="bmth-stats" aria-label="Atributos físicos"><div class="bmth-stats-title">ATRIBUTOS FÍSICOS · <span id="sheetStatRank"></span></div><div class="bmth-stats-grid"><div class="bmth-stat"><div class="bmth-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="m12 12 6-6M14 3h7v7"/></svg> VELOCIDADE</div><div class="bmth-stat-value"><span id="sheetSpeed"></span> <small>km/h</small></div><small>Velocidade máxima</small></div><div class="bmth-stat"><div class="bmth-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 5v14M18 5v14M3 8v8M21 8v8M6 12h12"/></svg> FORÇA</div><div class="bmth-stat-value"><span id="sheetStrength"></span> <small>kg</small></div><small>Capacidade máxima</small></div></div><div class="bmth-next" id="sheetNextStats"></div><div class="bmth-stats-note">Valores-base do rank, sem bônus de habilidades.</div></div>
