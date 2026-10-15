@@ -122,3 +122,28 @@ create policy community_reactions_update on public.community_reactions for updat
 -- Permitir remocao por moderador via funcao SECURITY DEFINER.
 revoke all on function public.bmth_appoint_staff(uuid,text),public.bmth_remove_staff(uuid),public.bmth_apply_sanction(uuid,text,text,timestamptz),public.bmth_revoke_sanction(uuid),public.bmth_moderate_post(uuid,text) from public,anon;
 grant execute on function public.bmth_appoint_staff(uuid,text),public.bmth_remove_staff(uuid),public.bmth_apply_sanction(uuid,text,text,timestamptz),public.bmth_revoke_sanction(uuid),public.bmth_moderate_post(uuid,text) to authenticated;
+
+-- Politicas restritivas se combinam com TODAS as politicas permissivas existentes.
+-- Bloqueia tambem Wikis, comentarios de personagens e reacoes.
+do $$
+declare t text;
+begin
+ foreach t in array array['community_posts','community_comments','community_reactions','ability_wikis','wiki_comments','wiki_likes','wiki_dislikes','character_comments','character_reactions'] loop
+ if to_regclass('public.'||t) is not null then
+ execute format('drop policy if exists bmth_sanctions_guard_insert on public.%I',t);
+ execute format('create policy bmth_sanctions_guard_insert on public.%I as restrictive for insert to authenticated with check (not public.bmth_is_restricted(auth.uid(), %L))',t,
+ case when t in ('community_posts','community_comments','wiki_comments','character_comments','ability_wikis') then 'mute' else 'ban' end);
+ end if;
+ end loop;
+end $$;
+-- Guardar atualizacoes de conteudo (sem impedir exclusao do proprio conteudo).
+do $$
+declare t text;
+begin
+ foreach t in array array['community_posts','ability_wikis'] loop
+ if to_regclass('public.'||t) is not null then
+ execute format('drop policy if exists bmth_sanctions_guard_update on public.%I',t);
+ execute format('create policy bmth_sanctions_guard_update on public.%I as restrictive for update to authenticated using (not public.bmth_is_restricted(auth.uid(), %L)) with check (not public.bmth_is_restricted(auth.uid(), %L))',t,'mute','mute');
+ end if;
+ end loop;
+end $$;
