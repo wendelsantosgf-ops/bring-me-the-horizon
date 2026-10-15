@@ -24,6 +24,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 .profile-wiki-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:15px}.profile-wiki-card{border:1px solid #43323e;background:#151119;overflow:hidden;min-width:0}.profile-wiki-cover{height:155px;background:linear-gradient(135deg,#351725,#17131e);color:#db8fa8;display:grid;place-items:center;font:700 20px 'Cinzel',serif;letter-spacing:.12em}.profile-wiki-cover img{width:100%;height:100%;object-fit:cover}.profile-wiki-info{padding:16px}.profile-wiki-info small{color:#d98ba2;letter-spacing:.06em}.profile-wiki-info h3{font:600 19px 'Cinzel',serif;margin:8px 0;overflow-wrap:anywhere}.profile-wiki-info p{color:#bdb3c0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-wrap;overflow-wrap:anywhere}
 .bmth-inline-svg{width:1em;height:1em;vertical-align:-.14em;display:inline-block;flex:none}.about h2 .bmth-inline-svg{width:1.15em;height:1.15em;color:#d13c55;margin-right:8px}.about p .bmth-inline-svg{color:#d39ab0;margin-right:8px}
 .profile-create-overlay{position:fixed;inset:0;z-index:10000;background:#07050bdf;display:grid;place-items:center;padding:12px}.profile-create-dialog{width:min(720px,100%);height:min(800px,94dvh);background:#18111e;border:1px solid #b44e6b;border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 70px #000b}.profile-create-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid #603b51}.profile-create-header button{background:#3a2232;border:1px solid #a44d6c;color:#fff;padding:8px 12px;border-radius:7px;cursor:pointer}.profile-create-dialog iframe{width:100%;flex:1;border:0;background:#151019}
+.bmth-stats{margin-top:16px;padding:14px;border:1px solid #b77c96;background:#221720;border-radius:12px;color:#f5e4eb}.bmth-stats-title{font-size:13px;font-weight:800;letter-spacing:.09em;margin-bottom:10px;color:#f2bed2}.bmth-stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.bmth-stat{background:#321e2c;border:1px solid #8c526d;border-radius:9px;padding:12px;min-width:0}.bmth-stat-label{display:flex;align-items:center;gap:6px;color:#efb5ce;font-size:11px;font-weight:700}.bmth-stat-label svg{width:17px;height:17px;flex:none}.bmth-stat-value{font-size:clamp(19px,4vw,25px);font-weight:800;color:white}.bmth-stat-value small{font-size:12px;color:#e2bccc}.bmth-next{margin-top:10px;background:#30202d;padding:10px;border-radius:8px;font-size:12px;color:#f1ccdb}.bmth-next b{color:white}.bmth-stats-note{font-size:11px;color:#c4a4b2;margin-top:8px}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile5">
 <style>
@@ -84,6 +85,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
   <header class="sheet-head"><div class="sheet-kicker">✧ ARQUIVO DOS LIMPADORES</div><h2 id="sheetName"></h2></header>
   <div class="sheet-grid"><div id="sheetPortrait" class="sheet-portrait"></div><div class="sheet-facts" id="sheetFacts"></div></div>
   <div class="sheet-block"><h3>PROGRESSÃO</h3><div class="sheet-meter"><b id="sheetRank"></b><div class="track"><i id="sheetFill" style="width:0%"></i></div></div><p id="sheetXP"></p></div>
+  <div id="sheetPhysicalStats" class="bmth-stats" aria-label="Atributos físicos"><div class="bmth-stats-title">ATRIBUTOS FÍSICOS · <span id="sheetStatRank"></span></div><div class="bmth-stats-grid"><div class="bmth-stat"><div class="bmth-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="m12 12 6-6M14 3h7v7"/></svg> VELOCIDADE</div><div class="bmth-stat-value"><span id="sheetSpeed"></span> <small>km/h</small></div><small>Velocidade máxima</small></div><div class="bmth-stat"><div class="bmth-stat-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 5v14M18 5v14M3 8v8M21 8v8M6 12h12"/></svg> FORÇA</div><div class="bmth-stat-value"><span id="sheetStrength"></span> <small>kg</small></div><small>Capacidade máxima</small></div></div><div class="bmth-next" id="sheetNextStats"></div><div class="bmth-stats-note">Valores-base do rank, sem bônus de habilidades.</div></div>
   <div class="sheet-block"><h3>APARÊNCIA</h3><p id="sheetAppearance"></p></div>
   <div class="sheet-block"><h3>HISTÓRIA</h3><p id="sheetHistory"></p></div>
   <p class="sheet-foot">BRING ME THE HORIZON · 清掃者</p>
@@ -218,6 +220,15 @@ function openSheet(c,progress,opener){
  const rank=progress?.rank||'D',xp=Number(progress?.xp)||0;
  $('sheetRank').textContent='RANK '+rank;$('sheetFill').style.width=(rank==='A'?100:Math.max(0,Math.min(100,xp%100)))+'%';
  $('sheetXP').textContent=rank==='A'?xp+' XP acumulados':(xp%100)+' / 100 XP para a próxima etapa';
+ const ranks=['D','C','B','A','S'],idx=ranks.indexOf(String(rank).toUpperCase());
+ $('sheetPhysicalStats').hidden=idx<0;
+ if(idx>=0){
+  const speed=220+idx*150,strength=200+idx*180;
+  $('sheetStatRank').textContent='RANK '+ranks[idx];
+  $('sheetSpeed').textContent=speed.toLocaleString('pt-BR');
+  $('sheetStrength').textContent=strength.toLocaleString('pt-BR');
+  $('sheetNextStats').textContent=idx<ranks.length-1?'PRÓXIMO RANK '+ranks[idx+1]+' · '+(speed+150).toLocaleString('pt-BR')+' km/h · '+(strength+180).toLocaleString('pt-BR')+' kg':'RANK S · Classificação máxima';
+ }
  $('sheetAppearance').textContent=c.appearance||'A aparência ainda não foi registrada.';
  $('sheetHistory').textContent=c.history||'A história deste Limpador ainda não foi registrada.';
  $('sheetModal').hidden=false;document.body.style.overflow='hidden';$('sheetDialog').focus();
