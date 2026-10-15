@@ -65,6 +65,7 @@ main{max-width:1450px;margin:25px auto;padding:0 clamp(16px,4vw,54px)}.eyebrow{m
 
 /* Perfil em abas: feed principal; demais painéis apenas sob seleção */
 .profile-content{display:none!important}.profile-content.bmth-show-all{display:grid!important}.profile-content.bmth-show-one{display:block!important}.profile-content.bmth-show-one>section{display:none!important}.profile-content.bmth-show-one>section.bmth-selected-section{display:block!important;max-width:900px;margin:0 auto}.bmth-profile-posts-section{display:none}.bmth-profile-posts-section.bmth-selected-section{display:block}.bmth-profile-wiki-title{font:600 19px/1.4 Georgia,serif;color:#f3d5e3;margin:14px 0 5px}
+.bmth-profile-post-link{display:inline-block;margin-top:13px;color:#efa2bf;font-size:13px;text-decoration:underline;text-underline-offset:3px}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile5">
 <style>
@@ -282,10 +283,49 @@ async function render(){
 function profilePostIsGif(url){return /\\.gif(?:[?#]|$)/i.test(url)}
 function profilePostLightbox(urls,start){let index=start;const layer=document.createElement('div');layer.className='bmth-profile-lightbox';layer.setAttribute('role','dialog');layer.setAttribute('aria-modal','true');layer.setAttribute('aria-label','Galeria da publicação');const image=document.createElement('img'),counter=document.createElement('span');image.alt='Imagem da publicação';const close=document.createElement('button'),prev=document.createElement('button'),next=document.createElement('button');close.textContent='×';prev.textContent='‹';next.textContent='›';close.setAttribute('aria-label','Fechar');prev.setAttribute('aria-label','Anterior');next.setAttribute('aria-label','Próxima');const update=()=>{image.src=urls[index];counter.textContent=(index+1)+' / '+urls.length;prev.hidden=next.hidden=urls.length===1};const done=()=>{document.removeEventListener('keydown',onKey);layer.remove()};const onKey=e=>{if(e.key==='Escape')done();if(e.key==='ArrowRight'){index=(index+1)%urls.length;update()}if(e.key==='ArrowLeft'){index=(index+urls.length-1)%urls.length;update()}};close.onclick=done;prev.onclick=()=>{index=(index+urls.length-1)%urls.length;update()};next.onclick=()=>{index=(index+1)%urls.length;update()};layer.addEventListener('click',e=>{if(e.target===layer)done()});layer.append(image,counter,close,prev,next);document.body.append(layer);document.addEventListener('keydown',onKey);update();close.focus()}
 function profilePostGallery(urls){const valid=urls.map(imageUrl).filter(Boolean).sort((a,b)=>Number(profilePostIsGif(b))-Number(profilePostIsGif(a)));const grid=document.createElement('div');grid.className='bmth-profile-post-gallery'+(valid.length===1?' single':'')+(valid.length===3?' three':'');valid.slice(0,4).forEach((url,i)=>{const tile=document.createElement('button');tile.type='button';tile.setAttribute('aria-label','Abrir mídia '+(i+1)+' de '+valid.length);const img=document.createElement('img');img.src=url;img.loading='lazy';img.alt='Imagem da publicação';tile.append(img);if(i===3&&valid.length>4){const more=document.createElement('span');more.className='bmth-profile-post-more';more.textContent='+'+(valid.length-4);tile.append(more)}tile.onclick=()=>profilePostLightbox(valid,i);grid.append(tile)});return grid}
-async function loadProfilePosts(){const area=$('profilePosts');area.replaceChildren();const [{data:posts,error},{data:characterRows,error:characterError}]=await Promise.all([db.from('community_posts').select('id,content,image_url,created_at').eq('user_id',profile.user_id).order('created_at',{ascending:false}).limit(50),db.from('characters').select('id').eq('profile_id',profile.id)]);if(error){const p=document.createElement('p');p.textContent='Não foi possível carregar as publicações: '+error.message;area.append(p);return}if(characterError)console.warn('Não foi possível carregar as Wikis do feed do perfil:',characterError);const ids=(characterRows||[]).map(c=>c.id);let wikis=[];if(ids.length){const {data,error:wikiError}=await db.from('ability_wikis').select('id,title,description,category,cover_image,created_at').in('character_id',ids).order('created_at',{ascending:false}).limit(50);if(wikiError)console.warn('Erro ao consultar Wikis:',wikiError);else wikis=data||[]}if(!posts?.length&&!wikis.length){const p=document.createElement('p');p.className='muted';p.textContent='Este Limpador ainda não compartilhou publicações ou Wikis.';area.append(p);return}const galleries=new Map();const {data:mediaRows,error:mediaError}=await db.from('bmth_post_media').select('post_id,url,position').in('post_id',posts.map(p=>p.id)).order('position');if(mediaError)console.warn('Galerias do perfil indisponíveis:',mediaError);for(const row of mediaRows||[]){if(!galleries.has(row.post_id))galleries.set(row.post_id,[]);galleries.get(row.post_id).push(row.url)}for(const post of posts){const article=document.createElement('article');article.className='bmth-profile-post';article.dataset.created=post.created_at;const head=document.createElement('div');head.className='bmth-profile-post-head';const avatar=document.createElement('img');avatar.src=imageUrl(profile.avatar_url)||$('avatar').src;avatar.alt='';const by=document.createElement('div');const name=document.createElement('strong');name.textContent=profile.display_name||'Limpador';const date=document.createElement('small');date.textContent=new Date(post.created_at).toLocaleString('pt-BR',{dateStyle:'medium',timeStyle:'short'});by.append(name,date);head.append(avatar,by);article.append(head);if(post.content){const body=document.createElement('p');body.className='bmth-profile-post-text';body.textContent=post.content;article.append(body)}const urls=galleries.get(post.id)||[post.image_url].filter(Boolean);if(urls.length)article.append(profilePostGallery(urls));area.append(article)}
-const wikiMedia=new Map();if(wikis.length){const {data:rows}=await db.from('bmth_wiki_media').select('wiki_id,url,position').in('wiki_id',wikis.map(w=>w.id)).order('position');for(const m of rows||[]){if(!wikiMedia.has(m.wiki_id))wikiMedia.set(m.wiki_id,[]);wikiMedia.get(m.wiki_id).push(m.url)}}
-for(const wiki of wikis){const article=document.createElement('article');article.className='bmth-profile-post';article.dataset.created=wiki.created_at;const head=document.createElement('div');head.className='bmth-profile-post-head';const avatar=document.createElement('img');avatar.src=imageUrl(profile.avatar_url)||$('avatar').src;avatar.alt='';const by=document.createElement('div');const name=document.createElement('strong');name.textContent=profile.display_name||'Limpador';const date=document.createElement('small');date.textContent='Wiki de habilidade · '+new Date(wiki.created_at).toLocaleString('pt-BR',{dateStyle:'medium',timeStyle:'short'});by.append(name,date);head.append(avatar,by);article.append(head);const title=document.createElement('h3');title.className='bmth-profile-wiki-title';title.textContent=wiki.title||'Wiki de habilidade';article.append(title);if(wiki.description){const body=document.createElement('p');body.className='bmth-profile-post-text';body.textContent=wiki.description;article.append(body)}const urls=[wiki.cover_image,...(wikiMedia.get(wiki.id)||[])].filter(Boolean);if(urls.length)article.append(profilePostGallery([...new Set(urls)]));area.append(article)}
-const ordered=[...area.children].filter(n=>n.matches('article')).sort((a,b)=>new Date(b.dataset.created||0)-new Date(a.dataset.created||0));for(const node of ordered)area.append(node);
+async function loadProfilePosts(){
+ const area=$('profilePosts');area.replaceChildren();
+ const [{data:posts,error:postError},{data:characters,error:characterError}]=await Promise.all([
+  db.from('community_posts').select('id,content,image_url,created_at').eq('user_id',profile.user_id).order('created_at',{ascending:false}).limit(100),
+  db.from('characters').select('id,first_name,last_name,portrait_url,history,created_at').eq('profile_id',profile.id).order('created_at',{ascending:false}).limit(100)
+ ]);
+ if(postError)console.warn('Publicações do perfil:',postError);
+ if(characterError)console.warn('Fichas do perfil:',characterError);
+ const ids=(characters||[]).map(c=>c.id);
+ let wikis=[];if(ids.length){
+  const {data,error}=await db.from('ability_wikis').select('id,title,description,category,cover_image,created_at').in('character_id',ids).order('created_at',{ascending:false}).limit(100);
+  if(error)console.warn('Wikis do perfil:',error);else wikis=data||[];
+ }
+ if(postError&&characterError){area.textContent='Não foi possível carregar as publicações agora. Tente novamente.';return}
+ if(!(posts||[]).length&&!(characters||[]).length&&!wikis.length){area.textContent='Este Limpador ainda não publicou postagens, fichas ou Wikis.';return}
+ const postMedia=new Map(),wikiMedia=new Map();
+ if(posts?.length){const {data,error}=await db.from('bmth_post_media').select('post_id,url,position').in('post_id',posts.map(p=>p.id)).order('position');if(error)console.warn('Mídias das postagens:',error);for(const m of data||[]){if(!postMedia.has(m.post_id))postMedia.set(m.post_id,[]);postMedia.get(m.post_id).push(m.url)}}
+ if(wikis.length){const {data,error}=await db.from('bmth_wiki_media').select('wiki_id,url,position').in('wiki_id',wikis.map(w=>w.id)).order('position');if(error)console.warn('Mídias das Wikis:',error);for(const m of data||[]){if(!wikiMedia.has(m.wiki_id))wikiMedia.set(m.wiki_id,[]);wikiMedia.get(m.wiki_id).push(m.url)}}
+ const entries=[
+  ...(posts||[]).map(item=>({type:'post',item,date:item.created_at})),
+  ...(characters||[]).map(item=>({type:'character',item,date:item.created_at})),
+  ...wikis.map(item=>({type:'wiki',item,date:item.created_at}))
+ ].sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+ for(const entry of entries){
+  const item=entry.item,article=document.createElement('article');article.className='bmth-profile-post';
+  const head=document.createElement('div');head.className='bmth-profile-post-head';
+  const avatar=document.createElement('img');avatar.src=imageUrl(profile.avatar_url)||$('avatar').src;avatar.alt='';
+  const by=document.createElement('div');const name=document.createElement('strong');name.textContent=profile.display_name||'Limpador';
+  const date=document.createElement('small');const prefix=entry.type==='wiki'?'Wiki de habilidade · ':entry.type==='character'?'Ficha de personagem · ':'';
+  date.textContent=prefix+(item.created_at?new Date(item.created_at).toLocaleString('pt-BR',{dateStyle:'medium',timeStyle:'short'}):'');
+  by.append(name,date);head.append(avatar,by);article.append(head);
+  if(entry.type!=='post'){
+   const title=document.createElement('h3');title.className='bmth-profile-wiki-title';
+   title.textContent=entry.type==='wiki'?(item.title||'Wiki de habilidade'):[item.first_name,item.last_name].filter(Boolean).join(' ')||'Ficha de personagem';
+   article.append(title);
+  }
+  const content=entry.type==='post'?item.content:entry.type==='wiki'?item.description:item.history;
+  if(content){const body=document.createElement('p');body.className='bmth-profile-post-text';body.textContent=content;article.append(body)}
+  const urls=entry.type==='post'?[...(postMedia.get(item.id)||[]),item.image_url].filter(Boolean):entry.type==='wiki'?[item.cover_image,...(wikiMedia.get(item.id)||[])].filter(Boolean):[item.portrait_url].filter(Boolean);
+  if(urls.length)article.append(profilePostGallery([...new Set(urls)]));
+  if(entry.type==='character'){const link=document.createElement('a');link.href='./personagens.html';link.className='bmth-profile-post-link';link.textContent='Ver ficha →';article.append(link)}
+  area.append(article);
+ }
 }
 async function loadProfileWikis(characterIds){
  const area=$('profileWikis');area.replaceChildren();
