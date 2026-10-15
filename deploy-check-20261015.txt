@@ -1,0 +1,4 @@
+BMTH deployment check
+Date: 2026-10-15
+Purpose: Verify Vercel automatic production deployment after free-tier rate limit.
+No site functionality changed.
