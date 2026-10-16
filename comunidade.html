@@ -57,6 +57,13 @@ main{max-width:1180px}.layout{grid-template-columns:minmax(0,1fr) 310px;align-it
 .bmth-social-gallery.gif-first .bmth-social-gallery-tile:first-child{grid-column:1/-1!important;grid-row:auto!important;aspect-ratio:16/9!important}
 .bmth-social-gallery.gif-first .bmth-social-gallery-tile img{width:100%!important;height:100%!important;max-height:none!important;object-fit:cover!important}
 @media(max-width:560px){.bmth-social-gallery.gif-first{gap:4px!important}.bmth-social-gallery.gif-first .bmth-social-gallery-tile:first-child{aspect-ratio:16/9!important}}
+
+/* Layout definitivo: mídia animada em destaque sem recorte, fotos em grade abaixo. */
+.bmth-social-gallery.gif-first{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:auto!important;grid-auto-rows:auto!important;align-items:start!important;aspect-ratio:auto!important;max-height:none!important;overflow:hidden!important;gap:4px!important}
+.bmth-social-gallery.gif-first .bmth-social-gallery-tile{grid-column:auto!important;grid-row:auto!important;align-self:start!important;aspect-ratio:1!important;height:auto!important;min-height:0!important;max-height:none!important;display:block!important}
+.bmth-social-gallery.gif-first .bmth-social-gallery-tile:first-child{grid-column:1 / -1!important;grid-row:1!important;aspect-ratio:auto!important;height:auto!important;min-height:0!important}
+.bmth-social-gallery.gif-first .bmth-social-gallery-tile:first-child img{display:block!important;width:100%!important;height:auto!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important}
+.bmth-social-gallery.gif-first .bmth-social-gallery-tile:not(:first-child) img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
 </style><link rel="stylesheet" href="./theme.css?v=mobile4">
 <style>
 /* BMTH / Comunidade 2.0 — somente apresentação, preservando autenticação e publicações */
