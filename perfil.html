@@ -247,10 +247,12 @@ async function loadMemberTags(){
  const area=$('memberTags');area.replaceChildren();
  const {data:assigned,error}=await db.from('bmth_profile_tag_assignments').select('tag_id').eq('profile_id',profile.id);
  if(error){console.warn('Tags ainda nao configuradas:',error.message);return}
+ const {data:staff}=await db.from('bmth_staff').select('role').eq('user_id',profile.user_id).maybeSingle();
+ if(staff?.role){const badge=document.createElement('span');badge.className='bmth-member-tag';badge.textContent=staff.role==='moderator'?'Moderador':'Curador';badge.style.setProperty('--tag-color',staff.role==='moderator'?'#e36a94':'#8c9df1');area.append(badge)}
  if(!assigned?.length)return;
  const {data:tags,error:te}=await db.from('bmth_profile_tags').select('id,name,color').in('id',assigned.map(x=>x.tag_id));
  if(te){console.warn('Nao foi possivel carregar tags:',te.message);return}
- for(const tag of tags||[]){const el=document.createElement('span');el.className='bmth-member-tag';el.textContent=tag.name;el.style.setProperty('--tag-color',/^#[0-9a-fA-F]{6}$/.test(tag.color)?tag.color:'#d96a9b');area.append(el)}
+ for(const tag of tags||[]){if(/^(moderador(?:a|es|as)?|curador(?:a|es|as)?|administrador(?:a|es|as)?|admin(?:s)?)$/i.test(String(tag.name||'').trim()))continue;const el=document.createElement('span');el.className='bmth-member-tag';el.textContent=tag.name;el.style.setProperty('--tag-color',/^#[0-9a-fA-F]{6}$/.test(tag.color)?tag.color:'#d96a9b');area.append(el)}
 }
 
 async function loadCommunityLevel(){
