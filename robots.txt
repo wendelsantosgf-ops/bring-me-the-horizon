@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /moderacao.html
+Disallow: /perfil.html
+
+Sitemap: https://bring-me-the-horizon-dusky.vercel.app/sitemap.xml
