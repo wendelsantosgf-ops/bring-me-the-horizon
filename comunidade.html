@@ -64,6 +64,8 @@ main{max-width:1180px}.layout{grid-template-columns:minmax(0,1fr) 310px;align-it
 .bmth-social-gallery.gif-first .bmth-social-gallery-tile:first-child{grid-column:1 / -1!important;grid-row:1!important;aspect-ratio:auto!important;height:auto!important;min-height:0!important}
 .bmth-social-gallery.gif-first .bmth-social-gallery-tile:first-child img{display:block!important;width:100%!important;height:auto!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important}
 .bmth-social-gallery.gif-first .bmth-social-gallery-tile:not(:first-child) img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
+
+.comment-actions{display:flex;flex-wrap:wrap;gap:7px;margin:7px 0 0}.comment-actions button{padding:5px 10px;font-size:12px;border-radius:8px;background:rgba(126,58,93,.23);border:1px solid rgba(212,128,166,.32);color:#f7d6e4}.comment-edit-box{display:grid;gap:8px;margin-top:8px}.comment-edit-box textarea{width:100%;min-height:70px;resize:vertical}.comment-actions button:disabled{opacity:.55}
 </style><link rel="stylesheet" href="./theme.css?v=mobile4">
 <style>
 /* BMTH / Comunidade 2.0 — somente apresentação, preservando autenticação e publicações */
@@ -251,6 +253,13 @@ function bmthIsGif(url){return /\.gif(?:[?#]|$)/i.test(url)}
 function bmthMediaSorted(urls){return urls.map(safeUrl).filter(Boolean).sort((a,b)=>Number(bmthIsGif(b))-Number(bmthIsGif(a)))}
 function openBmthGallery(urls,start=0){let idx=start;const overlay=el('div','bmth-gallery-lightbox');overlay.setAttribute('role','dialog');overlay.setAttribute('aria-modal','true');overlay.setAttribute('aria-label','Galeria de mídias');const backdrop=el('div','bmth-gallery-lightbox-bg');const image=el('img');image.alt='Mídia ampliada';const count=el('span','bmth-gallery-lightbox-count');const close=el('button','bmth-gallery-lightbox-close','×'),prev=el('button','bmth-gallery-lightbox-prev','‹'),next=el('button','bmth-gallery-lightbox-next','›');[close,prev,next].forEach(btn=>btn.type='button');close.setAttribute('aria-label','Fechar galeria');prev.setAttribute('aria-label','Imagem anterior');next.setAttribute('aria-label','Próxima imagem');const update=()=>{image.src=urls[idx];count.textContent=(idx+1)+' / '+urls.length;prev.hidden=next.hidden=urls.length<2};const cleanup=()=>{document.removeEventListener('keydown',onKey);overlay.remove()};const onKey=e=>{if(e.key==='Escape')cleanup();else if(e.key==='ArrowRight'){idx=(idx+1)%urls.length;update()}else if(e.key==='ArrowLeft'){idx=(idx+urls.length-1)%urls.length;update()}};backdrop.onclick=close.onclick=cleanup;prev.onclick=()=>{idx=(idx+urls.length-1)%urls.length;update()};next.onclick=()=>{idx=(idx+1)%urls.length;update()};overlay.append(backdrop,image,count,close,prev,next);document.body.append(overlay);document.addEventListener('keydown',onKey);update();close.focus()}
 function buildBmthMediaGrid(input,alt){const urls=bmthMediaSorted(input),grid=el('div','bmth-social-gallery'+(urls.length===1?' single':''));if(urls.length>1&&bmthIsGif(urls[0]))grid.classList.add('gif-first');if(urls.length===3)grid.classList.add('three');urls.slice(0,4).forEach((url,i)=>{const tile=el('button','bmth-social-gallery-tile');tile.type='button';tile.setAttribute('aria-label','Abrir mídia '+(i+1)+' de '+urls.length);const img=el('img');img.src=url;img.alt=alt;img.loading='lazy';tile.append(img);if(i===3&&urls.length>4){const more=el('span','bmth-social-gallery-more','+'+(urls.length-4));tile.append(more)}tile.onclick=()=>openBmthGallery(urls,i);grid.append(tile)});return grid}
+
+function bmthCommentControls(item,c,table,refresh,feedback){
+ if(!user||c.user_id!==user.id)return;
+ const actions=el('div','comment-actions'),edit=el('button','','Editar'),del=el('button','','Apagar');edit.type=del.type='button';actions.append(edit,del);item.append(actions);
+ edit.onclick=()=>{if(item.querySelector('.comment-edit-box'))return;const box=el('div','comment-edit-box'),area=el('textarea');area.maxLength=2000;area.value=c.content;const buttons=el('div','comment-actions'),save=el('button','','Salvar'),cancel=el('button','','Cancelar');save.type=cancel.type='button';buttons.append(save,cancel);box.append(area,buttons);item.append(box);cancel.onclick=()=>box.remove();save.onclick=async()=>{const content=area.value.trim();if(!content){feedback.textContent='O comentário não pode ficar vazio.';return}save.disabled=true;const {error}=await db.from(table).update({content}).eq('id',c.id).eq('user_id',user.id);save.disabled=false;if(error){feedback.textContent='Não foi possível editar: '+error.message;return}feedback.textContent='Comentário atualizado.';await refresh()}};
+ del.onclick=async()=>{if(!confirm('Apagar seu comentário?'))return;del.disabled=true;const {error}=await db.from(table).delete().eq('id',c.id).eq('user_id',user.id);del.disabled=false;if(error){feedback.textContent='Não foi possível apagar: '+error.message;return}feedback.textContent='Comentário apagado.';await refresh()};
+}
 async function drawSocialPost(area,p,gallery=[]){
  const card=el('article','post social-post'),owner=profiles.get(p.user_id),name=owner?.display_name||'Limpador';
  const head=el('div','post-head'),identity=el('div','post-identity'),av=safeUrl(owner?.avatar_url);
@@ -297,10 +306,10 @@ async function drawSocialPost(area,p,gallery=[]){
  }
  like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
  async function refreshComments(){
-  const {data,error}=await db.from('community_comments').select('user_id,content,created_at').eq('post_id',p.id).order('created_at',{ascending:true}).limit(60);
+  const {data,error}=await db.from('community_comments').select('id,user_id,content,created_at').eq('post_id',p.id).order('created_at',{ascending:true}).limit(60);
   list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
   if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
-  for(const c of data||[]){const item=el('div','comment');item.append(el('strong','',profiles.get(c.user_id)?.display_name||'Limpador'),el('small','',' · '+new Date(c.created_at).toLocaleString('pt-BR')),el('div','',c.content));list.append(item)}
+  for(const c of data||[]){const item=el('div','comment');item.append(el('strong','',profiles.get(c.user_id)?.display_name||'Limpador'),el('small','',' · '+new Date(c.created_at).toLocaleString('pt-BR')),el('div','',c.content));bmthCommentControls(item,c,'community_comments',refreshComments,feedback);list.append(item)}
  }
  form.addEventListener('submit',async e=>{
   e.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;
@@ -403,12 +412,12 @@ async function drawCharacterPost(area,c){
  }
  like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
  async function refreshComments(){
-  const {data,error}=await db.from('character_comments').select('user_id,content,created_at').eq('character_id',c.id).order('created_at',{ascending:true}).limit(80);
+  const {data,error}=await db.from('character_comments').select('id,user_id,content,created_at').eq('character_id',c.id).order('created_at',{ascending:true}).limit(80);
   list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
   if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
   for(const item of data||[]){
    const comment=el('div','comment'),author=profiles.get(item.user_id);
-   comment.append(el('strong','',author?.display_name||'Limpador'),el('small','',' · '+new Date(item.created_at).toLocaleString('pt-BR')),el('div','',item.content));list.append(comment);
+   comment.append(el('strong','',author?.display_name||'Limpador'),el('small','',' · '+new Date(item.created_at).toLocaleString('pt-BR')),el('div','',item.content));bmthCommentControls(comment,item,'character_comments',refreshComments,feedback);list.append(comment);
   }
  }
  form.addEventListener('submit',async e=>{
