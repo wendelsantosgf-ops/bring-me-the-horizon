@@ -55,7 +55,7 @@ import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 const db=createClient('https://hfmnoiaiyrchxrxprsav.supabase.co','sb_publishable_0HS5ItAQ76mtGqkEQ387Lw_Adirp2Ml');
 const $=id=>document.getElementById(id);const status=s=>$('status').textContent=s;
 let user=null,profile=null,editing=null,characters=[],isAdmin=false;
-const urlParams=new URLSearchParams(location.search);const embedCreate=urlParams.get('embed')==='create';if(embedCreate)document.body.classList.add('embed-create');const publicProfileId=urlParams.get('profile');const mineMode=urlParams.get('mine')==='1';let owners=new Map();
+const urlParams=new URLSearchParams(location.search);const embedCreate=urlParams.get('embed')==='create';if(embedCreate)document.body.classList.add('embed-create');const publicProfileId=urlParams.get('profile');const mineMode=urlParams.get('mine')==='1';const editTarget=urlParams.get('edit');let owners=new Map();
 let previewObjectUrl=null;function safeImage(url){try{const u=new URL(url);return ['https:','http:'].includes(u.protocol)?u.href:null}catch{return null}}function showPreview(url){if(previewObjectUrl){URL.revokeObjectURL(previewObjectUrl);previewObjectUrl=null}const img=$('portraitPreview');img.hidden=!url;if(url)img.src=url;else img.removeAttribute('src')}
 $('portraitFile').addEventListener('change',async()=>{
  const file=$('portraitFile').files[0];croppedPortraitFile=null;
@@ -143,7 +143,7 @@ window.addEventListener('resize',updateCharacterCarousel);
 async function loadCharacters(){status('Carregando personagens...');let query=db.from('characters').select('id,profile_id,first_name,last_name,age,spiritual_energy,appearance,history,portrait_url,created_at').order('created_at',{ascending:false});
  if(publicProfileId)query=query.eq('profile_id',publicProfileId);
  else if(mineMode)query=query.eq('profile_id',profile.id);
- const {data,error}=await query;if(error){status('Erro ao carregar fichas: '+error.message);return}characters=data||[];
+ const {data,error}=await query;if(error){status('Erro ao carregar fichas: '+error.message);return}characters=data||[];if(editTarget){const target=characters.find(c=>c.id===editTarget);if(target&&(target.profile_id===profile?.id||isAdmin)&&editing!==editTarget)requestAnimationFrame(()=>showForm(target));}
  const ids=[...new Set(characters.map(c=>c.profile_id))];
  owners=new Map();if(ids.length){const {data:ps}=await db.from('profile').select('id,user_id,display_name').in('id',ids);for(const p of ps||[])owners.set(p.id,p)}
  const xpSelect=$('xpCharacter');xpSelect.replaceChildren();for(const c of characters.filter(c=>c.profile_id===profile?.id)){const o=document.createElement('option');o.value=c.id;o.textContent=[c.first_name,c.last_name].filter(Boolean).join(' ');xpSelect.append(o)}$('cards').replaceChildren();if(!characters.length){const p=document.createElement('p');p.className='empty';p.textContent='Nenhum personagem cadastrado ainda.';$('cards').append(p);status('');return}
