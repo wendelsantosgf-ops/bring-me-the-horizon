@@ -67,7 +67,12 @@ $('portraitFile').addEventListener('change',async()=>{
  const img=$('portraitPreview');img.src=previewObjectUrl;img.hidden=false;
 });
 
-let croppedPortraitFile=null;
+let croppedPortraitFile=null;let removePortraitPending=false;
+$('removePortraitBtn').addEventListener('click',()=>{
+ if(!editing||!confirm('Remover a imagem desta ficha ao salvar?'))return;
+ removePortraitPending=true;croppedPortraitFile=null;$('portraitFile').value='';showPreview(null);
+ $('removePortraitBtn').hidden=true;status('Imagem será removida ao salvar a ficha.');
+});
 function editPortrait(file){
  return new Promise(resolve=>{
   const overlay=document.createElement('div');overlay.className='crop-overlay';
