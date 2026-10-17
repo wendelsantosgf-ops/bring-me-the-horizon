@@ -308,7 +308,7 @@ async function render(){
   const info=document.createElement('span');const name=document.createElement('strong');name.className='mini-name';name.textContent=[c.first_name,c.last_name].filter(Boolean).join(' ')||'Sem nome';
   const meta=document.createElement('span');meta.className='mini-meta';meta.textContent='RANK '+(progress?.rank||'D')+' · '+(c.spiritual_energy||'ENERGIA INDEFINIDA');
   info.append(name,meta);const arrow=document.createElement('span');arrow.className='mini-arrow';arrow.textContent='↗';
-  btn.append(portrait,info,arrow);btn.setAttribute('aria-label','Abrir ficha de '+name.textContent);btn.addEventListener('click',()=>openSheet(c,progress,btn));$('characters').append(btn);
+  btn.append(portrait,info,arrow);btn.setAttribute('aria-label','Abrir ficha de '+name.textContent);btn.addEventListener('click',()=>openSheet(c,progress,btn));const entry=document.createElement('div');entry.style.cssText='display:flex;flex-direction:column;gap:8px;min-width:0';entry.append(btn);if(profile.user_id===user?.id){const edit=document.createElement('a');edit.href='./personagens.html?mine=1&edit='+encodeURIComponent(c.id);edit.textContent='✎ Editar ficha';edit.setAttribute('aria-label','Editar ficha de '+name.textContent);edit.style.cssText='display:inline-flex;align-self:flex-end;align-items:center;padding:8px 13px;border:1px solid #a94e70;border-radius:9px;color:#f5c1d3;background:#2b1929;text-decoration:none;font-weight:700;font-size:13px';entry.append(edit)}$('characters').append(entry);
   const target=new URLSearchParams(location.search).get('character');
   if(target===c.id)requestAnimationFrame(()=>openSheet(c,progress,btn));
  }
