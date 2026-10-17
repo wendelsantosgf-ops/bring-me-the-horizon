@@ -445,6 +445,35 @@ async function drawPost(area,w,gallery=[]){const card=el('article','post');const
     if(error)throw error;if(!data?.length)throw Error('Sem permissão para editar esta Wiki.');
    });card.insertBefore(panel,head.nextSibling);
   },()=>removeOwned('ability_wikis',w.id,feedback,{key:'character_id',value:w.character_id})));
+  const manageMedia=el('button','ghost','✎ Gerenciar imagens');manageMedia.type='button';head.append(manageMedia);
+  manageMedia.onclick=()=>{
+   const old=card.querySelector('.bmth-media-manager');if(old){old.remove();return}
+   const manager=el('div','bmth-media-manager');manager.style.cssText='padding:15px;border:1px solid #74445d;background:#1b121e;margin:12px 0;border-radius:10px';
+   manager.append(el('strong','','Imagens da Wiki — substituir ou remover'));
+   const all=[...(w.cover_image?[{url:w.cover_image,cover:true}]:[]),...gallery.map(url=>({url,cover:false}))];
+   if(!all.length)manager.append(el('p','muted','Esta Wiki ainda não possui imagens.'));
+   for(const item of all){
+    const line=el('div');line.style.cssText='display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px';
+    const img=el('img');img.src=item.url;img.alt='Imagem da Wiki';img.style.cssText='width:76px;height:70px;object-fit:cover;border-radius:6px';
+    const change=el('input');change.type='file';change.accept='image/jpeg,image/png,image/webp,image/gif';change.setAttribute('aria-label','Substituir imagem');
+    const remove=el('button','ghost','Excluir');remove.type='button';
+    async function saveImage(next){
+     if(item.cover){
+      const {data,error}=await db.from('ability_wikis').update({cover_image:next}).eq('id',w.id).eq('character_id',w.character_id).select('id');
+      if(error)throw error;if(!data?.length)throw Error('Sem permissão para editar a capa.');
+     }else{
+      let query=db.from('bmth_wiki_media');
+      const {data,error}=next?await query.update({url:next}).eq('wiki_id',w.id).eq('url',item.url).select('url'):await query.delete().eq('wiki_id',w.id).eq('url',item.url).select('url');
+      if(error)throw error;if(!data?.length)throw Error('Sem permissão para alterar esta imagem.');
+     }
+     await loadPosts();
+    }
+    change.onchange=async()=>{const file=change.files?.[0];if(!file)return;change.disabled=true;remove.disabled=true;try{const url=await uploadWikiFile(file);await saveImage(url)}catch(e){feedback.textContent='Não foi possível substituir: '+e.message;change.disabled=false;remove.disabled=false}};
+    remove.onclick=async()=>{if(!confirm('Remover esta imagem da Wiki?'))return;remove.disabled=true;try{await saveImage(null)}catch(e){feedback.textContent='Não foi possível remover: '+e.message;remove.disabled=false}};
+    line.append(img,change,remove);manager.append(line);
+   }
+   head.insertAdjacentElement('afterend',manager);
+  };
   card.append(feedback);
  }
  card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
