@@ -168,7 +168,16 @@ body .layout>.community-sidebar{grid-column:1;grid-row:1;position:sticky;top:18p
 </style><style>
 .owner-tools{display:flex;align-items:center;gap:7px;margin-left:auto;flex-wrap:wrap}.owner-tools button{border:1px solid #75465b;border-radius:9px;padding:7px 11px;background:#2b1b2a;color:#f6dce6;font-size:12px;cursor:pointer}.owner-tools button:hover{background:#74304b}.owner-tools .danger{border-color:#8b364b;color:#ffafbd}
 .owner-edit{padding:14px;margin:12px 0;border:1px solid #694058;background:#160e18;border-radius:12px}.owner-edit label{display:block;margin:8px 0 4px}.owner-edit input,.owner-edit textarea,.owner-edit select{width:100%;padding:10px;border:1px solid #664052;background:#0e0b12;color:white;border-radius:8px;font:inherit}.owner-edit textarea{min-height:90px}.owner-edit .owner-edit-actions{display:flex;gap:8px;margin-top:12px}.owner-edit button{padding:9px 14px;border-radius:8px;border:1px solid #9e4b69;background:#702642;color:#fff;cursor:pointer}.owner-edit button.secondary{background:#241925}.owner-edit .muted{margin-top:8px}
-</style><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"></head><body>
+</style><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"><style>
+/* BMTH compact social reactions inspired by classic community feeds */
+.social-reactions,.post-actions:has(>button){display:flex;align-items:center;gap:6px 16px;flex-wrap:wrap}
+.social-reactions button,.post-actions>button{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:52px;border:0;background:transparent;color:#d9b4c6;font-size:19px;padding:9px 8px;border-radius:9px}
+.social-reactions button:hover,.post-actions>button:hover{background:#392032}
+.social-reactions button.active,.social-reactions button[data-active="true"]{color:#f06492;background:transparent}
+.social-reactions .muted,.post-actions .count{font-size:13px}
+@media(max-width:560px){.social-reactions{gap:4px 9px}.social-reactions button{font-size:18px;padding:8px 7px;min-width:45px}}
+</style>
+</head><body>
 <header class="bmth-header"><a class="bmth-brand" href="./index.html"><span class="bmth-sigil">✧</span><span class="bmth-brandwords"><b>BMTH</b><small>L I M P A D O R E S</small></span></a><nav class="bmth-nav" aria-label="Navegação principal"><a href="./index.html"><span class="bmth-icon" aria-hidden="true">▧</span>MANUAL<small>REGRAS E GUIAS</small></a><a href="./comunidade.html" aria-current="page"><span class="bmth-icon" aria-hidden="true">✧</span>COMUNIDADE<small>LIMPADORES</small></a><a href="./comunidade.html#posts"><span class="bmth-icon">◈</span>WIKIS<small>HABILIDADES</small></a><a href="./personagens.html"><span class="bmth-icon" aria-hidden="true">◇</span>PERSONAGENS<small>FICHAS</small></a><a href="./perfil.html"><span class="bmth-icon">◉</span>MEU PERFIL<small>JOGADOR</small></a></nav><a class="bmth-account" href="./login.html">⚙ CONTA</a></header>
 <main><div class="eyebrow">ARQUIVO SOCIAL // LIMPADORES</div><h1>Comunidade</h1><p class="muted">Conheça outros Limpadores, descubra habilidades e participe das conversas do Imaginário.</p>
 <p id="status" role="status" aria-live="polite">Verificando acesso...</p><section id="gate" class="panel community-gate" hidden><div class="gate-heading"><span class="eyebrow">BMTH // ACESSO À COMUNIDADE</span><span class="gate-emblem" aria-hidden="true">✧</span></div><h2>Entre para participar</h2><p>Seu registro é a porta de entrada para conhecer os Limpadores e compartilhar suas habilidades.</p><div class="gate-actions"><a class="gate-btn gate-btn-primary" href="./login.html"><span aria-hidden="true">↳</span> ENTRAR NA COMUNIDADE</a><a class="gate-btn gate-btn-secondary" href="./login.html?mode=register"><span aria-hidden="true">＋</span> CRIAR MINHA CONTA</a></div></section>
@@ -284,10 +293,11 @@ async function drawSocialPost(area,p,gallery=[]){
  card.prepend(head);
  if(p.content)card.append(el('p','social-post-body',p.content));
  const urls=gallery.length?gallery:[p.image_url].filter(Boolean);if(urls.length)card.append(buildBmthMediaGrid(urls,'Mídia publicada por '+name));
- const actions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','👎 Não curtir'),count=el('span','muted',''),commentsToggle=el('button','','▤ Comentários');
+ const actions=el('div','social-reactions'),like=el('button','','♡'),dislike=el('button','','👎'),count=el('span','muted',''),commentsToggle=el('button','','▢ 0');
  actions.append(like,dislike,count,commentsToggle);card.append(actions);
  const comments=el('div','social-comments');comments.hidden=true;const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
  input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;send.type='submit';form.append(input,send);comments.append(list,form,feedback);card.append(comments);area.append(card);
+ const updateCommentCount=async()=>{const {count,error}=await db.from('community_comments').select('id',{count:'exact',head:true}).eq('post_id',p.id);if(!error)commentsToggle.textContent='▢ '+(count??0);};updateCommentCount();
  commentsToggle.onclick=()=>{comments.hidden=!comments.hidden;if(!comments.hidden)refreshComments()};
  async function refreshReactions(){
   const {data,error}=await db.from('community_reactions').select('user_id,reaction').eq('post_id',p.id);
@@ -307,7 +317,7 @@ async function drawSocialPost(area,p,gallery=[]){
  like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
  async function refreshComments(){
   const {data,error}=await db.from('community_comments').select('id,user_id,content,created_at').eq('post_id',p.id).order('created_at',{ascending:true}).limit(60);
-  list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
+  updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
   if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
   for(const c of data||[]){const item=el('div','comment');item.append(el('strong','',profiles.get(c.user_id)?.display_name||'Limpador'),el('small','',' · '+new Date(c.created_at).toLocaleString('pt-BR')),el('div','',c.content));bmthCommentControls(item,c,'community_comments',refreshComments,feedback);list.append(item)}
  }
@@ -386,13 +396,14 @@ async function drawCharacterPost(area,c){
  const view=link('./perfil.html?id='+encodeURIComponent(c.profile_id)+'&character='+encodeURIComponent(c.id),'✦ Ver ficha completa');
  view.className='button';view.style.cssText='display:inline-flex;align-items:center;padding:11px 17px;border:1px solid #a94e70;border-radius:10px;background:#351c2c;color:#fff;text-decoration:none;font-weight:700';
  actions.append(view);card.append(actions);
- const reactions=el('div','social-reactions'),like=el('button','','♡ Curtir'),dislike=el('button','','👎 Não curtir'),count=el('span','muted',''),toggle=el('button','','▤ Comentários');
+ const reactions=el('div','social-reactions'),like=el('button','','♡'),dislike=el('button','','👎'),count=el('span','muted',''),toggle=el('button','','▢ 0');
  like.type=dislike.type=toggle.type='button';
  reactions.append(like,dislike,count,toggle);card.append(reactions);
  const comments=el('div','social-comments');comments.hidden=true;
  const list=el('div'),form=el('form','formrow'),input=el('textarea'),send=el('button','','Enviar'),feedback=el('p','muted');
  input.placeholder='Escreva um comentário sobre '+name+'...';input.maxLength=2000;input.required=true;send.type='submit';
  form.append(input,send);comments.append(list,form,feedback);card.append(comments);area.append(card);
+ const updateCommentCount=async()=>{const {count,error}=await db.from('character_comments').select('id',{count:'exact',head:true}).eq('character_id',c.id);if(!error)toggle.textContent='▢ '+(count??0);};updateCommentCount();
  toggle.setAttribute('aria-expanded','false');
  toggle.onclick=()=>{comments.hidden=!comments.hidden;toggle.setAttribute('aria-expanded',String(!comments.hidden));if(!comments.hidden)refreshComments()};
  async function refreshReactions(){
@@ -413,7 +424,7 @@ async function drawCharacterPost(area,c){
  like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
  async function refreshComments(){
   const {data,error}=await db.from('character_comments').select('id,user_id,content,created_at').eq('character_id',c.id).order('created_at',{ascending:true}).limit(80);
-  list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
+  updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
   if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
   for(const item of data||[]){
    const comment=el('div','comment'),author=profiles.get(item.user_id);
@@ -478,10 +489,11 @@ async function drawPost(area,w,gallery=[]){const card=el('article','post');const
  }
  card.append(el('div','tag post-tag',w.category||'WIKI DE HABILIDADE'));card.append(el('h3','post-title',w.title||'Habilidade sem título'));if(w.description)card.append(el('p','post-description',w.description));if(w.limitations)card.append(el('p','post-limit','Limitações: '+w.limitations));
 const wikiMedia=[w.cover_image,...gallery].filter(Boolean);if(wikiMedia.length){card.append(buildBmthMediaGrid([...new Set(wikiMedia)],'Mídia da Wiki '+(w.title||'')))}else{const media=el('div','post-media'),block=el('div','fallback-cover');block.append(el('b','','✧'),el('span','','BMTH // ARQUIVO DE HABILIDADE'));media.append(block);card.append(media)}
-const actions=el('div','post-actions');const like=el('button','','♡ Curtir');const count=el('span','muted count','...');const dislike=el('button','','👎 Não curtir');const commentToggle=el('button','','☏ Comentários');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
-const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
+const actions=el('div','post-actions');const like=el('button','','♡');const count=el('span','muted count','...');const dislike=el('button','','👎');const commentToggle=el('button','','▢ 0');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
+const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);const updateCommentCount=async()=>{const {count,error}=await db.from('wiki_comments').select('id',{count:'exact',head:true}).eq('wiki_id',w.id);if(!error)commentToggle.textContent='▢ '+(count??0);};updateCommentCount();
+ commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
 async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥ Curtido':'♡ Curtir';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked);await refreshDislikes()}
-async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of data||[]){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));list.append(item)}}
+async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of data||[]){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));list.append(item)}}
 
 async function refreshDislikes(){
  const {data,error}=await db.from('wiki_dislikes').select('user_id').eq('wiki_id',w.id);
