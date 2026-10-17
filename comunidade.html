@@ -437,7 +437,7 @@ async function drawCharacterPost(area,c){
   const {data,error}=await db.from('character_reactions').select('user_id,reaction').eq('character_id',c.id);
   if(error){count.textContent='Interações indisponíveis: execute o SQL character_feed_interactions.sql';like.disabled=dislike.disabled=true;return}
   const mine=(data||[]).find(x=>x.user_id===user.id)?.reaction;
-  like.textContent=mine==='like'?'♥ Curtido':'♡ Curtir';dislike.textContent=mine==='dislike'?'👎 Não curtiu':'👎 Não curtir';
+  like.textContent=mine==='like'?'♥':'♡';dislike.textContent='👎';
   like.dataset.active=String(mine==='like');dislike.dataset.active=String(mine==='dislike');
   count.textContent=(data||[]).filter(x=>x.reaction==='like').length+' curtidas · '+(data||[]).filter(x=>x.reaction==='dislike').length+' dislikes';
  }
@@ -519,14 +519,14 @@ const wikiMedia=[w.cover_image,...gallery].filter(Boolean);if(wikiMedia.length){
 const actions=el('div','post-actions');const like=el('button','','♡');const count=el('span','muted count','...');const dislike=el('button','','👎');const commentToggle=el('button','','▢ 0');commentToggle.type='button';actions.append(like,dislike,count,commentToggle);card.append(actions);
 const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);const updateCommentCount=async()=>{const {count,error}=await db.from('wiki_comments').select('id',{count:'exact',head:true}).eq('wiki_id',w.id);if(!error)commentToggle.textContent='▢ '+(count??0);};updateCommentCount();
  commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
-async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥ Curtido':'♡ Curtir';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked);await refreshDislikes()}
+async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥':'♡';count.textContent=(data||[]).length+' curtida(s)';like.dataset.liked=String(liked);await refreshDislikes()}
 async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of data||[]){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));bmthCommentControls(item,c,'wiki_comments',refreshComments,feedback);bmthAttachCommentLikes(item,c,'wiki_comments',feedback);list.append(item)}}
 
 async function refreshDislikes(){
  const {data,error}=await db.from('wiki_dislikes').select('user_id').eq('wiki_id',w.id);
  if(error){dislike.disabled=true;return}
  const mine=(data||[]).some(x=>x.user_id===user.id);
- dislike.textContent=mine?'👎 Não curtiu':'👎 Não curtir';dislike.dataset.active=String(mine);
+ dislike.textContent='👎';dislike.dataset.active=String(mine);
  count.textContent+=' · '+(data||[]).length+' dislikes';
 }
 dislike.addEventListener('click',async()=>{
