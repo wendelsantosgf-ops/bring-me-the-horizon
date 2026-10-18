@@ -66,6 +66,8 @@ main{max-width:1180px}.layout{grid-template-columns:minmax(0,1fr) 310px;align-it
 .bmth-social-gallery.gif-first .bmth-social-gallery-tile:not(:first-child) img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important}
 
 .comment-actions{display:flex;flex-wrap:wrap;gap:7px;margin:7px 0 0}.comment-actions button{padding:5px 10px;font-size:12px;border-radius:8px;background:rgba(126,58,93,.23);border:1px solid rgba(212,128,166,.32);color:#f7d6e4}.comment-edit-box{display:grid;gap:8px;margin-top:8px}.comment-edit-box textarea{width:100%;min-height:70px;resize:vertical}.comment-actions button:disabled{opacity:.55}
+
+.bmth-replies{margin:10px 0 4px 18px;padding-left:12px;border-left:2px solid rgba(214,116,160,.35);display:grid;gap:9px}.bmth-reply{padding:8px 10px;border-radius:10px;background:rgba(135,78,108,.09)}.bmth-reply-form{display:grid;gap:7px;margin-top:8px}.bmth-reply-form textarea{width:100%;min-height:65px;resize:vertical}.bmth-reply-form button{margin-right:7px}
 </style><link rel="stylesheet" href="./theme.css?v=mobile4">
 <style>
 /* BMTH / Comunidade 2.0 — somente apresentação, preservando autenticação e publicações */
@@ -305,6 +307,13 @@ async function bmthAttachCommentLikes(item,c,table,feedback){
  };
  await refresh();
 }
+
+function bmthAttachReplies(item,c,table,all,refresh,feedback,foreignKey,foreignId){
+ const reply=el('button','','↳ Responder');reply.type='button';reply.className='secondary';reply.style.marginTop='7px';item.append(reply);
+ const children=all.filter(x=>x.parent_id===c.id);
+ if(children.length){const thread=el('div','bmth-replies');for(const child of children){const node=el('div','bmth-reply'),name=profiles.get(child.user_id)?.display_name||'Limpador';node.append(el('strong','',name),el('small','',' · '+new Date(child.created_at).toLocaleString('pt-BR')),el('div','',child.content));bmthCommentControls(node,child,table,refresh,feedback);bmthAttachCommentLikes(node,child,table,feedback);thread.append(node)}item.append(thread)}
+ reply.onclick=()=>{const existing=item.querySelector(':scope > .bmth-reply-form');if(existing){existing.remove();return}const form=el('form','bmth-reply-form'),field=el('textarea'),actions=el('div'),send=el('button','','Enviar resposta'),cancel=el('button','secondary','Cancelar');field.required=true;field.maxLength=2000;field.placeholder='Responder a '+(profiles.get(c.user_id)?.display_name||'este comentário')+'...';send.type='submit';cancel.type='button';actions.append(send,cancel);form.append(field,actions);item.append(form);field.focus();cancel.onclick=()=>form.remove();form.onsubmit=async e=>{e.preventDefault();const content=field.value.trim();if(!content)return;send.disabled=true;const payload={user_id:user.id,content,parent_id:c.id};payload[foreignKey]=foreignId;const {error}=await db.from(table).insert(payload);send.disabled=false;if(error){feedback.textContent='Não foi possível responder: '+error.message;return}feedback.textContent='Resposta enviada.';await refresh()}}
+}
 function bmthCommentControls(item,c,table,refresh,feedback){
  if(!user||c.user_id!==user.id)return;
  const actions=el('div','comment-actions'),edit=el('button','','Editar'),del=el('button','','Apagar');edit.type=del.type='button';actions.append(edit,del);item.append(actions);
@@ -358,10 +367,10 @@ async function drawSocialPost(area,p,gallery=[]){
  }
  like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
  async function refreshComments(){
-  const {data,error}=await db.from('community_comments').select('id,user_id,content,created_at').eq('post_id',p.id).order('created_at',{ascending:true}).limit(60);
+  const {data,error}=await db.from('community_comments').select('id,user_id,content,created_at,parent_id').eq('post_id',p.id).order('created_at',{ascending:true}).limit(60);
   updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
   if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
-  for(const c of data||[]){const item=el('div','comment');item.append(el('strong','',profiles.get(c.user_id)?.display_name||'Limpador'),el('small','',' · '+new Date(c.created_at).toLocaleString('pt-BR')),el('div','',c.content));bmthCommentControls(item,c,'community_comments',refreshComments,feedback);bmthAttachCommentLikes(item,c,'community_comments',feedback);list.append(item)}
+  for(const c of (data||[]).filter(x=>!x.parent_id)){const item=el('div','comment');item.append(el('strong','',profiles.get(c.user_id)?.display_name||'Limpador'),el('small','',' · '+new Date(c.created_at).toLocaleString('pt-BR')),el('div','',c.content));bmthCommentControls(item,c,'community_comments',refreshComments,feedback);bmthAttachCommentLikes(item,c,'community_comments',feedback);bmthAttachReplies(item,c,'community_comments',data,refreshComments,feedback,'post_id',p.id);list.append(item)}
  }
  form.addEventListener('submit',async e=>{
   e.preventDefault();const content=input.value.trim();if(!content)return;send.disabled=true;
@@ -465,12 +474,12 @@ async function drawCharacterPost(area,c){
  }
  like.onclick=()=>react('like');dislike.onclick=()=>react('dislike');
  async function refreshComments(){
-  const {data,error}=await db.from('character_comments').select('id,user_id,content,created_at').eq('character_id',c.id).order('created_at',{ascending:true}).limit(80);
+  const {data,error}=await db.from('character_comments').select('id,user_id,content,created_at,parent_id').eq('character_id',c.id).order('created_at',{ascending:true}).limit(80);
   updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}
   if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));
-  for(const item of data||[]){
+  for(const item of (data||[]).filter(x=>!x.parent_id)){
    const comment=el('div','comment'),author=profiles.get(item.user_id);
-   comment.append(el('strong','',author?.display_name||'Limpador'),el('small','',' · '+new Date(item.created_at).toLocaleString('pt-BR')),el('div','',item.content));bmthCommentControls(comment,item,'character_comments',refreshComments,feedback);bmthAttachCommentLikes(comment,item,'character_comments',feedback);list.append(comment);
+   comment.append(el('strong','',author?.display_name||'Limpador'),el('small','',' · '+new Date(item.created_at).toLocaleString('pt-BR')),el('div','',item.content));bmthCommentControls(comment,item,'character_comments',refreshComments,feedback);bmthAttachCommentLikes(comment,item,'character_comments',feedback);bmthAttachReplies(comment,item,'character_comments',data,refreshComments,feedback,'character_id',c.id);list.append(comment);
   }
  }
  form.addEventListener('submit',async e=>{
@@ -535,7 +544,7 @@ const actions=el('div','post-actions');const like=el('button','bmth-reaction-lik
 const comments=el('div','comments');comments.hidden=true;comments.append(el('h3','','Comentários'));const list=el('div');comments.append(list);const form=el('form','formrow');const input=el('textarea');input.placeholder='Escreva um comentário...';input.maxLength=2000;input.required=true;input.setAttribute('aria-label','Novo comentário');const send=el('button','','Enviar');send.type='submit';form.append(input,send);comments.append(form);const feedback=el('p','muted');comments.append(feedback);card.append(comments);area.append(card);const updateCommentCount=async()=>{const {count,error}=await db.from('wiki_comments').select('id',{count:'exact',head:true}).eq('wiki_id',w.id);if(!error)commentToggle.textContent=String(count??0);};updateCommentCount();
  commentToggle.setAttribute('aria-expanded','false');commentToggle.onclick=()=>{comments.hidden=!comments.hidden;commentToggle.setAttribute('aria-expanded',String(!comments.hidden))};
 async function refreshLikes(){const {data,error}=await db.from('wiki_likes').select('user_id').eq('wiki_id',w.id);if(error){count.textContent='Curtidas indisponíveis';like.disabled=true;return}const liked=(data||[]).some(x=>x.user_id===user.id);like.textContent=liked?'♥':'♡';like.textContent=String((data||[]).length);like.dataset.liked=String(liked);await refreshDislikes()}
-async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of data||[]){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));bmthCommentControls(item,c,'wiki_comments',refreshComments,feedback);bmthAttachCommentLikes(item,c,'wiki_comments',feedback);list.append(item)}}
+async function refreshComments(){const {data,error}=await db.from('wiki_comments').select('id,user_id,content,created_at,parent_id').eq('wiki_id',w.id).order('created_at',{ascending:true}).limit(60);updateCommentCount();list.replaceChildren();if(error){list.textContent='Comentários indisponíveis: '+error.message;return}if(!data?.length)list.append(el('p','muted','Seja o primeiro a comentar.'));for(const c of (data||[]).filter(x=>!x.parent_id)){const item=el('div','comment');const p=profiles.get(c.user_id);item.append(el('strong','',p?.display_name||'Limpador'),el('small','', ' · '+new Date(c.created_at).toLocaleString('pt-BR')));item.append(el('div','',c.content));bmthCommentControls(item,c,'wiki_comments',refreshComments,feedback);bmthAttachCommentLikes(item,c,'wiki_comments',feedback);bmthAttachReplies(item,c,'wiki_comments',data,refreshComments,feedback,'wiki_id',w.id);list.append(item)}}
 
 async function refreshDislikes(){
  const {data,error}=await db.from('wiki_dislikes').select('user_id').eq('wiki_id',w.id);
