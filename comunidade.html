@@ -68,6 +68,8 @@ main{max-width:1180px}.layout{grid-template-columns:minmax(0,1fr) 310px;align-it
 .comment-actions{display:flex;flex-wrap:wrap;gap:7px;margin:7px 0 0}.comment-actions button{padding:5px 10px;font-size:12px;border-radius:8px;background:rgba(126,58,93,.23);border:1px solid rgba(212,128,166,.32);color:#f7d6e4}.comment-edit-box{display:grid;gap:8px;margin-top:8px}.comment-edit-box textarea{width:100%;min-height:70px;resize:vertical}.comment-actions button:disabled{opacity:.55}
 
 .bmth-replies{margin:10px 0 4px 18px;padding-left:12px;border-left:2px solid rgba(214,116,160,.35);display:grid;gap:9px}.bmth-reply{padding:8px 10px;border-radius:10px;background:rgba(135,78,108,.09)}.bmth-reply-form{display:grid;gap:7px;margin-top:8px}.bmth-reply-form textarea{width:100%;min-height:65px;resize:vertical}.bmth-reply-form button{margin-right:7px}
+
+.bmth-reply-heading{display:flex;gap:5px;align-items:baseline;flex-wrap:wrap;font-size:13px}.bmth-reply-mention{color:#ff8eb5;font-weight:700}.bmth-reply{scroll-margin-top:100px}
 </style><link rel="stylesheet" href="./theme.css?v=mobile4">
 <style>
 /* BMTH / Comunidade 2.0 — somente apresentação, preservando autenticação e publicações */
@@ -309,9 +311,9 @@ async function bmthAttachCommentLikes(item,c,table,feedback){
 }
 
 function bmthAttachReplies(item,c,table,all,refresh,feedback,foreignKey,foreignId){
- const reply=el('button','','↳ Responder');reply.type='button';reply.className='secondary';reply.style.marginTop='7px';item.append(reply);
+ item.id='bmth-comment-'+c.id;const reply=el('button','','↳ Responder');reply.type='button';reply.className='secondary';reply.style.marginTop='7px';item.append(reply);
  const children=all.filter(x=>x.parent_id===c.id);
- if(children.length){const thread=el('div','bmth-replies');for(const child of children){const node=el('div','bmth-reply'),name=profiles.get(child.user_id)?.display_name||'Limpador';node.append(el('strong','',name),el('small','',' · '+new Date(child.created_at).toLocaleString('pt-BR')),el('div','',child.content));bmthCommentControls(node,child,table,refresh,feedback);bmthAttachCommentLikes(node,child,table,feedback);thread.append(node)}item.append(thread)}
+ if(children.length){const thread=el('div','bmth-replies');for(const child of children){const node=el('div','bmth-reply'),name=profiles.get(child.user_id)?.display_name||'Limpador',target=profiles.get(c.user_id)?.display_name||'Limpador';node.id='bmth-comment-'+child.id;const heading=el('div','bmth-reply-heading');heading.append(el('strong','',name),document.createTextNode(' respondeu a '),el('span','bmth-reply-mention','@'+target));node.append(heading,el('small','',' · '+new Date(child.created_at).toLocaleString('pt-BR')),el('div','',child.content));bmthCommentControls(node,child,table,refresh,feedback);bmthAttachCommentLikes(node,child,table,feedback);thread.append(node)}item.append(thread)}
  reply.onclick=()=>{const existing=item.querySelector(':scope > .bmth-reply-form');if(existing){existing.remove();return}const form=el('form','bmth-reply-form'),field=el('textarea'),actions=el('div'),send=el('button','','Enviar resposta'),cancel=el('button','secondary','Cancelar');field.required=true;field.maxLength=2000;field.placeholder='Responder a '+(profiles.get(c.user_id)?.display_name||'este comentário')+'...';send.type='submit';cancel.type='button';actions.append(send,cancel);form.append(field,actions);item.append(form);field.focus();cancel.onclick=()=>form.remove();form.onsubmit=async e=>{e.preventDefault();const content=field.value.trim();if(!content)return;send.disabled=true;const payload={user_id:user.id,content,parent_id:c.id};payload[foreignKey]=foreignId;const {error}=await db.from(table).insert(payload);send.disabled=false;if(error){feedback.textContent='Não foi possível responder: '+error.message;return}feedback.textContent='Resposta enviada.';await refresh()}}
 }
 function bmthCommentControls(item,c,table,refresh,feedback){
