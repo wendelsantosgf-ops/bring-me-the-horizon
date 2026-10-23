@@ -246,6 +246,8 @@
 .archive-caption{margin:10px 2px 0;color:#c58ba1;letter-spacing:.18em;font-size:11px}
 @media(max-width:560px){.archive-carousel{width:calc(100% - 32px);margin:12px auto 40px}.archive-stage{aspect-ratio:4/3}.archive-slide--shinjuku{background-position:62% center}.archive-slide-copy{left:5%;bottom:21%;max-width:76%}.archive-slide-copy h2{font-size:clamp(23px,6vw,35px)}.archive-slide-copy p{font-size:12px;margin-bottom:12px}.archive-slide-copy a{font-size:10px;padding:9px 12px}.archive-controls{bottom:5%}.archive-dots{bottom:3%;right:auto;left:5%}.archive-orb,.archive-rift,.archive-moon{left:72%}}
 @media(prefers-reduced-motion:reduce){.archive-slide{transition:none}}
+
+.lobby-welcome,.lobby-library{max-width:1180px;margin:auto;padding:32px 24px 45px}.lobby-welcome{text-align:center}.lobby-welcome h2{font:700 clamp(2rem,5vw,3.4rem)/1.15 Georgia,serif;margin:12px 0}.lobby-welcome p{color:#cbbcca;max-width:710px;margin:0 auto 20px}.lobby-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}.lobby-pills span{border:1px solid #714159;border-radius:30px;padding:7px 14px;color:#eeb0cb;font-size:12px}.lobby-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.lobby-grid a{display:grid;gap:7px;padding:24px;min-height:150px;border:1px solid #704059;border-radius:17px;background:linear-gradient(125deg,#321b2d,#18121f);transition:transform .2s,border-color .2s}.lobby-grid a:hover{transform:translateY(-3px);border-color:#e881ab}.lobby-grid b{font-size:1.2rem}.lobby-grid small{color:#c5afc3}.lobby-grid span{color:#ec87ab;font-size:11px;font-weight:800;letter-spacing:.15em}.lobby-system{margin:17px 0;border:1px solid #5e354d;border-radius:17px;overflow:hidden;scroll-margin-top:90px;background:#17101b}.lobby-system>summary{display:flex;gap:17px;align-items:center;padding:23px;cursor:pointer;list-style:none;background:linear-gradient(110deg,#321a2b,#1b1423)}.lobby-system>summary::-webkit-details-marker{display:none}.lobby-system summary>span:nth-child(2){display:grid;gap:4px}.lobby-system summary small{color:#f18ab0;font-size:11px;letter-spacing:.15em}.lobby-system summary strong{font-size:1.3rem}.lobby-system summary em{font-style:normal;color:#b8a8ba;font-size:12px}.lobby-system summary>span:first-child{font-size:26px;color:#f19abc}.lobby-chevron{margin-left:auto;font-size:23px}.lobby-system[open] .lobby-chevron{transform:rotate(180deg)}.lobby-system-body{padding:0 24px 24px}.lobby-system .section:first-child{border-top:0}.lobby-system .section{scroll-margin-top:110px}@media(max-width:700px){.lobby-welcome,.lobby-library{padding-left:16px;padding-right:16px}.lobby-grid{grid-template-columns:1fr}.lobby-grid a{min-height:118px;padding:18px}.lobby-system>summary{padding:17px}.lobby-system-body{padding:0 14px 16px}}
 </style>
 <link rel="stylesheet" href="./theme.css?v=mobile4">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/bmth-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="BMTH"><style>
@@ -300,7 +302,7 @@
       <h1>O imaginário é a origem.<span>A forma é sua.</span></h1>
       <p class="hero-copy">Em um mundo onde a realidade pode se romper, cada poder é uma interpretação do desconhecido. Descubra as regras, construa sua própria manifestação e prepare-se para entrar nas Zonas.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#sistemas">EXPLORAR OS SISTEMAS ↘</a>
+        <a class="btn btn-primary" href="#biblioteca">EXPLORAR OS SISTEMAS ↘</a>
         <a class="btn btn-ghost" href="./comunidade.html">COMUNIDADE ↗</a>
       </div>
     </div>
@@ -327,16 +329,15 @@
     <p class="archive-caption" aria-live="polite" id="archiveCaption">01 / 04 — RUPTURA DE SHINJUKU</p>
   </section>
 
-  <nav class="quick-nav" aria-label="Atalhos dos sistemas">
-    <a href="#nucleo"><b>00 / Núcleo: Japão</b><small>Universo e origem das Zonas</small></a>
-    <a href="#imaginario"><b>01 / Imaginário</b><small>A origem do poder</small></a>
-    <a href="#energias"><b>02 / Energia</b><small>Formas de manifestação</small></a>
-    <a href="#poderes"><b>03 / Habilidades</b><small>Criação e liberações</small></a>
-    <a href="#zonas"><b>04 / Zonas</b><small>Classificação de risco</small></a>
-    <a href="#progressao"><b>05 / Progressão</b><small>XP e evolução</small></a>
-  </nav>
-
+<section class="lobby-welcome"><span class="eyebrow">BRING ME THE HORIZON · LOBBY</span><h2>Bem-vindo ao Imaginário.</h2><p>Um RPG narrativo no Japão, onde portais, criaturas e poderes nascem do desconhecido. Conheça o universo e consulte os sistemas por categoria.</p><div class="lobby-pills"><span>✦ RPG narrativo</span><span>◈ Fichas e Wikis</span><span>◇ Missões e XP</span></div></section>
+<section class="lobby-library" id="biblioteca"><div class="section-head"><div><span class="eyebrow">BIBLIOTECA DO JOGADOR</span><h2>Pastas de sistemas</h2></div><p>Cada arquivo reúne regras relacionadas. Abra apenas o assunto que deseja consultar.</p></div><div class="lobby-grid">
+<a href="#arquivo-mundo"><b>◈ Universo &amp; Imaginário</b><small>Japão, origem e energias</small><span>01 / EXPLORAR ↗</span></a>
+<a href="#arquivo-poder"><b>✧ Poderes &amp; Habilidades</b><small>Técnicas, limites e liberações</small><span>02 / EXPLORAR ↗</span></a>
+<a href="#arquivo-zonas"><b>◇ Zonas &amp; Limpadores</b><small>Portais, risco e operações</small><span>03 / EXPLORAR ↗</span></a>
+<a href="#arquivo-evolucao"><b>✦ Evolução &amp; XP</b><small>Ranks, experiência e administração</small><span>04 / EXPLORAR ↗</span></a>
+</div></section>
   <main id="sistemas">
+    <details class="lobby-system" id="arquivo-mundo"><summary><span>▣</span><span><small>01 / MUNDO</small><strong>Universo & Imaginário</strong><em>Toque para abrir o arquivo completo</em></span><span class="lobby-chevron">⌄</span></summary><div class="lobby-system-body">
     <section class="section" id="nucleo">
       <div class="section-head">
         <div><div class="eyebrow">ARQUIVO 00 / 日本 — NIHON</div><h2>Núcleo: Japão</h2></div>
@@ -380,6 +381,8 @@
       <div class="notice"><strong>Importante:</strong> referências de outras obras servem como inspiração. Escolher uma energia não concede automaticamente os poderes ou as habilidades de um personagem já existente.</div>
     </section>
 
+    </div></details>
+    <details class="lobby-system" id="arquivo-poder"><summary><span>▣</span><span><small>02 / TÉCNICAS</small><strong>Poderes & Habilidades</strong><em>Toque para abrir o arquivo completo</em></span><span class="lobby-chevron">⌄</span></summary><div class="lobby-system-body">
     <section class="section" id="poderes">
       <div class="section-head">
         <div><div class="eyebrow">03 / Construção</div><h2>Crie sua própria manifestação</h2></div>
@@ -398,6 +401,8 @@
       <div class="notice"><strong>Registro obrigatório:</strong> técnicas, evoluções e formas de liberação devem ser descritas na Wiki de habilidades do personagem, com funcionamento, condições e limitações. O jogador pode propor suas liberações, mas elas só entram em jogo após avaliação e aprovação da administração. Evoluir não elimina automaticamente as fraquezas de um poder.</div>
     </section>
 
+    </div></details>
+    <details class="lobby-system" id="arquivo-zonas"><summary><span>▣</span><span><small>03 / EXPLORAÇÃO</small><strong>Zonas & Limpadores</strong><em>Toque para abrir o arquivo completo</em></span><span class="lobby-chevron">⌄</span></summary><div class="lobby-system-body">
     <section class="section" id="zonas">
       <div class="section-head">
         <div><div class="eyebrow">04 / Anomalias dimensionais</div><h2>As Zonas</h2></div>
@@ -437,6 +442,8 @@
       </div>
     </section>
 
+    </div></details>
+    <details class="lobby-system" id="arquivo-evolucao"><summary><span>▣</span><span><small>04 / PROGRESSÃO</small><strong>Evolução & XP</strong><em>Toque para abrir o arquivo completo</em></span><span class="lobby-chevron">⌄</span></summary><div class="lobby-system-body">
     <section class="section" id="progressao">
       <div class="section-head">
         <div><div class="eyebrow">06 / Desenvolvimento</div><h2>XP e evolução</h2></div>
@@ -480,6 +487,7 @@
         <article class="card"><h3>Registro de mudanças</h3><p>Manter o histórico de aprovações, alterações de regras e reclassificações de Zonas.</p></article>
       </div>
     </section>
+    </div></details>
   </main>
 
   <footer class="footer">
@@ -567,5 +575,5 @@
  window.addEventListener('pageshow',schedule);
  schedule();
 })();
-</script><script type="module" src="./notifications.js"></script></body>
+</script><script type="module" src="./notifications.js"></script><script>(function(){function showHash(){const el=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(!el)return;const d=el.matches('details.lobby-system')?el:el.closest('details.lobby-system');if(d)d.open=true}window.addEventListener('hashchange',showHash);showHash();document.querySelectorAll('.lobby-grid a').forEach(a=>a.addEventListener('click',()=>{const d=document.querySelector(a.getAttribute('href'));if(d)d.open=true}))})();</script></body>
 </html>
